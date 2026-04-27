@@ -6,6 +6,8 @@ import {
   getGlassCardClasses,
   getGlassButtonClasses,
   getGlassInputClasses,
+  getGlassModalClasses,
+  getGlassTabBarClasses,
 } from "@/lib/glass-core/variants"
 import type { ComponentKind, GlassOptions } from "@/lib/glass-core/types"
 import {
@@ -27,6 +29,8 @@ import {
   RotateCcw,
   Eye,
   EyeOff,
+  Home,
+  User,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -76,21 +80,18 @@ export function Preview({
     [pos.x, pos.y],
   )
 
-  const onPointerMove = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      if (!dragStart.current || !stageRef.current) return
-      const stage = stageRef.current.getBoundingClientRect()
-      const dx = e.clientX - dragStart.current.px
-      const dy = e.clientY - dragStart.current.py
-      // Clamp inside stage bounds with a 24px safe area
-      const maxX = stage.width / 2 - 60
-      const maxY = stage.height / 2 - 60
-      const nextX = Math.max(-maxX, Math.min(maxX, dragStart.current.x + dx))
-      const nextY = Math.max(-maxY, Math.min(maxY, dragStart.current.y + dy))
-      setPos({ x: nextX, y: nextY })
-    },
-    [],
-  )
+  const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragStart.current || !stageRef.current) return
+    const stage = stageRef.current.getBoundingClientRect()
+    const dx = e.clientX - dragStart.current.px
+    const dy = e.clientY - dragStart.current.py
+    // Clamp inside stage bounds with a 60px safe area
+    const maxX = stage.width / 2 - 60
+    const maxY = stage.height / 2 - 60
+    const nextX = Math.max(-maxX, Math.min(maxX, dragStart.current.x + dx))
+    const nextY = Math.max(-maxY, Math.min(maxY, dragStart.current.y + dy))
+    setPos({ x: nextX, y: nextY })
+  }, [])
 
   const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     dragStart.current = null
@@ -99,6 +100,10 @@ export function Preview({
       ;(e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId)
     } catch {}
   }, [])
+
+  // For the tab bar we anchor it to the bottom of the stage and only allow
+  // horizontal drag — that mirrors how it actually behaves in iOS apps.
+  const isBottomDocked = component === "glass-tabbar"
 
   return (
     <div className="flex h-full flex-col">
@@ -136,20 +141,26 @@ export function Preview({
         </div>
 
         {/* Draggable surface */}
-        <div className="relative z-10 flex h-full items-center justify-center p-6">
+        <div
+          className={cn(
+            "relative z-10 flex h-full p-6",
+            isBottomDocked ? "items-end justify-center pb-10" : "items-center justify-center",
+          )}
+        >
           <div
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             onPointerCancel={onPointerUp}
             style={{
-              transform: `translate3d(${pos.x}px, ${pos.y}px, 0)`,
+              transform: `translate3d(${pos.x}px, ${isBottomDocked ? 0 : pos.y}px, 0)`,
               transition: dragging ? "none" : "transform 250ms cubic-bezier(0.22, 1, 0.36, 1)",
               cursor: dragging ? "grabbing" : "grab",
               touchAction: "none",
             }}
             className={cn(
               "select-none",
+              isBottomDocked && "w-full max-w-[340px]",
               dragging && "scale-[1.02] drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)]",
             )}
           >
@@ -195,11 +206,14 @@ function ComponentStage({
   if (component === "glass-card") return <CardStage options={options} />
   if (component === "glass-button") return <ButtonStage options={options} />
   if (component === "glass-input") return <InputStage options={options} />
+  if (component === "glass-modal") return <ModalStage options={options} />
+  if (component === "glass-tabbar") return <TabBarStage options={options} />
   return null
 }
 
 function CardStage({ options }: { options: GlassOptions }) {
   const isDark = options.theme === "dark"
+  const title = options.text || "Now Playing"
   return (
     <div className="w-[300px]">
       <div className={cn(getGlassCardClasses(options), "transition-all duration-300")}>
@@ -215,11 +229,11 @@ function CardStage({ options }: { options: GlassOptions }) {
           <div className="min-w-0 flex-1">
             <p
               className={cn(
-                "text-base font-semibold leading-tight",
+                "truncate text-base font-semibold leading-tight",
                 isDark ? "text-white" : "text-neutral-900",
               )}
             >
-              Now Playing
+              {title}
             </p>
             <p className={cn("mt-0.5 text-sm leading-snug", isDark ? "text-white/70" : "text-neutral-700")}>
               Frosted vibes — Glass UI
@@ -259,6 +273,94 @@ function InputStage({ options }: { options: GlassOptions }) {
         <Search className={cn("h-4 w-4 shrink-0", isDark ? "text-white/60" : "text-neutral-700/70")} />
         <span className={cn(isDark ? "text-white/55" : "text-neutral-700/60")}>{placeholder}</span>
       </div>
+    </div>
+  )
+}
+
+function ModalStage({ options }: { options: GlassOptions }) {
+  const isDark = options.theme === "dark"
+  const title = options.text || "Confirm action"
+  return (
+    <div className="w-[320px]">
+      <div className={cn(getGlassModalClasses(options), "transition-all duration-300")}>
+        <p className={cn("text-base font-semibold tracking-tight", isDark ? "text-white" : "text-neutral-900")}>
+          {title}
+        </p>
+        <p className={cn("mt-1.5 text-sm leading-relaxed", isDark ? "text-white/70" : "text-neutral-700")}>
+          This action can be undone from the settings panel.
+        </p>
+        <div className="mt-5 flex items-center justify-end gap-2">
+          <button
+            type="button"
+            className={cn(
+              "h-9 rounded-full px-4 text-xs font-medium transition-colors",
+              isDark ? "text-white/80 hover:bg-white/10" : "text-neutral-700 hover:bg-black/5",
+            )}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="h-9 rounded-full bg-primary px-4 text-xs font-semibold text-primary-foreground shadow-md transition-colors hover:bg-primary/90"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TabBarStage({ options }: { options: GlassOptions }) {
+  const isDark = options.theme === "dark"
+  const tabs = [
+    { id: "home", Icon: Home, label: "Home" },
+    { id: "search", Icon: Search, label: "Search" },
+    { id: "saved", Icon: Heart, label: "Saved" },
+    { id: "profile", Icon: User, label: "Profile" },
+  ]
+  const [active, setActive] = useState("home")
+  return (
+    <div className={cn(getGlassTabBarClasses(options), "transition-all duration-300")}>
+      {tabs.map(({ id, Icon, label }) => {
+        const isActive = id === active
+        return (
+          <button
+            key={id}
+            type="button"
+            onClick={() => setActive(id)}
+            className="flex flex-1 flex-col items-center justify-center gap-0.5"
+          >
+            <Icon
+              className={cn(
+                "h-5 w-5 transition-colors",
+                isActive
+                  ? isDark
+                    ? "text-white"
+                    : "text-neutral-900"
+                  : isDark
+                    ? "text-white/55"
+                    : "text-neutral-700/55",
+              )}
+              strokeWidth={2.2}
+            />
+            <span
+              className={cn(
+                "text-[10px] font-medium tracking-tight transition-colors",
+                isActive
+                  ? isDark
+                    ? "text-white"
+                    : "text-neutral-900"
+                  : isDark
+                    ? "text-white/55"
+                    : "text-neutral-700/55",
+              )}
+            >
+              {label}
+            </span>
+          </button>
+        )
+      })}
     </div>
   )
 }

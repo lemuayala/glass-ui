@@ -1,4 +1,5 @@
 import type { GlassOptions } from "../types"
+import { TINT_COMPOUNDS_SNIPPET, TINT_VARIANT_SNIPPET } from "./_shared"
 
 /**
  * Reusable export — full <GlassButton /> using CVA + tailwind-merge.
@@ -47,6 +48,7 @@ export const glassButtonVariants = cva(
         lg: "h-12 px-7 text-base",
       },
       shadow: { none: "", sm: "shadow-sm", md: "shadow-md", lg: "shadow-xl" },
+      ${TINT_VARIANT_SNIPPET},
     },
     compoundVariants: [
       { theme: "light", intensity: "subtle", className: "bg-white/15 text-neutral-900" },
@@ -59,6 +61,7 @@ export const glassButtonVariants = cva(
       { theme: "light", border: "strong", className: "border-white/60" },
       { theme: "dark", border: "subtle", className: "border-white/15" },
       { theme: "dark", border: "strong", className: "border-white/25" },
+${TINT_COMPOUNDS_SNIPPET}
     ],
     defaultVariants: {
       theme: "${options.theme}",
@@ -68,6 +71,7 @@ export const glassButtonVariants = cva(
       border: "${options.border}",
       size: "${options.padding}",
       shadow: "${options.shadow}",
+      tint: "${options.tint}",
     },
   },
 )
@@ -82,16 +86,16 @@ export type GlassButtonProps = Omit<PressableProps, "children"> &
  * <GlassButton /> — frosted-glass button for React Native + NativeWind.
  *
  * @example
- * <GlassButton theme="dark" rounded="full">
+ * <GlassButton theme="dark" rounded="full" tint="blue">
  *   Continue
  * </GlassButton>
  */
 export const GlassButton = React.forwardRef<React.ElementRef<typeof Pressable>, GlassButtonProps>(
-  ({ theme, blur, rounded, intensity, border, size, shadow, className, children, ...props }, ref) => {
+  ({ theme, blur, rounded, intensity, border, size, shadow, tint, className, children, ...props }, ref) => {
     return (
       <Pressable
         ref={ref}
-        className={cn(glassButtonVariants({ theme, blur, rounded, intensity, border, size, shadow }), className)}
+        className={cn(glassButtonVariants({ theme, blur, rounded, intensity, border, size, shadow, tint }), className)}
         {...props}
       >
         {typeof children === "string" ? <Text className="font-semibold">{children}</Text> : children}

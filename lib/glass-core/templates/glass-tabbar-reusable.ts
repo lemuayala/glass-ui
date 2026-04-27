@@ -2,15 +2,15 @@ import type { GlassOptions } from "../types"
 import { TINT_COMPOUNDS_SNIPPET, TINT_VARIANT_SNIPPET } from "./_shared"
 
 /**
- * Reusable export — full <GlassInput /> using CVA + tailwind-merge.
+ * Reusable export — full <GlassTabBar /> using CVA + tailwind-merge.
  * Future home: `@glass-ui/native`.
  */
-export function renderGlassInputReusable(options: GlassOptions): string {
-  return `// glass-input.tsx
-// Drop this file into your project (e.g. components/ui/glass-input.tsx).
+export function renderGlassTabBarReusable(options: GlassOptions): string {
+  return `// glass-tabbar.tsx
+// Drop this file into your project (e.g. components/ui/glass-tabbar.tsx).
 // Requires: react-native, nativewind, class-variance-authority, tailwind-merge, clsx.
 import * as React from "react"
-import { TextInput, type TextInputProps } from "react-native"
+import { View, type ViewProps } from "react-native"
 import { cva, type VariantProps } from "class-variance-authority"
 import { twMerge } from "tailwind-merge"
 import { clsx, type ClassValue } from "clsx"
@@ -19,8 +19,8 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const glassInputVariants = cva(
-  "w-full overflow-hidden font-medium tracking-tight",
+export const glassTabBarVariants = cva(
+  "flex w-full items-center justify-around overflow-hidden",
   {
     variants: {
       theme: { light: "", dark: "" },
@@ -42,21 +42,22 @@ export const glassInputVariants = cva(
       },
       intensity: { subtle: "", medium: "", strong: "" },
       border: { none: "", subtle: "border", strong: "border-2" },
+      // Padding maps to height for tab bars
       size: {
-        sm: "h-9 px-3 text-xs",
-        md: "h-11 px-4 text-sm",
-        lg: "h-14 px-5 text-base",
+        sm: "h-14 px-2",
+        md: "h-16 px-3",
+        lg: "h-20 px-4",
       },
       shadow: { none: "", sm: "shadow-sm", md: "shadow-md", lg: "shadow-xl" },
       ${TINT_VARIANT_SNIPPET},
     },
     compoundVariants: [
-      { theme: "light", intensity: "subtle", className: "bg-white/15 text-neutral-900 placeholder:text-neutral-700/60" },
-      { theme: "light", intensity: "medium", className: "bg-white/30 text-neutral-900 placeholder:text-neutral-700/70" },
-      { theme: "light", intensity: "strong", className: "bg-white/50 text-neutral-900 placeholder:text-neutral-700/80" },
-      { theme: "dark", intensity: "subtle", className: "bg-black/20 text-white placeholder:text-white/50" },
-      { theme: "dark", intensity: "medium", className: "bg-black/35 text-white placeholder:text-white/55" },
-      { theme: "dark", intensity: "strong", className: "bg-black/55 text-white placeholder:text-white/60" },
+      { theme: "light", intensity: "subtle", className: "bg-white/20" },
+      { theme: "light", intensity: "medium", className: "bg-white/40" },
+      { theme: "light", intensity: "strong", className: "bg-white/60" },
+      { theme: "dark", intensity: "subtle", className: "bg-black/30" },
+      { theme: "dark", intensity: "medium", className: "bg-black/50" },
+      { theme: "dark", intensity: "strong", className: "bg-black/70" },
       { theme: "light", border: "subtle", className: "border-white/40" },
       { theme: "light", border: "strong", className: "border-white/60" },
       { theme: "dark", border: "subtle", className: "border-white/10" },
@@ -76,29 +77,33 @@ ${TINT_COMPOUNDS_SNIPPET}
   },
 )
 
-export type GlassInputProps = TextInputProps &
-  VariantProps<typeof glassInputVariants> & {
+export type GlassTabBarProps = ViewProps &
+  VariantProps<typeof glassTabBarVariants> & {
     className?: string
+    children?: React.ReactNode
   }
 
 /**
- * <GlassInput /> — frosted-glass text input for React Native + NativeWind.
+ * <GlassTabBar /> — frosted-glass tab bar container for React Native + NativeWind.
  *
  * @example
- * <GlassInput theme="dark" placeholder="Search…" tint="blue" />
+ * <GlassTabBar theme="dark" tint="blue">
+ *   {tabs.map(t => <TabButton key={t.id} {...t} />)}
+ * </GlassTabBar>
  */
-export const GlassInput = React.forwardRef<React.ElementRef<typeof TextInput>, GlassInputProps>(
-  ({ theme, blur, rounded, intensity, border, size, shadow, tint, className, ...props }, ref) => {
+export const GlassTabBar = React.forwardRef<View, GlassTabBarProps>(
+  ({ theme, blur, rounded, intensity, border, size, shadow, tint, className, children, ...props }, ref) => {
     return (
-      <TextInput
+      <View
         ref={ref}
-        placeholderTextColor={theme === "dark" ? "rgba(255,255,255,0.55)" : "rgba(23,23,23,0.6)"}
-        className={cn(glassInputVariants({ theme, blur, rounded, intensity, border, size, shadow, tint }), className)}
+        className={cn(glassTabBarVariants({ theme, blur, rounded, intensity, border, size, shadow, tint }), className)}
         {...props}
-      />
+      >
+        {children}
+      </View>
     )
   },
 )
-GlassInput.displayName = "GlassInput"
+GlassTabBar.displayName = "GlassTabBar"
 `
 }

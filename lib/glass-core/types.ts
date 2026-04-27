@@ -13,10 +13,16 @@ export type GlassBorder = "none" | "subtle" | "strong"
 export type GlassPadding = "sm" | "md" | "lg"
 export type GlassShadow = "none" | "sm" | "md" | "lg"
 export type GlassSize = "sm" | "md" | "lg"
+export type GlassTint = "none" | "blue" | "pink" | "orange" | "teal"
 
 export type ExportMode = "inline" | "reusable"
 
-export type ComponentKind = "glass-card" | "glass-button" | "glass-input"
+export type ComponentKind =
+  | "glass-card"
+  | "glass-button"
+  | "glass-input"
+  | "glass-modal"
+  | "glass-tabbar"
 
 export interface GlassOptions {
   theme: GlassTheme
@@ -26,6 +32,7 @@ export interface GlassOptions {
   border: GlassBorder
   padding: GlassPadding
   shadow: GlassShadow
+  tint: GlassTint
   /** Optional sample text used in the preview (label / placeholder / title). */
   text?: string
 }

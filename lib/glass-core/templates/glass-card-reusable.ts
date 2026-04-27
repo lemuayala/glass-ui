@@ -1,4 +1,5 @@
 import type { GlassOptions } from "../types"
+import { TINT_COMPOUNDS_SNIPPET, TINT_VARIANT_SNIPPET } from "./_shared"
 
 /**
  * Reusable export — full GlassCard component using CVA + tailwind-merge,
@@ -47,6 +48,7 @@ export const glassCardVariants = cva("overflow-hidden", {
       xl: "rounded-xl",
       "2xl": "rounded-2xl",
       "3xl": "rounded-3xl",
+      full: "rounded-full",
     },
     intensity: {
       subtle: "",
@@ -69,6 +71,7 @@ export const glassCardVariants = cva("overflow-hidden", {
       md: "shadow-md",
       lg: "shadow-xl",
     },
+    ${TINT_VARIANT_SNIPPET},
   },
   compoundVariants: [
     { theme: "light", intensity: "subtle", className: "bg-white/10" },
@@ -81,6 +84,7 @@ export const glassCardVariants = cva("overflow-hidden", {
     { theme: "light", border: "strong", className: "border-white/50" },
     { theme: "dark", border: "subtle", className: "border-white/10" },
     { theme: "dark", border: "strong", className: "border-white/20" },
+${TINT_COMPOUNDS_SNIPPET}
   ],
   defaultVariants: {
     theme: "${options.theme}",
@@ -90,6 +94,7 @@ export const glassCardVariants = cva("overflow-hidden", {
     border: "${options.border}",
     padding: "${options.padding}",
     shadow: "${options.shadow}",
+    tint: "${options.tint}",
   },
 })
 
@@ -104,17 +109,17 @@ export type GlassCardProps = ViewProps &
  * <GlassCard /> — frosted-glass surface for React Native + NativeWind.
  *
  * @example
- * <GlassCard theme="dark" blur="lg" rounded="2xl">
+ * <GlassCard theme="dark" blur="lg" rounded="2xl" tint="blue">
  *   <Text className="text-white">Hello</Text>
  * </GlassCard>
  */
 export const GlassCard = React.forwardRef<View, GlassCardProps>(
-  ({ theme, blur, rounded, intensity, border, padding, shadow, className, children, ...props }, ref) => {
+  ({ theme, blur, rounded, intensity, border, padding, shadow, tint, className, children, ...props }, ref) => {
     return (
       <View
         ref={ref}
         className={cn(
-          glassCardVariants({ theme, blur, rounded, intensity, border, padding, shadow }),
+          glassCardVariants({ theme, blur, rounded, intensity, border, padding, shadow, tint }),
           className,
         )}
         {...props}
@@ -130,7 +135,7 @@ GlassCard.displayName = "GlassCard"
 import { GlassCard } from "./components/ui/glass-card"
 import { Text } from "react-native"
 
-<GlassCard theme="${options.theme}" blur="${options.blur}" rounded="${options.rounded}">
+<GlassCard theme="${options.theme}" blur="${options.blur}" rounded="${options.rounded}" tint="${options.tint}">
   <Text className="text-base font-semibold ${
     options.theme === "dark" ? "text-white" : "text-neutral-900"
   }">

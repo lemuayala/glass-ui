@@ -1,6 +1,6 @@
 "use client"
 
-import { Moon, Sun, RotateCcw, Sliders, Type } from "lucide-react"
+import { Moon, Sun, RotateCcw, Sliders, Type, Droplet } from "lucide-react"
 import { Segmented } from "./segmented"
 import { cn } from "@/lib/utils"
 import type {
@@ -12,6 +12,7 @@ import type {
   GlassBorder,
   GlassPadding,
   GlassShadow,
+  GlassTint,
 } from "@/lib/glass-core/types"
 
 export const DEFAULT_OPTIONS: GlassOptions = {
@@ -22,6 +23,7 @@ export const DEFAULT_OPTIONS: GlassOptions = {
   border: "subtle",
   padding: "md",
   shadow: "md",
+  tint: "none",
   text: "",
 }
 
@@ -37,6 +39,7 @@ export function defaultsFor(component: ComponentKind): GlassOptions {
         border: "subtle",
         padding: "md",
         shadow: "md",
+        tint: "none",
         text: "Continue",
       }
     case "glass-input":
@@ -48,7 +51,32 @@ export function defaultsFor(component: ComponentKind): GlassOptions {
         border: "subtle",
         padding: "md",
         shadow: "sm",
+        tint: "none",
         text: "Search…",
+      }
+    case "glass-modal":
+      return {
+        theme: "dark",
+        blur: "xl",
+        rounded: "3xl",
+        intensity: "medium",
+        border: "subtle",
+        padding: "lg",
+        shadow: "lg",
+        tint: "none",
+        text: "Confirm action",
+      }
+    case "glass-tabbar":
+      return {
+        theme: "dark",
+        blur: "xl",
+        rounded: "full",
+        intensity: "medium",
+        border: "subtle",
+        padding: "md",
+        shadow: "lg",
+        tint: "none",
+        text: "",
       }
     case "glass-card":
     default:
@@ -60,12 +88,24 @@ const SIZE_LABEL: Record<ComponentKind, { label: string; description: string }> 
   "glass-card": { label: "Padding", description: "Inner spacing" },
   "glass-button": { label: "Size", description: "Height + horizontal padding" },
   "glass-input": { label: "Size", description: "Height + horizontal padding" },
+  "glass-modal": { label: "Padding", description: "Inner spacing" },
+  "glass-tabbar": { label: "Height", description: "Bar height" },
 }
 
-const TEXT_LABEL: Record<ComponentKind, { label: string; placeholder: string }> = {
+const TEXT_LABEL: Record<ComponentKind, { label: string; placeholder: string; hidden?: boolean }> = {
   "glass-card": { label: "Title", placeholder: "Now Playing" },
   "glass-button": { label: "Label", placeholder: "Continue" },
   "glass-input": { label: "Placeholder", placeholder: "Search…" },
+  "glass-modal": { label: "Title", placeholder: "Confirm action" },
+  "glass-tabbar": { label: "", placeholder: "", hidden: true },
+}
+
+const TINT_DOT: Record<GlassTint, string> = {
+  none: "bg-white/30",
+  blue: "bg-blue-500",
+  pink: "bg-pink-500",
+  orange: "bg-orange-500",
+  teal: "bg-teal-500",
 }
 
 export function Controls({
@@ -79,6 +119,8 @@ export function Controls({
 }) {
   const set = <K extends keyof GlassOptions>(key: K, value: GlassOptions[K]) =>
     onChange({ ...options, [key]: value })
+
+  const textCfg = TEXT_LABEL[component]
 
   return (
     <div className="flex h-full flex-col">
@@ -115,26 +157,65 @@ export function Controls({
           </div>
         </div>
 
-        {/* Contextual text */}
+        {/* Tint */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <label
-              htmlFor="gg-text"
-              className="text-xs font-medium uppercase tracking-wider text-muted-foreground"
-            >
-              {TEXT_LABEL[component].label}
-            </label>
-            <Type className="h-3 w-3 text-muted-foreground/60" />
+            <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Tint</label>
+            <Droplet className="h-3 w-3 text-muted-foreground/60" />
           </div>
-          <input
-            id="gg-text"
-            type="text"
-            value={options.text ?? ""}
-            placeholder={TEXT_LABEL[component].placeholder}
-            onChange={(e) => set("text", e.target.value)}
-            className="h-9 w-full rounded-lg border border-white/5 bg-white/[0.03] px-3 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/40 focus:bg-white/[0.05]"
-          />
+          <div className="grid grid-cols-5 gap-0.5 rounded-xl border border-white/5 bg-white/[0.03] p-0.5">
+            {(["none", "blue", "pink", "orange", "teal"] as GlassTint[]).map((t) => {
+              const active = options.tint === t
+              return (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => set("tint", t)}
+                  aria-pressed={active}
+                  aria-label={t}
+                  title={t}
+                  className={cn(
+                    "group flex h-8 items-center justify-center rounded-[10px] transition-all duration-200",
+                    active
+                      ? "bg-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_1px_2px_0_rgba(0,0,0,0.3)]"
+                      : "hover:bg-white/[0.04]",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "h-3.5 w-3.5 rounded-full ring-1",
+                      TINT_DOT[t],
+                      active ? "ring-white/30" : "ring-white/10",
+                    )}
+                  />
+                </button>
+              )
+            })}
+          </div>
         </div>
+
+        {/* Contextual text */}
+        {!textCfg.hidden && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="gg-text"
+                className="text-xs font-medium uppercase tracking-wider text-muted-foreground"
+              >
+                {textCfg.label}
+              </label>
+              <Type className="h-3 w-3 text-muted-foreground/60" />
+            </div>
+            <input
+              id="gg-text"
+              type="text"
+              value={options.text ?? ""}
+              placeholder={textCfg.placeholder}
+              onChange={(e) => set("text", e.target.value)}
+              className="h-9 w-full rounded-lg border border-white/5 bg-white/[0.03] px-3 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/40 focus:bg-white/[0.05]"
+            />
+          </div>
+        )}
 
         <Segmented<GlassBlur>
           label="Blur"
@@ -216,7 +297,7 @@ export function Controls({
         {/* Footer hint */}
         <div className="rounded-xl border border-white/5 bg-white/[0.02] p-3">
           <p className="text-[11px] leading-relaxed text-muted-foreground">
-            Every change updates the live preview and the exported code. All utilities are{" "}
+            Every change updates the live preview, the URL and the exported code. All utilities are{" "}
             <span className="font-medium text-foreground">NativeWind-compatible</span>.
           </p>
         </div>
