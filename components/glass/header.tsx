@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils"
 import type { ComponentKind } from "@/lib/glass-core/codegen"
 
 const COMPONENTS: { id: ComponentKind; label: string; soon?: boolean }[] = [
-  { id: "glass-card", label: "GlassCard" },
-  { id: "glass-button", label: "Button", soon: true },
-  { id: "glass-input", label: "Input", soon: true },
+  { id: "glass-card", label: "Card" },
+  { id: "glass-button", label: "Button" },
+  { id: "glass-input", label: "Input" },
 ]
 
 export function Header({

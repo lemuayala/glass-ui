@@ -1,9 +1,10 @@
 "use client"
 
-import { Moon, Sun, RotateCcw, Sliders } from "lucide-react"
+import { Moon, Sun, RotateCcw, Sliders, Type } from "lucide-react"
 import { Segmented } from "./segmented"
 import { cn } from "@/lib/utils"
 import type {
+  ComponentKind,
   GlassOptions,
   GlassBlur,
   GlassRounded,
@@ -21,12 +22,58 @@ export const DEFAULT_OPTIONS: GlassOptions = {
   border: "subtle",
   padding: "md",
   shadow: "md",
+  text: "",
+}
+
+/** Per-component sensible defaults. */
+export function defaultsFor(component: ComponentKind): GlassOptions {
+  switch (component) {
+    case "glass-button":
+      return {
+        theme: "dark",
+        blur: "md",
+        rounded: "full",
+        intensity: "medium",
+        border: "subtle",
+        padding: "md",
+        shadow: "md",
+        text: "Continue",
+      }
+    case "glass-input":
+      return {
+        theme: "dark",
+        blur: "md",
+        rounded: "xl",
+        intensity: "medium",
+        border: "subtle",
+        padding: "md",
+        shadow: "sm",
+        text: "Search…",
+      }
+    case "glass-card":
+    default:
+      return DEFAULT_OPTIONS
+  }
+}
+
+const SIZE_LABEL: Record<ComponentKind, { label: string; description: string }> = {
+  "glass-card": { label: "Padding", description: "Inner spacing" },
+  "glass-button": { label: "Size", description: "Height + horizontal padding" },
+  "glass-input": { label: "Size", description: "Height + horizontal padding" },
+}
+
+const TEXT_LABEL: Record<ComponentKind, { label: string; placeholder: string }> = {
+  "glass-card": { label: "Title", placeholder: "Now Playing" },
+  "glass-button": { label: "Label", placeholder: "Continue" },
+  "glass-input": { label: "Placeholder", placeholder: "Search…" },
 }
 
 export function Controls({
+  component,
   options,
   onChange,
 }: {
+  component: ComponentKind
   options: GlassOptions
   onChange: (next: GlassOptions) => void
 }) {
@@ -43,7 +90,7 @@ export function Controls({
         </div>
         <button
           type="button"
-          onClick={() => onChange(DEFAULT_OPTIONS)}
+          onClick={() => onChange(defaultsFor(component))}
           className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
         >
           <RotateCcw className="h-3 w-3" />
@@ -66,6 +113,27 @@ export function Controls({
               Dark
             </ThemeBtn>
           </div>
+        </div>
+
+        {/* Contextual text */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="gg-text"
+              className="text-xs font-medium uppercase tracking-wider text-muted-foreground"
+            >
+              {TEXT_LABEL[component].label}
+            </label>
+            <Type className="h-3 w-3 text-muted-foreground/60" />
+          </div>
+          <input
+            id="gg-text"
+            type="text"
+            value={options.text ?? ""}
+            placeholder={TEXT_LABEL[component].placeholder}
+            onChange={(e) => set("text", e.target.value)}
+            className="h-9 w-full rounded-lg border border-white/5 bg-white/[0.03] px-3 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/40 focus:bg-white/[0.05]"
+          />
         </div>
 
         <Segmented<GlassBlur>
@@ -103,6 +171,7 @@ export function Controls({
             { value: "xl", label: "XL" },
             { value: "2xl", label: "2XL" },
             { value: "3xl", label: "3XL" },
+            { value: "full", label: "Full" },
           ]}
           value={options.rounded}
           onChange={(v) => set("rounded", v)}
@@ -121,7 +190,8 @@ export function Controls({
         />
 
         <Segmented<GlassPadding>
-          label="Padding"
+          label={SIZE_LABEL[component].label}
+          description={SIZE_LABEL[component].description}
           options={[
             { value: "sm", label: "Small" },
             { value: "md", label: "Medium" },

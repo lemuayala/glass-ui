@@ -1,8 +1,8 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { Header } from "./header"
-import { Controls, DEFAULT_OPTIONS } from "./controls"
+import { Controls, defaultsFor } from "./controls"
 import { Preview } from "./preview"
 import { CodePanel } from "./code-panel"
 import type { WallpaperId } from "./wallpaper"
@@ -12,14 +12,19 @@ import type { ComponentKind, ExportMode, GlassOptions } from "@/lib/glass-core/t
 export function Generator() {
   const [component, setComponent] = useState<ComponentKind>("glass-card")
   const [mode, setMode] = useState<ExportMode>("reusable")
-  const [options, setOptions] = useState<GlassOptions>(DEFAULT_OPTIONS)
+  const [options, setOptions] = useState<GlassOptions>(() => defaultsFor("glass-card"))
   const [wallpaper, setWallpaper] = useState<WallpaperId>("aurora")
+
+  const handleComponent = useCallback((next: ComponentKind) => {
+    setComponent(next)
+    setOptions(defaultsFor(next))
+  }, [])
 
   const code = useMemo(() => generateCode({ component, mode, options }), [component, mode, options])
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header component={component} onComponent={setComponent} />
+      <Header component={component} onComponent={handleComponent} />
 
       {/* Main grid — 3 columns on desktop, stack on mobile */}
       <main className="flex-1 px-4 py-4 md:px-6 md:py-6">
@@ -29,7 +34,7 @@ export function Generator() {
             aria-label="Properties"
             className="gg-glass gg-glass-inset overflow-hidden rounded-2xl max-lg:max-h-[60vh]"
           >
-            <Controls options={options} onChange={setOptions} />
+            <Controls component={component} options={options} onChange={setOptions} />
           </section>
 
           {/* Preview */}
@@ -37,7 +42,12 @@ export function Generator() {
             aria-label="Live preview"
             className="gg-glass gg-glass-inset overflow-hidden rounded-2xl max-lg:h-[70vh]"
           >
-            <Preview options={options} wallpaper={wallpaper} onWallpaper={setWallpaper} />
+            <Preview
+              component={component}
+              options={options}
+              wallpaper={wallpaper}
+              onWallpaper={setWallpaper}
+            />
           </section>
 
           {/* Code */}
