@@ -8,22 +8,12 @@ import type { WallpaperId } from "./wallpaper"
  * State <-> URL search params (compact keys) <-> localStorage.
  *
  * URL is the source of truth when present (shareable). Otherwise we hydrate
- * from localStorage on first mount. Updates are debounced via rAF to avoid
- * thrashing the history stack while the user drags sliders.
+ * from localStorage on first mount. Updates are debounced via rAF.
  *
- * Compact key map:
- *   c   component       (card | button | input | modal | tabbar)
- *   m   export mode     (inline | reusable)
- *   t   theme           (light | dark)
- *   b   blur            (none|sm|md|lg|xl)
- *   r   rounded         (none|md|lg|xl|2xl|3xl|full)
- *   i   intensity       (subtle|medium|strong)
- *   bd  border          (none|subtle|strong)
- *   p   padding         (sm|md|lg)
- *   sh  shadow          (none|sm|md|lg)
- *   tn  tint            (none|blue|pink|orange|teal)
- *   txt text            (URL-encoded)
- *   w   wallpaper       (id)
+ * The custom wallpaper image (data URL) lives ONLY in localStorage — it would
+ * blow up the URL otherwise. The shareable URL only carries the wallpaper *id*
+ * (which can be "custom"); recipients without that custom image fall back to
+ * the default wallpaper automatically inside <Wallpaper>.
  */
 
 export interface SerializedState {
@@ -31,9 +21,11 @@ export interface SerializedState {
   mode: ExportMode
   options: GlassOptions
   wallpaper: WallpaperId
+  customWallpaper: string | null
 }
 
 const STORAGE_KEY = "glass-ui-state-v1"
+const CUSTOM_WALLPAPER_KEY = "glass-ui-custom-wallpaper-v1"
 
 const COMPONENT_SHORT: Record<ComponentKind, string> = {
   "glass-card": "card",
@@ -87,10 +79,16 @@ export function decodeState(search: string, fallback: SerializedState): Serializ
     tint: (params.get("tn") as GlassTint) ?? "none",
     text: params.get("txt") ?? fallback.options.text ?? "",
   }
-  return { component, mode, options, wallpaper }
+  return {
+    component,
+    mode,
+    options,
+    wallpaper,
+    customWallpaper: fallback.customWallpaper,
+  }
 }
 
-/** Sync the current state into the URL + localStorage (debounced via rAF). */
+/** Sync state to URL + localStorage. Custom wallpaper goes to its own key. */
 export function useStateSync(state: SerializedState) {
   const rafRef = useRef<number | null>(null)
   useEffect(() => {
@@ -102,6 +100,11 @@ export function useStateSync(state: SerializedState) {
       window.history.replaceState(null, "", next)
       try {
         window.localStorage.setItem(STORAGE_KEY, qs)
+        if (state.customWallpaper) {
+          window.localStorage.setItem(CUSTOM_WALLPAPER_KEY, state.customWallpaper)
+        } else {
+          window.localStorage.removeItem(CUSTOM_WALLPAPER_KEY)
+        }
       } catch {
         /* private mode / quota — ignore */
       }
@@ -115,17 +118,26 @@ export function useStateSync(state: SerializedState) {
 /** Read the initial state once: URL > localStorage > fallback. */
 export function readInitialState(fallback: SerializedState): SerializedState {
   if (typeof window === "undefined") return fallback
-  const fromUrl = window.location.search
-  if (fromUrl && new URLSearchParams(fromUrl).has("c")) {
-    return decodeState(fromUrl, fallback)
-  }
+
+  let customWallpaper: string | null = null
   try {
-    const stored = window.localStorage.getItem(STORAGE_KEY)
-    if (stored) return decodeState(`?${stored}`, fallback)
+    customWallpaper = window.localStorage.getItem(CUSTOM_WALLPAPER_KEY)
   } catch {
     /* ignore */
   }
-  return fallback
+  const baseFallback = { ...fallback, customWallpaper }
+
+  const fromUrl = window.location.search
+  if (fromUrl && new URLSearchParams(fromUrl).has("c")) {
+    return decodeState(fromUrl, baseFallback)
+  }
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY)
+    if (stored) return decodeState(`?${stored}`, baseFallback)
+  } catch {
+    /* ignore */
+  }
+  return baseFallback
 }
 
 /** Build a shareable absolute URL for the current state. */

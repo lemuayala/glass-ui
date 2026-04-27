@@ -1,9 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useTheme } from "next-themes"
 import { Highlight, themes } from "prism-react-renderer"
-import { Check, Copy, Download, Code2 } from "lucide-react"
+import { toast } from "sonner"
+import { Copy, Download, Code2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useT } from "@/lib/i18n/provider"
 import type { ExportMode } from "@/lib/glass-core/types"
 
 export function CodePanel({
@@ -15,13 +17,16 @@ export function CodePanel({
   mode: ExportMode
   onMode: (m: ExportMode) => void
 }) {
-  const [copied, setCopied] = useState(false)
+  const t = useT()
+  const { resolvedTheme } = useTheme()
+  const prismTheme = resolvedTheme === "light" ? themes.vsLight : themes.vsDark
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(code)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1500)
+      toast.success(t("code.toast.title"), {
+        description: t("code.toast.description"),
+      })
     } catch {
       // ignore — environment without clipboard
     }
@@ -32,7 +37,7 @@ export function CodePanel({
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = mode === "inline" ? "glass-card-snippet.tsx" : "glass-card.tsx"
+    a.download = mode === "inline" ? "glass-snippet.tsx" : "glass-component.tsx"
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -42,26 +47,28 @@ export function CodePanel({
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between gap-3 border-b border-white/5 px-5 py-3">
+      <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-3">
         <div className="flex items-center gap-2">
           <Code2 className="h-3.5 w-3.5 text-muted-foreground" />
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Code</h2>
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            {t("panel.code")}
+          </h2>
         </div>
 
         {/* Mode tabs */}
-        <div className="flex items-center gap-0.5 rounded-full border border-white/5 bg-white/[0.03] p-0.5">
+        <div className="flex items-center gap-0.5 rounded-full border border-border bg-foreground/[0.03] p-0.5">
           <ModeTab active={mode === "inline"} onClick={() => onMode("inline")}>
-            Inline
+            {t("code.inline")}
           </ModeTab>
           <ModeTab active={mode === "reusable"} onClick={() => onMode("reusable")}>
-            Reusable
+            {t("code.reusable")}
           </ModeTab>
         </div>
       </div>
 
       {/* Code area */}
       <div className="relative flex-1 overflow-hidden">
-        <Highlight code={code.trim()} language="tsx" theme={themes.vsDark}>
+        <Highlight code={code.trim()} language="tsx" theme={prismTheme}>
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
             <pre
               className={cn(
@@ -95,23 +102,20 @@ export function CodePanel({
           <button
             type="button"
             onClick={handleDownload}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-white/[0.04] text-muted-foreground backdrop-blur-md transition-all hover:bg-white/[0.08] hover:text-foreground"
-            title="Download .tsx"
-            aria-label="Download as .tsx file"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-foreground/[0.04] text-muted-foreground backdrop-blur-md transition-all hover:bg-foreground/[0.08] hover:text-foreground"
+            title={t("actions.download")}
+            aria-label={t("actions.download")}
           >
             <Download className="h-3.5 w-3.5" />
           </button>
           <button
             type="button"
             onClick={handleCopy}
-            className={cn(
-              "flex h-8 items-center gap-1.5 rounded-lg border border-white/5 bg-white/[0.04] px-3 text-xs font-medium text-muted-foreground backdrop-blur-md transition-all hover:bg-white/[0.08] hover:text-foreground",
-              copied && "border-primary/40 bg-primary/15 text-primary hover:bg-primary/15 hover:text-primary",
-            )}
-            aria-label="Copy code"
+            className="flex h-8 items-center gap-1.5 rounded-lg border border-border bg-foreground/[0.04] px-3 text-xs font-medium text-muted-foreground backdrop-blur-md transition-all hover:bg-foreground/[0.08] hover:text-foreground"
+            aria-label={t("actions.copy")}
           >
-            {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-            {copied ? "Copied" : "Copy"}
+            <Copy className="h-3.5 w-3.5" />
+            {t("actions.copy")}
           </button>
         </div>
       </div>
@@ -136,7 +140,7 @@ function ModeTab({
       className={cn(
         "rounded-full px-3.5 py-1 text-[11px] font-medium transition-all duration-200",
         active
-          ? "bg-white/10 text-foreground shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
+          ? "bg-foreground/10 text-foreground shadow-[inset_0_1px_0_0_var(--gg-glass-inset-light)]"
           : "text-muted-foreground hover:text-foreground",
       )}
     >

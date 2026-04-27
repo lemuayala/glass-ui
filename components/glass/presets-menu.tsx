@@ -1,32 +1,55 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { Wand2, Check, ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { PRESETS, type GlassPreset } from "@/lib/glass-core/presets"
 import type { GlassOptions } from "@/lib/glass-core/types"
+import { useT } from "@/lib/i18n/provider"
+import type { TranslationKey } from "@/lib/i18n/dictionaries"
+
+const PRESET_NAME_KEY: Record<string, TranslationKey> = {
+  frosted: "presets.frosted.name",
+  liquid: "presets.liquid.name",
+  smoked: "presets.smoked.name",
+  crystal: "presets.crystal.name",
+  sunset: "presets.sunset.name",
+  aqua: "presets.aqua.name",
+}
+const PRESET_DESC_KEY: Record<string, TranslationKey> = {
+  frosted: "presets.frosted.description",
+  liquid: "presets.liquid.description",
+  smoked: "presets.smoked.description",
+  crystal: "presets.crystal.description",
+  sunset: "presets.sunset.description",
+  aqua: "presets.aqua.description",
+}
 
 /**
- * Curated presets dropdown. One click sets every option except `text`,
- * which is preserved so the user's custom label/title stays.
+ * Curated presets dropdown. Open/close state is controlled from the parent so
+ * we can also trigger it from a keyboard shortcut.
  */
 export function PresetsMenu({
   onApply,
   current,
+  open,
+  onOpenChange,
 }: {
   onApply: (preset: GlassPreset) => void
   current: GlassOptions
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }) {
-  const [open, setOpen] = useState(false)
+  const t = useT()
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!open) return
     function onDoc(e: MouseEvent) {
-      if (!ref.current?.contains(e.target as Node)) setOpen(false)
+      if (!ref.current?.contains(e.target as Node)) onOpenChange(false)
     }
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false)
+      if (e.key === "Escape") onOpenChange(false)
     }
     document.addEventListener("mousedown", onDoc)
     document.addEventListener("keydown", onKey)
@@ -34,9 +57,8 @@ export function PresetsMenu({
       document.removeEventListener("mousedown", onDoc)
       document.removeEventListener("keydown", onKey)
     }
-  }, [open])
+  }, [open, onOpenChange])
 
-  // A preset is "active" when every option (except text) matches the current state.
   const matches = (p: GlassPreset) =>
     (Object.keys(p.options) as (keyof GlassOptions)[]).every((k) => {
       if (k === "text") return true
@@ -47,28 +69,29 @@ export function PresetsMenu({
     <div ref={ref} className="relative">
       <button
         type="button"
-        onClick={() => setOpen((s) => !s)}
+        onClick={() => onOpenChange(!open)}
         aria-haspopup="listbox"
         aria-expanded={open}
+        title={`${t("actions.presets")} (P)`}
         className={cn(
-          "flex h-8 items-center gap-1.5 rounded-full border border-white/5 bg-white/[0.03] px-3 text-xs font-medium transition-colors",
-          "hover:bg-white/[0.06] hover:text-foreground",
+          "flex h-8 items-center gap-1.5 rounded-full border border-border bg-foreground/[0.03] px-3 text-xs font-medium transition-colors",
+          "hover:bg-foreground/[0.06] hover:text-foreground",
           open ? "text-foreground" : "text-muted-foreground",
         )}
       >
         <Wand2 className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">Presets</span>
+        <span className="hidden sm:inline">{t("actions.presets")}</span>
         <ChevronDown className={cn("h-3 w-3 transition-transform", open && "rotate-180")} />
       </button>
 
       {open && (
         <div
           role="listbox"
-          className="absolute right-0 top-[calc(100%+8px)] z-50 w-[280px] origin-top-right rounded-2xl border border-white/10 bg-[#0e1119]/95 p-1.5 shadow-2xl backdrop-blur-xl"
+          className="absolute right-0 top-[calc(100%+8px)] z-50 w-[280px] origin-top-right rounded-2xl border border-border bg-popover/95 p-1.5 text-popover-foreground shadow-2xl backdrop-blur-xl"
         >
           <div className="px-3 pb-1.5 pt-2">
             <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-              Curated styles
+              {t("presets.title")}
             </p>
           </div>
           <div className="space-y-0.5">
@@ -80,22 +103,24 @@ export function PresetsMenu({
                   type="button"
                   onClick={() => {
                     onApply(preset)
-                    setOpen(false)
+                    onOpenChange(false)
                   }}
                   className={cn(
                     "flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
-                    "hover:bg-white/[0.06]",
-                    active && "bg-white/[0.04]",
+                    "hover:bg-foreground/[0.06]",
+                    active && "bg-foreground/[0.04]",
                   )}
                 >
                   <PresetSwatch preset={preset} />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-foreground">{preset.name}</span>
+                      <span className="text-sm font-medium text-foreground">
+                        {t(PRESET_NAME_KEY[preset.id] ?? "actions.presets")}
+                      </span>
                       {active && <Check className="h-3.5 w-3.5 text-primary" />}
                     </div>
                     <p className="mt-0.5 truncate text-[11px] leading-tight text-muted-foreground">
-                      {preset.description}
+                      {t(PRESET_DESC_KEY[preset.id] ?? "actions.presets")}
                     </p>
                   </div>
                 </button>
@@ -108,7 +133,6 @@ export function PresetsMenu({
   )
 }
 
-/** Tiny live-rendered glass chip representing the preset. */
 function PresetSwatch({ preset }: { preset: GlassPreset }) {
   const o = preset.options
   const tintBg: Record<string, string> = {

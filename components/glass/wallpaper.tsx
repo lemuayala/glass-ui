@@ -1,10 +1,14 @@
 "use client"
 
+import { useRef } from "react"
+import { Upload, X } from "lucide-react"
+import { toast } from "sonner"
 import { cn } from "@/lib/utils"
+import { useT } from "@/lib/i18n/provider"
 
-export type WallpaperId = "sunset" | "aurora" | "ocean" | "ember" | "mono"
+export type WallpaperId = "sunset" | "aurora" | "ocean" | "ember" | "mono" | "custom"
 
-export const WALLPAPERS: { id: WallpaperId; label: string; preview: string; bg: string }[] = [
+export const WALLPAPERS: { id: Exclude<WallpaperId, "custom">; label: string; preview: string; bg: string }[] = [
   {
     id: "sunset",
     label: "Sunset",
@@ -37,8 +41,36 @@ export const WALLPAPERS: { id: WallpaperId; label: string; preview: string; bg: 
   },
 ]
 
-export function Wallpaper({ id, className }: { id: WallpaperId; className?: string }) {
-  const wp = WALLPAPERS.find((w) => w.id === id) ?? WALLPAPERS[0]
+const MAX_SIZE_BYTES = 5 * 1024 * 1024 // 5 MB
+
+/**
+ * Renders the active wallpaper. When `id === "custom"` and a `customUrl` is
+ * provided, it renders the user's image with cover sizing instead.
+ */
+export function Wallpaper({
+  id,
+  customUrl,
+  className,
+}: {
+  id: WallpaperId
+  customUrl?: string | null
+  className?: string
+}) {
+  if (id === "custom" && customUrl) {
+    return (
+      <div
+        aria-hidden
+        className={cn("absolute inset-0 transition-[background] duration-700", className)}
+        style={{
+          backgroundImage: `url("${customUrl}")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
+    )
+  }
+  const safeId = id === "custom" ? "aurora" : id
+  const wp = WALLPAPERS.find((w) => w.id === safeId) ?? WALLPAPERS[0]
   return (
     <div
       aria-hidden
@@ -50,13 +82,37 @@ export function Wallpaper({ id, className }: { id: WallpaperId; className?: stri
 
 export function WallpaperPicker({
   value,
+  customUrl,
   onChange,
+  onCustomUpload,
+  onCustomClear,
 }: {
   value: WallpaperId
+  customUrl: string | null
   onChange: (id: WallpaperId) => void
+  onCustomUpload: (dataUrl: string) => void
+  onCustomClear: () => void
 }) {
+  const t = useT()
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  const handleFile = (file: File) => {
+    if (file.size > MAX_SIZE_BYTES) {
+      toast.error(t("preview.wallpaper.tooLarge"))
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = () => {
+      const result = reader.result
+      if (typeof result === "string") {
+        onCustomUpload(result)
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+
   return (
-    <div className="flex items-center gap-2" role="radiogroup" aria-label="Wallpaper">
+    <div className="flex items-center gap-2" role="radiogroup" aria-label={t("preview.wallpaper")}>
       {WALLPAPERS.map((wp) => {
         const active = wp.id === value
         return (
@@ -79,6 +135,66 @@ export function WallpaperPicker({
           </button>
         )
       })}
+
+      {/* Custom wallpaper slot */}
+      {customUrl ? (
+        <div className="relative">
+          <button
+            type="button"
+            role="radio"
+            aria-checked={value === "custom"}
+            aria-label="Custom wallpaper"
+            title="Custom wallpaper"
+            onClick={() => onChange("custom")}
+            className={cn(
+              "relative h-7 w-7 overflow-hidden rounded-full ring-1 ring-white/15 transition-all duration-200",
+              "hover:scale-110 hover:ring-white/40",
+              value === "custom" && "scale-110 ring-2 ring-primary",
+            )}
+            style={{
+              backgroundImage: `url("${customUrl}")`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <span className="sr-only">Custom wallpaper</span>
+          </button>
+          <button
+            type="button"
+            onClick={onCustomClear}
+            aria-label="Remove custom wallpaper"
+            className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-foreground text-background shadow-md ring-2 ring-background transition-transform hover:scale-110"
+          >
+            <X className="h-2 w-2" strokeWidth={3} />
+          </button>
+        </div>
+      ) : null}
+
+      <button
+        type="button"
+        onClick={() => fileRef.current?.click()}
+        aria-label={t("preview.wallpaper.upload")}
+        title={t("preview.wallpaper.upload")}
+        className={cn(
+          "flex h-7 w-7 items-center justify-center rounded-full",
+          "border border-dashed border-foreground/20 text-muted-foreground",
+          "hover:border-foreground/40 hover:bg-foreground/5 hover:text-foreground",
+          "transition-colors",
+        )}
+      >
+        <Upload className="h-3 w-3" strokeWidth={2.5} />
+      </button>
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0]
+          if (file) handleFile(file)
+          e.target.value = "" // allow same-file re-selection
+        }}
+      />
     </div>
   )
 }

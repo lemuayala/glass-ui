@@ -33,32 +33,35 @@ import {
   User,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useT } from "@/lib/i18n/provider"
 
 /**
  * Live preview.
  *
- * Why we don't use react-native-web here:
- *  - The generated code uses *Tailwind utilities*, which render identically in
- *    the browser. Using RN-Web would add a heavy bridge with no visual gain
- *    for the utilities we expose. The generated code is still 100% valid
- *    React Native + NativeWind for export.
- *
  * Drag & drop:
  *  - The glass component can be dragged across the wallpaper using pointer
- *    events. This makes it obvious whether the chosen blur/intensity is
- *    actually transparent — the most common pitfall when designing glass UIs.
+ *    events. While dragging we DO NOT alter the component's visual style
+ *    (no scale, no extra shadow) — that way the user sees the *exact same*
+ *    blur/transparency they'll get in production. Only the cursor changes.
  */
 export function Preview({
   options,
   component,
   wallpaper,
+  customWallpaper,
   onWallpaper,
+  onCustomUpload,
+  onCustomClear,
 }: {
   options: GlassOptions
   component: ComponentKind
   wallpaper: WallpaperId
+  customWallpaper: string | null
   onWallpaper: (id: WallpaperId) => void
+  onCustomUpload: (dataUrl: string) => void
+  onCustomClear: () => void
 }) {
+  const t = useT()
   const stageRef = useRef<HTMLDivElement>(null)
   const [pos, setPos] = useState({ x: 0, y: 0 })
   const [dragging, setDragging] = useState(false)
@@ -85,7 +88,6 @@ export function Preview({
     const stage = stageRef.current.getBoundingClientRect()
     const dx = e.clientX - dragStart.current.px
     const dy = e.clientY - dragStart.current.py
-    // Clamp inside stage bounds with a 60px safe area
     const maxX = stage.width / 2 - 60
     const maxY = stage.height / 2 - 60
     const nextX = Math.max(-maxX, Math.min(maxX, dragStart.current.x + dx))
@@ -109,7 +111,7 @@ export function Preview({
     <div className="flex h-full flex-col">
       {/* Stage */}
       <div ref={stageRef} className="relative flex-1 overflow-hidden">
-        <Wallpaper id={wallpaper} />
+        <Wallpaper id={wallpaper} customUrl={customWallpaper} />
 
         {/* Backdrop content — gives the glass something to occlude */}
         {showBackdrop && <BackdropGrid />}
@@ -126,13 +128,17 @@ export function Preview({
         {/* Stage toolbar (top-right) */}
         <div className="absolute right-3 top-10 z-20 flex items-center gap-1.5">
           <ToolbarBtn
-            label={showBackdrop ? "Hide backdrop content" : "Show backdrop content"}
+            label={
+              showBackdrop
+                ? t("preview.toggleBackdrop.hide")
+                : t("preview.toggleBackdrop.show")
+            }
             onClick={() => setShowBackdrop((s) => !s)}
           >
             {showBackdrop ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
           </ToolbarBtn>
           <ToolbarBtn
-            label="Reset position"
+            label={t("preview.resetPosition")}
             onClick={() => setPos({ x: 0, y: 0 })}
             disabled={pos.x === 0 && pos.y === 0}
           >
@@ -140,7 +146,7 @@ export function Preview({
           </ToolbarBtn>
         </div>
 
-        {/* Draggable surface */}
+        {/* Draggable surface — visual is identical whether dragging or not */}
         <div
           className={cn(
             "relative z-10 flex h-full p-6",
@@ -158,11 +164,7 @@ export function Preview({
               cursor: dragging ? "grabbing" : "grab",
               touchAction: "none",
             }}
-            className={cn(
-              "select-none",
-              isBottomDocked && "w-full max-w-[340px]",
-              dragging && "scale-[1.02] drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)]",
-            )}
+            className={cn("select-none", isBottomDocked && "w-full max-w-[340px]")}
           >
             <ComponentStage component={component} options={options} />
           </div>
@@ -177,17 +179,23 @@ export function Preview({
             )}
           >
             <Move className="h-3 w-3" />
-            Drag to test transparency
+            {t("preview.dragHint")}
           </div>
         </div>
       </div>
 
       {/* Wallpaper picker bar */}
-      <div className="flex items-center justify-between gap-3 border-t border-white/5 bg-background/40 px-5 py-3 backdrop-blur-xl">
+      <div className="flex items-center justify-between gap-3 border-t border-border bg-background/40 px-5 py-3 backdrop-blur-xl">
         <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-          Wallpaper
+          {t("preview.wallpaper")}
         </span>
-        <WallpaperPicker value={wallpaper} onChange={onWallpaper} />
+        <WallpaperPicker
+          value={wallpaper}
+          customUrl={customWallpaper}
+          onChange={onWallpaper}
+          onCustomUpload={onCustomUpload}
+          onCustomClear={onCustomClear}
+        />
       </div>
     </div>
   )
@@ -367,8 +375,6 @@ function TabBarStage({ options }: { options: GlassOptions }) {
 
 /* -----------------------------------------------------------
  * Backdrop content — visual elements behind the glass.
- * The whole point: when dragging, the user can see exactly
- * how the chosen blur/intensity affects readability.
  * --------------------------------------------------------- */
 function BackdropGrid() {
   const items = [
