@@ -15,7 +15,7 @@
 <br/>
 
 <!-- Replace with actual screenshot -->
-![Glass UI Playground Screenshot](docs/screenshot.png)
+<img width="1534" height="857" alt="image" src="https://github.com/user-attachments/assets/6dd4e4df-4707-467e-8f07-3baff7092272" />
 
 </div>
 
