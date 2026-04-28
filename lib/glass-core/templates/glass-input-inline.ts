@@ -2,25 +2,23 @@ import { getGlassInputClasses } from "../variants"
 import type { GlassOptions } from "../types"
 
 /**
- * Inline export — TextInput snippet with NativeWind classes applied directly.
+ * Inline export — <input> snippet with all Tailwind classes applied.
  */
 export function renderGlassInputInline(options: GlassOptions): string {
   const classes = getGlassInputClasses(options).trim().replace(/\s+/g, " ")
   const placeholder = (options.text || "Search…").replace(/"/g, '\\"')
 
-  return `// 👇 Paste this anywhere inside your screen.
-// Requires: react-native + nativewind configured.
-import { TextInput } from "react-native"
+  return `// 👇 Paste this anywhere in your React component.
 import { useState } from "react"
 
 export function Example() {
   const [value, setValue] = useState("")
   return (
-    <TextInput
+    <input
+      type="text"
       value={value}
-      onChangeText={setValue}
+      onChange={(e) => setValue(e.target.value)}
       placeholder="${placeholder}"
-      placeholderTextColor="${options.theme === "dark" ? "rgba(255,255,255,0.55)" : "rgba(23,23,23,0.6)"}"
       className="${classes}"
     />
   )

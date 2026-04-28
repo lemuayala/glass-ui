@@ -14,6 +14,7 @@ import {
   Keyboard,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { PresetsMenu } from "./presets-menu"
 import type { GlassPreset } from "@/lib/glass-core/presets"
 import type { ComponentKind, GlassOptions } from "@/lib/glass-core/types"
@@ -156,23 +157,31 @@ export const Header = forwardRef<
           onOpenChange={onPresetsOpenChange}
         />
 
-        <button
-          type="button"
-          onClick={handleShare}
-          aria-label={t("actions.share")}
-          title={`${t("actions.share")} (S)`}
-          className="flex h-8 items-center gap-1.5 rounded-full border border-border bg-foreground/[0.03] px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
-        >
-          <Share2 className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">{t("actions.share")}</span>
-        </button>
+        <TooltipProvider>
+          <Tooltip delayDuration={300}>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={handleShare}
+                aria-label={t("actions.share")}
+                className="flex h-8 items-center gap-1.5 rounded-full border border-border bg-foreground/[0.03] px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+              >
+                <Share2 className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">{t("actions.share")}</span>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" sideOffset={8}>
+              {`${t("actions.share")} (S)`}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
         {/* Divider */}
         <div className="hidden h-5 w-px bg-border md:block" aria-hidden />
 
         <IconBtn
           ariaLabel={t("actions.shortcuts")}
-          title={`${t("actions.shortcuts")} (?)`}
+          tooltip={`${t("actions.shortcuts")} (?)`}
           onClick={onShowShortcuts}
         >
           <Keyboard className="h-3.5 w-3.5" />
@@ -180,7 +189,7 @@ export const Header = forwardRef<
 
         <IconBtn
           ariaLabel={t("actions.locale")}
-          title={`${t("actions.locale")} (L)`}
+          tooltip={`${t("actions.locale")} (L)`}
           onClick={toggleLocale}
         >
           <Languages className="h-3.5 w-3.5" />
@@ -191,7 +200,7 @@ export const Header = forwardRef<
 
         <IconBtn
           ariaLabel={isDark ? t("actions.theme.light") : t("actions.theme.dark")}
-          title={`${isDark ? t("actions.theme.light") : t("actions.theme.dark")} (T)`}
+          tooltip={`${isDark ? t("actions.theme.light") : t("actions.theme.dark")} (T)`}
           onClick={() => setTheme(isDark ? "light" : "dark")}
         >
           {!mounted ? (
@@ -228,23 +237,31 @@ function IconBtn({
   children,
   onClick,
   ariaLabel,
-  title,
+  tooltip,
 }: {
   children: React.ReactNode
   onClick: () => void
   ariaLabel: string
-  title: string
+  tooltip: string
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={ariaLabel}
-      title={title}
-      className="flex h-8 min-w-8 items-center justify-center rounded-full border border-border bg-foreground/[0.03] px-2 text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
-    >
-      {children}
-    </button>
+    <TooltipProvider>
+      <Tooltip delayDuration={300}>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            onClick={onClick}
+            aria-label={ariaLabel}
+            className="flex h-8 min-w-8 items-center justify-center rounded-full border border-border bg-foreground/[0.03] px-2 text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+          >
+            {children}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" sideOffset={8}>
+          {tooltip}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 

@@ -13,7 +13,7 @@ import { I18nProvider } from "@/lib/i18n/provider"
  */
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <NextThemes attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+    <NextThemes attribute="class" defaultTheme="dark" enableSystem>
       <I18nProvider>
         {children}
         <Toaster
@@ -22,7 +22,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           toastOptions={{
             classNames: {
               toast:
-                "rounded-2xl border border-white/10 bg-card/95 backdrop-blur-xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.5)]",
+                "rounded-2xl border border-white/10 !bg-black/40 !backdrop-blur-2xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.5)] !text-white",
               title: "text-sm font-semibold tracking-tight text-foreground",
               description: "text-xs text-muted-foreground leading-relaxed",
               actionButton:

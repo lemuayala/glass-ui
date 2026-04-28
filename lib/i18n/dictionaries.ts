@@ -27,6 +27,8 @@ export const dictionaries = {
     "actions.star": "Star",
     "actions.presets": "Presets",
     "actions.copy": "Copy",
+    "actions.copyWithUsage": "Copy component + usage",
+    "actions.copyUsageOnly": "Copy usage",
     "actions.download": "Download .tsx",
     "actions.reset": "Reset",
     "actions.theme.light": "Light theme",
@@ -40,6 +42,10 @@ export const dictionaries = {
     "share.toast.action": "Open",
     "code.toast.title": "Code copied",
     "code.toast.description": "Paste it into your project and you're good to go.",
+    "code.toast.withUsage.title": "Component + usage copied",
+    "code.toast.withUsage.description": "Includes the full component file and a ready-to-use call with your current props.",
+    "code.toast.usageOnly.title": "Usage snippet copied",
+    "code.toast.usageOnly.description": "Drop this call-site into any file that already imports the component.",
 
     "panel.properties": "Properties",
     "panel.code": "Code",
@@ -68,6 +74,7 @@ export const dictionaries = {
 
     "code.inline": "Inline",
     "code.reusable": "Reusable",
+    "code.reusable.callout": "Reusable mode — \"Copy\" exports the full component file. \"Usage\" copies a ready-to-use call with your current props.",
 
     "preview.wallpaper": "Wallpaper",
     "preview.wallpaper.upload": "Upload image",
@@ -76,6 +83,7 @@ export const dictionaries = {
     "preview.dragHint": "Drag to test transparency",
     "preview.toggleBackdrop.show": "Show backdrop content",
     "preview.toggleBackdrop.hide": "Hide backdrop content",
+    "preview.toggleFrame": "Toggle device frame",
     "preview.resetPosition": "Reset position",
 
     "presets.title": "Curated styles",
@@ -108,7 +116,7 @@ export const dictionaries = {
     "brand.name": "Glass UI",
     "brand.tagline": "Generador Glassmorphism",
 
-    "nav.card": "Tarjeta",
+    "nav.card": "Card",
     "nav.button": "Botón",
     "nav.input": "Input",
     "nav.modal": "Modal",
@@ -116,9 +124,11 @@ export const dictionaries = {
 
     "actions.share": "Compartir",
     "actions.copied": "Copiado",
-    "actions.star": "Estrella",
+    "actions.star": "Star",
     "actions.presets": "Presets",
     "actions.copy": "Copiar",
+    "actions.copyWithUsage": "Copiar componente + uso",
+    "actions.copyUsageOnly": "Copiar uso",
     "actions.download": "Descargar .tsx",
     "actions.reset": "Reset",
     "actions.theme.light": "Tema claro",
@@ -132,6 +142,10 @@ export const dictionaries = {
     "share.toast.action": "Abrir",
     "code.toast.title": "Código copiado",
     "code.toast.description": "Pégalo en tu proyecto y listo.",
+    "code.toast.withUsage.title": "Componente + uso copiado",
+    "code.toast.withUsage.description": "Incluye el componente completo y un ejemplo de uso con tus props actuales.",
+    "code.toast.usageOnly.title": "Snippet de uso copiado",
+    "code.toast.usageOnly.description": "Pégalo en cualquier archivo que ya importe el componente.",
 
     "panel.properties": "Propiedades",
     "panel.code": "Código",
@@ -160,6 +174,7 @@ export const dictionaries = {
 
     "code.inline": "Inline",
     "code.reusable": "Reutilizable",
+    "code.reusable.callout": "Modo reutilizable — \"Copiar\" exporta el componente completo. \"Uso\" copia la llamada lista con tus props actuales.",
 
     "preview.wallpaper": "Wallpaper",
     "preview.wallpaper.upload": "Subir imagen",
@@ -168,6 +183,7 @@ export const dictionaries = {
     "preview.dragHint": "Arrastra para ver la transparencia",
     "preview.toggleBackdrop.show": "Mostrar contenido detrás",
     "preview.toggleBackdrop.hide": "Ocultar contenido detrás",
+    "preview.toggleFrame": "Cambiar marco de dispositivo",
     "preview.resetPosition": "Reiniciar posición",
 
     "presets.title": "Estilos curados",

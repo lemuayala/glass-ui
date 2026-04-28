@@ -37,8 +37,11 @@ export interface GlassOptions {
   text?: string
 }
 
+export type Platform = "web" | "native"
+
 export interface CodegenInput {
   component: ComponentKind
   mode: ExportMode
+  platform: Platform
   options: GlassOptions
 }
