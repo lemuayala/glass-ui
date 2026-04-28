@@ -4,6 +4,7 @@ import { Moon, Sun, RotateCcw, Sliders, Type, Droplet } from "lucide-react"
 import { Segmented } from "./segmented"
 import { cn } from "@/lib/utils"
 import { useT } from "@/lib/i18n/provider"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import type { TranslationKey } from "@/lib/i18n/dictionaries"
 import type {
   ComponentKind,
@@ -135,14 +136,23 @@ export function Controls({
             {t("panel.properties")}
           </h2>
         </div>
-        <button
-          type="button"
-          onClick={() => onChange(defaultsFor(component))}
-          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
-        >
-          <RotateCcw className="h-3 w-3" />
-          {t("actions.reset")}
-        </button>
+        <TooltipProvider>
+          <Tooltip delayDuration={300}>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={() => onChange(defaultsFor(component))}
+                className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+              >
+                <RotateCcw className="h-3 w-3" />
+                {t("actions.reset")}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" sideOffset={6}>
+              {t("actions.reset")}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
       {/* Scrollable content */}
@@ -176,28 +186,35 @@ export function Controls({
             {(["none", "blue", "pink", "orange", "teal"] as GlassTint[]).map((tn) => {
               const active = options.tint === tn
               return (
-                <button
-                  key={tn}
-                  type="button"
-                  onClick={() => set("tint", tn)}
-                  aria-pressed={active}
-                  aria-label={tn}
-                  title={tn}
-                  className={cn(
-                    "group flex h-8 items-center justify-center rounded-[10px] transition-all duration-200",
-                    active
-                      ? "bg-foreground/10 shadow-[inset_0_1px_0_0_var(--gg-glass-inset-light),0_1px_2px_0_var(--gg-glass-inset-dark)]"
-                      : "hover:bg-foreground/[0.04]",
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "h-3.5 w-3.5 rounded-full ring-1",
-                      TINT_DOT[tn],
-                      active ? "ring-foreground/30" : "ring-foreground/10",
-                    )}
-                  />
-                </button>
+                <TooltipProvider key={tn}>
+                  <Tooltip delayDuration={300}>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={() => set("tint", tn)}
+                        aria-pressed={active}
+                        aria-label={tn}
+                        className={cn(
+                          "group flex h-8 items-center justify-center rounded-[10px] transition-all duration-200",
+                          active
+                            ? "bg-foreground/10 shadow-[inset_0_1px_0_0_var(--gg-glass-inset-light),0_1px_2px_0_var(--gg-glass-inset-dark)]"
+                            : "hover:bg-foreground/[0.04]",
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            "h-3.5 w-3.5 rounded-full ring-1",
+                            TINT_DOT[tn],
+                            active ? "ring-foreground/30" : "ring-foreground/10",
+                          )}
+                        />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" sideOffset={8} className="capitalize">
+                      {tn}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )
             })}
           </div>
