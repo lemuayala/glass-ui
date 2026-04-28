@@ -9,7 +9,7 @@ import { Preview } from "./preview"
 import { CodePanel } from "./code-panel"
 import { ShortcutsDialog } from "./shortcuts-dialog"
 import type { WallpaperId } from "./wallpaper"
-import { generateCode } from "@/lib/glass-core/codegen"
+import { generateCode, generateUsageSnippet } from "@/lib/glass-core/codegen"
 import type { ComponentKind, ExportMode, GlassOptions } from "@/lib/glass-core/types"
 import {
   type SerializedState,
@@ -21,6 +21,7 @@ import { applyPreset, type GlassPreset } from "@/lib/glass-core/presets"
 import { useShortcuts } from "./use-shortcuts"
 import { useI18n, useT } from "@/lib/i18n/provider"
 import { SITE } from "@/lib/config"
+import type { Platform } from "@/lib/glass-core/types"
 
 const COMPONENTS_BY_INDEX: ComponentKind[] = [
   "glass-card",
@@ -46,6 +47,7 @@ export function Generator() {
   const [hydrated, setHydrated] = useState(false)
   const [component, setComponent] = useState<ComponentKind>(FALLBACK_STATE.component)
   const [mode, setMode] = useState<ExportMode>(FALLBACK_STATE.mode)
+  const [platform, setPlatform] = useState<Platform>("web")
   const [options, setOptions] = useState<GlassOptions>(FALLBACK_STATE.options)
   const [wallpaper, setWallpaper] = useState<WallpaperId>(FALLBACK_STATE.wallpaper)
   const [customWallpaper, setCustomWallpaper] = useState<string | null>(null)
@@ -89,7 +91,8 @@ export function Generator() {
     setWallpaper((curr) => (curr === "custom" ? "aurora" : curr))
   }, [])
 
-  const code = useMemo(() => generateCode({ component, mode, options }), [component, mode, options])
+  const code = useMemo(() => generateCode({ component, mode, platform, options }), [component, mode, platform, options])
+  const usageSnippet = useMemo(() => generateUsageSnippet({ component, mode, platform, options }), [component, mode, platform, options])
 
   const shareUrl = useMemo(() => {
     if (typeof window === "undefined") return ""
@@ -147,7 +150,7 @@ export function Generator() {
 
       {/* Main grid — 3 columns on desktop, stack on mobile */}
       <main className="flex-1 px-4 py-4 md:px-6 md:py-6">
-        <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-4 lg:h-[calc(100vh-8rem)] lg:grid-cols-[300px_1fr_minmax(380px,520px)]">
+        <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-4 lg:h-[calc(100vh-8rem)] lg:grid-cols-[280px_1fr_minmax(400px,500px)] xl:grid-cols-[280px_1fr_480px] 2xl:grid-cols-[300px_1.1fr_560px]">
           <section
             aria-label={t("panel.properties")}
             className="gg-glass gg-glass-inset overflow-hidden rounded-2xl max-lg:max-h-[60vh]"
@@ -174,7 +177,7 @@ export function Generator() {
             aria-label={t("panel.code")}
             className="gg-glass gg-glass-inset overflow-hidden rounded-2xl max-lg:h-[70vh]"
           >
-            <CodePanel code={code} mode={mode} onMode={setMode} />
+            <CodePanel code={code} usageSnippet={usageSnippet} mode={mode} onMode={setMode} platform={platform} onPlatform={setPlatform} />
           </section>
         </div>
       </main>

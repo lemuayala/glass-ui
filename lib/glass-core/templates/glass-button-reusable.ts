@@ -2,15 +2,10 @@ import type { GlassOptions } from "../types"
 import { TINT_COMPOUNDS_SNIPPET, TINT_VARIANT_SNIPPET } from "./_shared"
 
 /**
- * Reusable export — full <GlassButton /> using CVA + tailwind-merge.
- * Future home: `@glass-ui/native`.
+ * Reusable export — full GlassButton component using CVA + tailwind-merge.
  */
 export function renderGlassButtonReusable(options: GlassOptions): string {
-  return `// glass-button.tsx
-// Drop this file into your project (e.g. components/ui/glass-button.tsx).
-// Requires: react-native, nativewind, class-variance-authority, tailwind-merge, clsx.
-import * as React from "react"
-import { Pressable, Text, type PressableProps } from "react-native"
+  return `import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { twMerge } from "tailwind-merge"
 import { clsx, type ClassValue } from "clsx"
@@ -76,30 +71,18 @@ ${TINT_COMPOUNDS_SNIPPET}
   },
 )
 
-export type GlassButtonProps = Omit<PressableProps, "children"> &
-  VariantProps<typeof glassButtonVariants> & {
-    className?: string
-    children?: React.ReactNode
-  }
+export interface GlassButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof glassButtonVariants> {}
 
-/**
- * <GlassButton /> — frosted-glass button for React Native + NativeWind.
- *
- * @example
- * <GlassButton theme="dark" rounded="full" tint="blue">
- *   Continue
- * </GlassButton>
- */
-export const GlassButton = React.forwardRef<React.ElementRef<typeof Pressable>, GlassButtonProps>(
-  ({ theme, blur, rounded, intensity, border, size, shadow, tint, className, children, ...props }, ref) => {
+export const GlassButton = React.forwardRef<HTMLButtonElement, GlassButtonProps>(
+  ({ className, theme, blur, rounded, intensity, border, size, shadow, tint, ...props }, ref) => {
     return (
-      <Pressable
+      <button
         ref={ref}
         className={cn(glassButtonVariants({ theme, blur, rounded, intensity, border, size, shadow, tint }), className)}
         {...props}
-      >
-        {typeof children === "string" ? <Text className="font-semibold">{children}</Text> : children}
-      </Pressable>
+      />
     )
   },
 )

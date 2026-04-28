@@ -134,43 +134,91 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   html,
   body {
     @apply bg-background text-foreground;
   }
+
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+  }
+
+  /* 
+   * PREMIUM THEME TRANSITIONS 
+   * Synchronized 500ms transition for a liquid, iOS-like feel.
+   * Covers colors, borders, and backdrop filters.
+   */
+  html,
+  body,
+  header,
+  nav,
+  footer,
+  button,
+  a,
+  input,
+  .gg-glass,
+  [class*="bg-"],
+  [class*="border-"],
+  [class*="text-"] {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow, backdrop-filter, -webkit-backdrop-filter, opacity;
+    transition-duration: 400ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Keep interactions snappy while maintaining smooth theme switches */
+  button:active,
+  a:active {
+    transition-duration: 100ms;
   }
 }
 
 /* ───── App-level utilities ───── */
 
 @keyframes gg-orb-drift {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(2%, -3%, 0) scale(1.05); }
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(2%, -3%, 0) scale(1.05);
+  }
 }
 
 .gg-orb {
   animation: gg-orb-drift 18s ease-in-out infinite;
   will-change: transform;
 }
-.gg-orb-2 { animation-duration: 22s; animation-delay: -6s; }
-.gg-orb-3 { animation-duration: 26s; animation-delay: -12s; }
+
+.gg-orb-2 {
+  animation-duration: 22s;
+  animation-delay: -6s;
+}
+
+.gg-orb-3 {
+  animation-duration: 26s;
+  animation-delay: -12s;
+}
 
 .gg-scroll {
   scrollbar-width: thin;
   scrollbar-color: var(--gg-scroll-thumb) transparent;
 }
+
 .gg-scroll::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
+
 .gg-scroll::-webkit-scrollbar-thumb {
   background: var(--gg-scroll-thumb);
   border-radius: 999px;
 }
+
 .gg-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
@@ -181,10 +229,12 @@
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
   border: 1px solid var(--gg-glass-border);
+  will-change: background-color, backdrop-filter, border-color;
 }
 
 .gg-glass-inset {
   box-shadow:
     inset 0 1px 0 0 var(--gg-glass-inset-light),
     0 1px 0 0 var(--gg-glass-inset-dark);
+  will-change: box-shadow;
 }

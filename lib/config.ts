@@ -19,7 +19,7 @@ const ENV_GITHUB =
   typeof process !== "undefined" ? process.env.NEXT_PUBLIC_GITHUB_URL : undefined
 
 export const GITHUB_REPO_URL =
-  ENV_GITHUB || "https://github.com/your-org/glass-ui"
+  ENV_GITHUB || "https://github.com/lemuayala/glass-ui"
 
 /** owner/repo extracted from a github.com URL, or null if not GitHub. */
 export function parseGitHubRepo(url: string): { owner: string; repo: string } | null {

@@ -1,11 +1,8 @@
-import type { GlassOptions } from "../types"
-import { TINT_COMPOUNDS_SNIPPET, TINT_VARIANT_SNIPPET } from "./_shared"
-
-/**
- * Reusable export — full GlassCard component using CVA + tailwind-merge.
- */
-export function renderGlassCardReusable(options: GlassOptions): string {
-  return `import * as React from "react"
+// glass-card.tsx
+// Drop this file into your React Native project.
+// Requires: react-native, nativewind, class-variance-authority, tailwind-merge, clsx.
+import * as React from "react"
+import { View, type ViewProps } from "react-native"
 import { cva, type VariantProps } from "class-variance-authority"
 import { twMerge } from "tailwind-merge"
 import { clsx, type ClassValue } from "clsx"
@@ -14,12 +11,6 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-/**
- * Variants for <GlassCard />.
- *
- * Generated from the Glass UI playground.
- * Tweak any value — every utility here is NativeWind-compatible.
- */
 export const glassCardVariants = cva("overflow-hidden", {
   variants: {
     theme: {
@@ -63,7 +54,13 @@ export const glassCardVariants = cva("overflow-hidden", {
       md: "shadow-md",
       lg: "shadow-xl",
     },
-    ${TINT_VARIANT_SNIPPET},
+    tint: {
+      none: "",
+      blue: "",
+      pink: "",
+      orange: "",
+      teal: "",
+    },
   },
   compoundVariants: [
     { theme: "light", intensity: "subtle", className: "bg-white/10" },
@@ -76,47 +73,51 @@ export const glassCardVariants = cva("overflow-hidden", {
     { theme: "light", border: "strong", className: "border-white/50" },
     { theme: "dark", border: "subtle", className: "border-white/10" },
     { theme: "dark", border: "strong", className: "border-white/20" },
-${TINT_COMPOUNDS_SNIPPET}
+    { tint: "blue", intensity: "subtle", className: "bg-blue-500/15" },
+    { tint: "blue", intensity: "medium", className: "bg-blue-500/25" },
+    { tint: "blue", intensity: "strong", className: "bg-blue-500/40" },
+    { tint: "pink", intensity: "subtle", className: "bg-pink-500/15" },
+    { tint: "pink", intensity: "medium", className: "bg-pink-500/25" },
+    { tint: "pink", intensity: "strong", className: "bg-pink-500/40" },
+    { tint: "orange", intensity: "subtle", className: "bg-orange-500/20" },
+    { tint: "orange", intensity: "medium", className: "bg-orange-500/30" },
+    { tint: "orange", intensity: "strong", className: "bg-orange-500/45" },
+    { tint: "teal", intensity: "subtle", className: "bg-teal-500/15" },
+    { tint: "teal", intensity: "medium", className: "bg-teal-500/25" },
+    { tint: "teal", intensity: "strong", className: "bg-teal-500/40" },
   ],
   defaultVariants: {
-    theme: "${options.theme}",
-    blur: "${options.blur}",
-    rounded: "${options.rounded}",
-    intensity: "${options.intensity}",
-    border: "${options.border}",
-    padding: "${options.padding}",
-    shadow: "${options.shadow}",
-    tint: "${options.tint}",
+    theme: "dark",
+    blur: "lg",
+    rounded: "3xl",
+    intensity: "medium",
+    border: "subtle",
+    padding: "md",
+    shadow: "lg",
+    tint: "teal",
   },
 })
 
-export interface GlassCardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof glassCardVariants> {}
-
-export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
-  ({ className, theme, blur, rounded, intensity, border, padding, shadow, tint, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={cn(glassCardVariants({ theme, blur, rounded, intensity, border, padding, shadow, tint }), className)}
-        {...props}
-      />
-    )
+export type GlassCardProps = ViewProps &
+  VariantProps<typeof glassCardVariants> & {
+    className?: string
+    children?: React.ReactNode
   }
+
+export const GlassCard = React.forwardRef<View, GlassCardProps>(
+  ({ theme, blur, rounded, intensity, border, padding, shadow, tint, className, children, ...props }, ref) => {
+    return (
+      <View
+        ref={ref}
+        className={cn(
+          glassCardVariants({ theme, blur, rounded, intensity, border, padding, shadow, tint }),
+          className,
+        )}
+        {...props}
+      >
+        {children}
+      </View>
+    )
+  },
 )
 GlassCard.displayName = "GlassCard"
-
-/* ---------- Usage ----------
-import { GlassCard } from "./components/ui/glass-card"
-import { Text } from "react-native"
-
-<GlassCard theme="${options.theme}" blur="${options.blur}" rounded="${options.rounded}" tint="${options.tint}">
-  <Text className="text-base font-semibold ${options.theme === "dark" ? "text-white" : "text-neutral-900"
-    }">
-    Glass Card
-  </Text>
-</GlassCard>
----------------------------- */
-`
-}

@@ -2,25 +2,18 @@ import { getGlassButtonClasses } from "../variants"
 import type { GlassOptions } from "../types"
 
 /**
- * Inline export — Pressable + Text snippet with NativeWind classes applied directly.
+ * Inline export — <button> snippet with all Tailwind classes applied.
  */
 export function renderGlassButtonInline(options: GlassOptions): string {
   const classes = getGlassButtonClasses(options).trim().replace(/\s+/g, " ")
   const label = (options.text || "Continue").replace(/"/g, '\\"')
 
-  return `// 👇 Paste this anywhere inside your screen.
-// Requires: react-native + nativewind configured.
-import { Pressable, Text } from "react-native"
-
+  return `// 👇 Paste this anywhere in your React component.
 export function Example() {
   return (
-    <Pressable className="${classes}">
-      <Text className="font-semibold ${
-        options.theme === "dark" ? "text-white" : "text-neutral-900"
-      }">
-        ${label}
-      </Text>
-    </Pressable>
+    <button className="${classes}">
+      ${label}
+    </button>
   )
 }
 `
