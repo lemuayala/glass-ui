@@ -20,7 +20,7 @@
   <br/>
   
   <!-- Add your real screenshot here -->
-  <img src="docs/screenshot.png" alt="Glass UI Interface" width="800" style="border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);"/>
+<img width="1530" height="1249" alt="image" src="https://github.com/user-attachments/assets/310fa706-0369-4a65-a2a3-162e9bbb1958" />
 
   <br/>
   <br/>
