@@ -17,14 +17,12 @@ export const metadata: Metadata = {
   title: "Glass UI — Glassmorphism Generator for React Native + NativeWind",
   description:
     "A premium playground to design and export Glassmorphism components for React Native (NativeWind) and Tailwind. Inline snippets or fully-typed CVA components.",
-  generator: "v0.app",
   icons: {
     icon: [
-      { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
-      { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" },
-      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/glass-logo-32.png", type: "image/png" },
+      { url: "/glass-logo-180.png", type: "image/png", sizes: "180x180" },
     ],
-    apple: "/apple-icon.png",
+    apple: "/glass-logo-180.png",
   },
 }
 

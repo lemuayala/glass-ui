@@ -12,7 +12,7 @@
 export const SITE = {
   name: "Glass UI",
   tagline: "Glassmorphism Generator",
-  version: "0.3.0",
+  version: "0.4.0",
 } as const
 
 const ENV_GITHUB =
