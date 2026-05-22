@@ -238,3 +238,221 @@
     0 1px 0 0 var(--gg-glass-inset-dark);
   will-change: box-shadow;
 }
+
+/* ────────────────────────────────────────────────────────────
+ *  SIRI GLOW — portfolio-style conic border (lemuel-ayala-portfolio)
+ * ─────────────────────────────────────────────────────────── */
+@property --liquid-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes liquid-rotate {
+  to {
+    --liquid-angle: 360deg;
+  }
+}
+
+.siri-glow {
+  position: relative;
+  isolation: isolate;
+}
+
+.siri-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--liquid-angle),
+    rgba(255, 255, 255, 0.12) 0deg,
+    #38bdf8 55deg,
+    #a78bfa 115deg,
+    #f472b6 185deg,
+    #fbbf24 255deg,
+    #22d3ee 320deg,
+    rgba(255, 255, 255, 0.1) 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition:
+    opacity 500ms ease,
+    filter 500ms ease;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.siri-glow:hover::after,
+.siri-glow:focus-within::after {
+  opacity: 1;
+  filter:
+    drop-shadow(0 0 10px rgba(56, 189, 248, 0.55))
+    drop-shadow(0 0 22px rgba(167, 139, 250, 0.4))
+    drop-shadow(0 0 36px rgba(244, 114, 182, 0.22));
+  animation: liquid-rotate 3.5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .siri-glow::after {
+    animation: none;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+ *  LANDING — floating tiles, marquee, grid mesh
+ * ─────────────────────────────────────────────────────────── */
+@keyframes gg-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -10px, 0); }
+}
+
+.gg-float-1 { animation: gg-float 6s ease-in-out infinite; }
+.gg-float-2 { animation: gg-float 7.5s ease-in-out -1.4s infinite; }
+.gg-float-3 { animation: gg-float 8s ease-in-out -3s infinite; }
+.gg-float-4 { animation: gg-float 6.5s ease-in-out -0.8s infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gg-float-1, .gg-float-2, .gg-float-3, .gg-float-4 { animation: none; }
+}
+
+@keyframes gg-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.gg-marquee {
+  animation: gg-marquee 38s linear infinite;
+  will-change: transform;
+}
+
+.gg-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* iPhone 17 Pro Max — fixed logical viewport (landing + future playground) */
+.gg-device-iphone-pro-max {
+  width: 440px;
+  height: 956px;
+  max-width: 100%;
+  flex-shrink: 0;
+  transform-style: preserve-3d;
+}
+
+.gg-device-scale-wrap {
+  width: 440px;
+  max-width: calc(100vw - 3rem);
+  margin-inline: auto;
+}
+
+@media (max-width: 520px) {
+  .gg-device-scale-wrap {
+    --gg-device-scale: min(1, calc((100vw - 3rem) / 440));
+    transform: scale(var(--gg-device-scale));
+    transform-origin: top center;
+    width: 440px;
+    margin-bottom: calc(956px * (var(--gg-device-scale) - 1));
+  }
+}
+
+/* Showcase — aurora drift + post-assembly polish */
+.gg-showcase-device {
+  transform-style: preserve-3d;
+}
+
+.gg-showcase-main {
+  scrollbar-width: none;
+}
+
+.gg-showcase-main::-webkit-scrollbar {
+  display: none;
+}
+
+.gg-showcase-wallpaper {
+  animation: gg-showcase-aurora 18s ease-in-out infinite alternate;
+}
+
+@keyframes gg-showcase-aurora {
+  0% { transform: scale(1) translate3d(0, 0, 0); filter: saturate(1); }
+  100% { transform: scale(1.06) translate3d(-2%, -1%, 0); filter: saturate(1.12); }
+}
+
+.gg-showcase-live .gg-showcase-progress {
+  animation: gg-showcase-progress 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Keep assembled UI visible — Anime must not rewind tiles after lock */
+.gg-showcase-live [data-showcase-tile],
+.gg-showcase-live [data-showcase-env] {
+  opacity: 1 !important;
+  filter: blur(0) !important;
+  transform: none !important;
+}
+
+@keyframes gg-showcase-progress {
+  from { width: 38%; }
+  to { width: 62%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gg-showcase-wallpaper { animation: none; }
+  .gg-showcase-live .gg-showcase-progress { animation: none; width: 52%; }
+}
+
+/* Premium grid mesh — barely visible, more dense on hero */
+.gg-grid-mesh {
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--foreground) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 6%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+}
+
+/* Word splits — make every split character look perfect */
+.split-line {
+  overflow: hidden;
+  display: inline-block;
+}
+
+.split-word,
+.split-char {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}
+
+/* Premium text gradient — Apple-style */
+.gg-text-grad {
+  background: linear-gradient(135deg,
+    oklch(0.95 0.005 260) 0%,
+    oklch(0.7 0.18 250) 35%,
+    oklch(0.7 0.2 320) 65%,
+    oklch(0.75 0.18 30) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Subtle shimmer for code panels */
+@keyframes gg-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.gg-shimmer {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in oklch, var(--foreground) 8%, transparent) 50%,
+    transparent 100%);
+  background-size: 200% 100%;
+  animation: gg-shimmer 3s linear infinite;
+}
