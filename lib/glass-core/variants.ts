@@ -372,8 +372,129 @@ export function getGlassTabBarClasses(o: GlassOptions): string {
   )
 }
 
+/* -----------------------------------------------------------
+ * GlassSwitch — toggle track wrapper
+ * --------------------------------------------------------- */
+export const glassSwitchVariants = cva("inline-flex items-center overflow-hidden", {
+  variants: {
+    theme: { light: "", dark: "" },
+    blur: blurVariants,
+    rounded: roundedVariants,
+    intensity: { subtle: "", medium: "", strong: "" },
+    border: borderVariants,
+    padding: {
+      sm: "h-7 w-12 p-0.5",
+      md: "h-8 w-14 p-0.5",
+      lg: "h-9 w-16 p-1",
+    },
+    shadow: shadowVariants,
+    tint: tintEmptyVariants,
+  },
+  compoundVariants: [
+    { theme: "light", intensity: "subtle", className: "bg-white/25" },
+    { theme: "light", intensity: "medium", className: "bg-white/40" },
+    { theme: "light", intensity: "strong", className: "bg-white/55" },
+    { theme: "dark", intensity: "subtle", className: "bg-white/10" },
+    { theme: "dark", intensity: "medium", className: "bg-white/18" },
+    { theme: "dark", intensity: "strong", className: "bg-white/28" },
+    { theme: "light", border: "subtle", className: "border-white/40" },
+    { theme: "light", border: "strong", className: "border-white/60" },
+    { theme: "dark", border: "subtle", className: "border-white/15" },
+    { theme: "dark", border: "strong", className: "border-white/25" },
+    ...tintCompounds,
+  ],
+  defaultVariants: {
+    theme: "dark",
+    blur: "md",
+    rounded: "full",
+    intensity: "medium",
+    border: "subtle",
+    padding: "md",
+    shadow: "sm",
+    tint: "none",
+  },
+})
+
+export function getGlassSwitchClasses(o: GlassOptions): string {
+  return merge(
+    glassSwitchVariants({
+      theme: o.theme,
+      blur: o.blur,
+      rounded: o.rounded,
+      intensity: o.intensity,
+      border: o.border,
+      padding: o.padding,
+      shadow: o.shadow,
+      tint: o.tint,
+    }),
+  )
+}
+
+/* -----------------------------------------------------------
+ * GlassNavigationBar — top bar
+ * --------------------------------------------------------- */
+export const glassNavbarVariants = cva(
+  "flex w-full items-center justify-between overflow-hidden",
+  {
+    variants: {
+      theme: { light: "", dark: "" },
+      blur: blurVariants,
+      rounded: roundedVariants,
+      intensity: { subtle: "", medium: "", strong: "" },
+      border: borderVariants,
+      padding: {
+        sm: "h-12 px-3",
+        md: "h-14 px-4",
+        lg: "h-16 px-5",
+      },
+      shadow: shadowVariants,
+      tint: tintEmptyVariants,
+    },
+    compoundVariants: [
+      { theme: "light", intensity: "subtle", className: "bg-white/20" },
+      { theme: "light", intensity: "medium", className: "bg-white/35" },
+      { theme: "light", intensity: "strong", className: "bg-white/50" },
+      { theme: "dark", intensity: "subtle", className: "bg-black/25" },
+      { theme: "dark", intensity: "medium", className: "bg-black/45" },
+      { theme: "dark", intensity: "strong", className: "bg-black/65" },
+      { theme: "light", border: "subtle", className: "border-white/30" },
+      { theme: "light", border: "strong", className: "border-white/50" },
+      { theme: "dark", border: "subtle", className: "border-white/10" },
+      { theme: "dark", border: "strong", className: "border-white/20" },
+      ...tintCompounds,
+    ],
+    defaultVariants: {
+      theme: "dark",
+      blur: "xl",
+      rounded: "none",
+      intensity: "medium",
+      border: "subtle",
+      padding: "md",
+      shadow: "sm",
+      tint: "none",
+    },
+  },
+)
+
+export function getGlassNavbarClasses(o: GlassOptions): string {
+  return merge(
+    glassNavbarVariants({
+      theme: o.theme,
+      blur: o.blur,
+      rounded: o.rounded,
+      intensity: o.intensity,
+      border: o.border,
+      padding: o.padding,
+      shadow: o.shadow,
+      tint: o.tint,
+    }),
+  )
+}
+
 export type GlassCardVariantProps = VariantProps<typeof glassCardVariants>
 export type GlassButtonVariantProps = VariantProps<typeof glassButtonVariants>
 export type GlassInputVariantProps = VariantProps<typeof glassInputVariants>
 export type GlassModalVariantProps = VariantProps<typeof glassModalVariants>
 export type GlassTabBarVariantProps = VariantProps<typeof glassTabBarVariants>
+export type GlassSwitchVariantProps = VariantProps<typeof glassSwitchVariants>
+export type GlassNavbarVariantProps = VariantProps<typeof glassNavbarVariants>

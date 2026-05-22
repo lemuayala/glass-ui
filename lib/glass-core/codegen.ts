@@ -9,8 +9,12 @@ import { renderGlassModalInline } from "./templates/glass-modal-inline"
 import { renderGlassModalReusable } from "./templates/glass-modal-reusable"
 import { renderGlassTabBarInline } from "./templates/glass-tabbar-inline"
 import { renderGlassTabBarReusable } from "./templates/glass-tabbar-reusable"
+import { renderGlassSwitchInline } from "./templates/glass-switch-inline"
+import { renderGlassSwitchReusable } from "./templates/glass-switch-reusable"
+import { renderGlassNavbarInline } from "./templates/glass-navbar-inline"
+import { renderGlassNavbarReusable } from "./templates/glass-navbar-reusable"
 import { renderGlassCardNativeInline, renderGlassCardNativeReusable } from "./templates/native/glass-card"
-import { 
+import {
   renderGlassButtonNativeInline,
   renderGlassButtonNativeReusable,
   renderGlassInputNativeInline,
@@ -20,15 +24,16 @@ import {
   renderGlassTabBarNativeInline,
   renderGlassTabBarNativeReusable,
 } from "./templates/native/others"
+import {
+  renderGlassSwitchNativeInline,
+  renderGlassSwitchNativeReusable,
+  renderGlassNavbarNativeInline,
+  renderGlassNavbarNativeReusable,
+} from "./templates/native/switch-navbar"
 
 /**
  * Single entry-point for code generation.
  * Switch on (component, mode) and dispatch to the right template.
- *
- * Adding a new component (Toast, NavBar, Switch...) means:
- *  1. Add it to \`ComponentKind\` in types.ts
- *  2. Create variants + templates following the GlassCard pattern
- *  3. Add a case here
  */
 export function generateCode(input: CodegenInput): string {
   const { component, mode, platform, options } = input
@@ -49,6 +54,12 @@ export function generateCode(input: CodegenInput): string {
     case "glass-tabbar":
       if (platform === "native") return mode === "inline" ? renderGlassTabBarNativeInline(options) : renderGlassTabBarNativeReusable(options)
       return mode === "inline" ? renderGlassTabBarInline(options) : renderGlassTabBarReusable(options)
+    case "glass-switch":
+      if (platform === "native") return mode === "inline" ? renderGlassSwitchNativeInline(options) : renderGlassSwitchNativeReusable(options)
+      return mode === "inline" ? renderGlassSwitchInline(options) : renderGlassSwitchReusable(options)
+    case "glass-navbar":
+      if (platform === "native") return mode === "inline" ? renderGlassNavbarNativeInline(options) : renderGlassNavbarNativeReusable(options)
+      return mode === "inline" ? renderGlassNavbarInline(options) : renderGlassNavbarReusable(options)
     default:
       return "// Unsupported component"
   }
@@ -109,10 +120,23 @@ import { Text } from "react-native"
 <GlassTabBar ${sharedProps} padding="${padding}">
   {/* your tab items here */}
 </GlassTabBar>`
+      case "glass-switch": {
+        const label = text || "Notifications"
+        return `import { GlassSwitch } from "./components/ui/glass-switch"
+
+<GlassSwitch ${sharedProps} size="${padding}" checked label="${label}" onCheckedChange={setOn} />`
+      }
+      case "glass-navbar": {
+        const title = text || "Glass UI"
+        return `import { GlassNavigationBar } from "./components/ui/glass-navbar"
+
+<GlassNavigationBar ${sharedProps} padding="${padding}" title="${title}" />`
+      }
+      default:
+        return ""
     }
   }
 
-  // Web
   switch (component) {
     case "glass-card": {
       const title = text || "Now Playing"
@@ -151,6 +175,18 @@ import { Text } from "react-native"
 <GlassTabBar ${sharedProps} padding="${padding}">
   {/* your tab items here */}
 </GlassTabBar>`
+    case "glass-switch": {
+      const label = text || "Notifications"
+      return `import { GlassSwitch } from "./components/ui/glass-switch"
+
+<GlassSwitch ${sharedProps} size="${padding}" checked label="${label}" onCheckedChange={setOn} />`
+    }
+    case "glass-navbar": {
+      const title = text || "Glass UI"
+      return `import { GlassNavigationBar } from "./components/ui/glass-navbar"
+
+<GlassNavigationBar ${sharedProps} padding="${padding}" title="${title}" />`
+    }
     default:
       return ""
   }
