@@ -1,11 +1,11 @@
 "use client"
 
+import Link from "next/link"
 import { forwardRef, useEffect, useState } from "react"
 import { useTheme } from "next-themes"
 import { toast } from "sonner"
 import {
   Github,
-  Sparkles,
   Share2,
   Star,
   Sun,
@@ -20,6 +20,7 @@ import type { GlassPreset } from "@/lib/glass-core/presets"
 import type { ComponentKind, GlassOptions } from "@/lib/glass-core/types"
 import { useI18n, useT } from "@/lib/i18n/provider"
 import { GITHUB_REPO_URL, parseGitHubRepo, SITE } from "@/lib/config"
+import { BrandLogo } from "./brand-logo"
 
 const COMPONENT_KEYS: ComponentKind[] = [
   "glass-card",
@@ -27,6 +28,8 @@ const COMPONENT_KEYS: ComponentKind[] = [
   "glass-input",
   "glass-modal",
   "glass-tabbar",
+  "glass-switch",
+  "glass-navbar",
 ]
 
 const COMPONENT_LABEL_KEY: Record<ComponentKind, string> = {
@@ -35,6 +38,8 @@ const COMPONENT_LABEL_KEY: Record<ComponentKind, string> = {
   "glass-input": "nav.input",
   "glass-modal": "nav.modal",
   "glass-tabbar": "nav.tabbar",
+  "glass-switch": "nav.switch",
+  "glass-navbar": "nav.navbar",
 }
 
 export const Header = forwardRef<
@@ -114,19 +119,16 @@ export const Header = forwardRef<
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-border bg-background/60 px-4 py-3 backdrop-blur-xl md:px-6">
       {/* Brand */}
-      <div className="flex items-center gap-2.5">
-        <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-primary to-primary/40 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3)]">
-          <Sparkles className="h-4 w-4 text-primary-foreground" strokeWidth={2.5} />
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent" />
-        </div>
+      <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-90">
+        <BrandLogo size={32} />
         <div className="flex flex-col leading-none">
           <span className="text-sm font-semibold tracking-tight">{SITE.name}</span>
           <span className="text-[10px] font-medium text-muted-foreground">{t("brand.tagline")}</span>
         </div>
-      </div>
+      </Link>
 
       {/* Component pills */}
-      <nav className="hidden items-center gap-0.5 rounded-full border border-border bg-foreground/[0.03] p-1 lg:flex">
+      <nav className="hidden max-w-[52vw] items-center gap-0.5 overflow-x-auto rounded-full border border-border bg-foreground/[0.03] p-1 lg:flex xl:max-w-none">
         {COMPONENT_KEYS.map((id) => {
           const active = id === component
           return (

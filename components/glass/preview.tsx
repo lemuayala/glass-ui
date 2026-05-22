@@ -8,6 +8,8 @@ import {
   getGlassInputClasses,
   getGlassModalClasses,
   getGlassTabBarClasses,
+  getGlassSwitchClasses,
+  getGlassNavbarClasses,
 } from "@/lib/glass-core/variants"
 import type { ComponentKind, GlassOptions } from "@/lib/glass-core/types"
 import {
@@ -266,21 +268,6 @@ export function Preview({
 /* -----------------------------------------------------------
  * Component-specific stages
  * --------------------------------------------------------- */
-function ComponentStage({
-  component,
-  options,
-}: {
-  component: ComponentKind
-  options: GlassOptions
-}) {
-  if (component === "glass-card") return <CardStage options={options} />
-  if (component === "glass-button") return <ButtonStage options={options} />
-  if (component === "glass-input") return <InputStage options={options} />
-  if (component === "glass-modal") return <ModalStage options={options} />
-  if (component === "glass-tabbar") return <TabBarStage options={options} />
-  return null
-}
-
 function CardStage({ options }: { options: GlassOptions }) {
   const isDark = options.theme === "dark"
   const title = options.text || "Now Playing"
@@ -381,6 +368,53 @@ function ModalStage({ options }: { options: GlassOptions }) {
   )
 }
 
+function SwitchStage({ options }: { options: GlassOptions }) {
+  const label = options.text || "Notifications"
+  const isDark = options.theme === "dark"
+  const [on, setOn] = useState(true)
+  const thumbOn = isDark ? "translate-x-6 bg-white" : "translate-x-6 bg-neutral-900"
+  const thumbOff = isDark ? "translate-x-0.5 bg-white/70" : "translate-x-0.5 bg-neutral-600"
+
+  return (
+    <label className="flex cursor-pointer items-center gap-3">
+      <button
+        type="button"
+        role="switch"
+        aria-checked={on}
+        onClick={() => setOn((v) => !v)}
+        className={cn(getGlassSwitchClasses(options), "relative transition-all duration-300")}
+      >
+        <span
+          className={cn(
+            "block h-6 w-6 rounded-full shadow-sm transition-transform",
+            on ? thumbOn : thumbOff,
+          )}
+        />
+      </button>
+      <span className={cn("text-sm font-medium", isDark ? "text-white" : "text-neutral-900")}>{label}</span>
+    </label>
+  )
+}
+
+function NavbarStage({ options }: { options: GlassOptions }) {
+  const title = options.text || "Glass UI"
+  const isDark = options.theme === "dark"
+  const fg = isDark ? "text-white" : "text-neutral-900"
+  const muted = isDark ? "text-white/60" : "text-neutral-600"
+
+  return (
+    <header className={cn(getGlassNavbarClasses(options), "w-[320px] max-w-full transition-all duration-300")}>
+      <button type="button" className={cn("text-sm font-medium", muted)}>
+        Back
+      </button>
+      <h1 className={cn("truncate text-base font-semibold", fg)}>{title}</h1>
+      <button type="button" className={cn("text-sm font-medium", muted)}>
+        Done
+      </button>
+    </header>
+  )
+}
+
 function TabBarStage({ options }: { options: GlassOptions }) {
   const isDark = options.theme === "dark"
   const tabs = [
@@ -433,6 +467,23 @@ function TabBarStage({ options }: { options: GlassOptions }) {
       })}
     </div>
   )
+}
+
+function ComponentStage({
+  component,
+  options,
+}: {
+  component: ComponentKind
+  options: GlassOptions
+}) {
+  if (component === "glass-card") return <CardStage options={options} />
+  if (component === "glass-button") return <ButtonStage options={options} />
+  if (component === "glass-input") return <InputStage options={options} />
+  if (component === "glass-modal") return <ModalStage options={options} />
+  if (component === "glass-tabbar") return <TabBarStage options={options} />
+  if (component === "glass-switch") return <SwitchStage options={options} />
+  if (component === "glass-navbar") return <NavbarStage options={options} />
+  return null
 }
 
 /* -----------------------------------------------------------
