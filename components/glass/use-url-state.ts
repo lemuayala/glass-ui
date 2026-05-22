@@ -24,6 +24,8 @@ export interface SerializedState {
   customWallpaper: string | null
 }
 
+export const PLAYGROUND_PATH = "/play"
+
 const STORAGE_KEY = "glass-ui-state-v1"
 const CUSTOM_WALLPAPER_KEY = "glass-ui-custom-wallpaper-v1"
 
@@ -33,6 +35,8 @@ const COMPONENT_SHORT: Record<ComponentKind, string> = {
   "glass-input": "input",
   "glass-modal": "modal",
   "glass-tabbar": "tabbar",
+  "glass-switch": "switch",
+  "glass-navbar": "navbar",
 }
 const COMPONENT_FROM: Record<string, ComponentKind> = {
   card: "glass-card",
@@ -40,6 +44,8 @@ const COMPONENT_FROM: Record<string, ComponentKind> = {
   input: "glass-input",
   modal: "glass-modal",
   tabbar: "glass-tabbar",
+  switch: "glass-switch",
+  navbar: "glass-navbar",
 }
 
 export function encodeState(state: SerializedState): string {
@@ -96,7 +102,9 @@ export function useStateSync(state: SerializedState) {
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
     rafRef.current = requestAnimationFrame(() => {
       const qs = encodeState(state)
-      const next = `${window.location.pathname}?${qs}`
+      const path =
+        window.location.pathname === "/" ? PLAYGROUND_PATH : window.location.pathname
+      const next = `${path}?${qs}`
       window.history.replaceState(null, "", next)
       try {
         window.localStorage.setItem(STORAGE_KEY, qs)
@@ -144,6 +152,8 @@ export function readInitialState(fallback: SerializedState): SerializedState {
 export function useShareUrl() {
   return useCallback((state: SerializedState) => {
     if (typeof window === "undefined") return ""
-    return `${window.location.origin}${window.location.pathname}?${encodeState(state)}`
+    const path =
+      window.location.pathname === "/" ? PLAYGROUND_PATH : window.location.pathname
+    return `${window.location.origin}${path}?${encodeState(state)}`
   }, [])
 }
