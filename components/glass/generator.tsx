@@ -10,13 +10,16 @@ import { CodePanel } from "./code-panel"
 import { ShortcutsDialog } from "./shortcuts-dialog"
 import type { WallpaperId } from "./wallpaper"
 import { generateCode, generateUsageSnippet } from "@/lib/glass-core/codegen"
+import { generateGlassPrompt, generateShortGlassPrompt } from "@/lib/glass-core/integration-prompt"
 import type { ComponentKind, ExportMode, GlassOptions } from "@/lib/glass-core/types"
 import {
   type SerializedState,
   encodeState,
   readInitialState,
   useStateSync,
+  PLAYGROUND_PATH,
 } from "./use-url-state"
+import { useProjectProfile } from "@/hooks/use-project-profile"
 import { applyPreset, type GlassPreset } from "@/lib/glass-core/presets"
 import { useShortcuts } from "./use-shortcuts"
 import { useI18n, useT } from "@/lib/i18n/provider"
@@ -29,6 +32,8 @@ const COMPONENTS_BY_INDEX: ComponentKind[] = [
   "glass-input",
   "glass-modal",
   "glass-tabbar",
+  "glass-switch",
+  "glass-navbar",
 ]
 
 const FALLBACK_STATE: SerializedState = {
@@ -53,6 +58,7 @@ export function Generator() {
   const [customWallpaper, setCustomWallpaper] = useState<string | null>(null)
   const [presetsOpen, setPresetsOpen] = useState(false)
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
+  const { profile, updateProfile } = useProjectProfile()
 
   // Hydrate once on client from URL > localStorage > fallback.
   useEffect(() => {
@@ -91,13 +97,28 @@ export function Generator() {
     setWallpaper((curr) => (curr === "custom" ? "aurora" : curr))
   }, [])
 
-  const code = useMemo(() => generateCode({ component, mode, platform, options }), [component, mode, platform, options])
-  const usageSnippet = useMemo(() => generateUsageSnippet({ component, mode, platform, options }), [component, mode, platform, options])
+  const codegenInput = useMemo(
+    () => ({ component, mode, platform, options }),
+    [component, mode, platform, options],
+  )
+
+  const code = useMemo(() => generateCode(codegenInput), [codegenInput])
+  const usageSnippet = useMemo(() => generateUsageSnippet(codegenInput), [codegenInput])
 
   const shareUrl = useMemo(() => {
     if (typeof window === "undefined") return ""
-    return `${window.location.origin}${window.location.pathname}?${encodeState(state)}`
+    return `${window.location.origin}${PLAYGROUND_PATH}?${encodeState(state)}`
   }, [state])
+
+  const glassPrompt = useMemo(
+    () => generateGlassPrompt({ codegen: codegenInput, profile, shareUrl: shareUrl || undefined }),
+    [codegenInput, profile, shareUrl],
+  )
+
+  const shortGlassPrompt = useMemo(
+    () => generateShortGlassPrompt({ codegen: codegenInput, profile }),
+    [codegenInput, profile],
+  )
 
   const handleShare = useCallback(async () => {
     if (!shareUrl) return
@@ -155,7 +176,13 @@ export function Generator() {
             aria-label={t("panel.properties")}
             className="gg-glass gg-glass-inset overflow-hidden rounded-2xl max-lg:max-h-[60vh]"
           >
-            <Controls component={component} options={options} onChange={setOptions} />
+            <Controls
+              component={component}
+              options={options}
+              onChange={setOptions}
+              profile={profile}
+              onProfileChange={updateProfile}
+            />
           </section>
 
           <section
@@ -177,7 +204,17 @@ export function Generator() {
             aria-label={t("panel.code")}
             className="gg-glass gg-glass-inset overflow-hidden rounded-2xl max-lg:h-[70vh]"
           >
-            <CodePanel code={code} usageSnippet={usageSnippet} mode={mode} onMode={setMode} platform={platform} onPlatform={setPlatform} />
+            <CodePanel
+              code={code}
+              usageSnippet={usageSnippet}
+              glassPrompt={glassPrompt}
+              shortGlassPrompt={shortGlassPrompt}
+              component={component}
+              mode={mode}
+              onMode={setMode}
+              platform={platform}
+              onPlatform={setPlatform}
+            />
           </section>
         </div>
       </main>
