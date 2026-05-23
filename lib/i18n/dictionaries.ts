@@ -34,30 +34,30 @@ export const dictionaries = {
     "profile.other": "Other",
 
     "glass.chars": "chars",
-    "glass.quick": "Quick prompt",
+    "glass.quick": "Short version",
     "glass.copyAll": "Copy GLASS.md",
-    "glass.toast.copied.title": "Prompt copied",
-    "glass.toast.copied.description": "Paste into Cursor, Claude, or your AI agent.",
+    "glass.toast.copied.title": "Copied",
+    "glass.toast.copied.description": "Paste into your editor or chat when you're ready.",
     "glass.howTo.title": "How to use",
     "glass.howTo.step1": "Tune the component and target project in the left panel.",
-    "glass.howTo.step2": "GLASS.md updates live with your design and stack.",
-    "glass.howTo.step3": "Copy and paste into your coding agent to integrate correctly.",
+    "glass.howTo.step2": "GLASS.md updates as you change blur, tint, and export mode.",
+    "glass.howTo.step3": "Copy it into your repo, or paste it into Cursor, Claude, or Copilot.",
 
-    "landing.badge": "Glass components · v0.4",
-    "landing.headline": "Glassmorphism that ships.",
+    "landing.badge": "Glass components · v0.4.0",
+    "landing.headlineLead": "Glassmorphism",
+    "landing.headlineAccent": "that ships.",
     "landing.subhead":
-      "Design iOS-grade glass components and export them as TSX, CVA components or GLASS.md prompts that any AI agent can integrate into your project.",
+      "Tune iOS-style glass in a live playground with iPhone and iPad preview. Export Tailwind and NativeWind TSX, CVA components, shareable URLs, and GLASS.md.",
     "landing.cta.play": "Open playground",
-    "landing.live": "Live — try every component",
+    "landing.live": "Live preview below",
     "landing.scrollHint": "Primitives",
     "landing.nav.playground": "Playground",
-    "landing.nav.native": "Native",
 
     "landing.showcase.eyebrow": "Primitives",
     "landing.showcase.title": "Seven components. One glass system.",
     "landing.showcase.desc":
-      "A full Now Playing screen inside an iPhone shell — same glass primitives you tune in the playground. Hover any block to see its name.",
-    "landing.showcase.deviceLabel": "Live assembly",
+      "A full Now Playing screen inside an iPhone shell — the same primitives you tune in the playground. On desktop, hover a block; on touch devices, tap to see its name.",
+    "landing.showcase.deviceLabel": "Live preview",
     "landing.showcase.appName": "Now Playing",
     "landing.showcase.back": "Library",
     "landing.showcase.done": "Edit",
@@ -74,55 +74,57 @@ export const dictionaries = {
     "landing.showcase.sectionPrefs": "Preferences",
     "landing.showcase.sectionPrompt": "Confirmation",
 
-    "landing.code.title": "A prompt your AI agent can read.",
+    "landing.code.title": "GLASS.md export",
     "landing.code.desc":
-      "GLASS.md ships every detail your coding agent needs: design tokens, generated code, file paths, and acceptance criteria — tailored to your project.",
-    "landing.code.b1": "Design spec — theme, blur, radius, intensity, border",
-    "landing.code.b2": "Generated TSX — inline or reusable CVA",
-    "landing.code.b3": "Integration steps for Cursor, Claude, Copilot",
+      "One markdown file with your tokens, the generated TSX, suggested file paths, and a short checklist before you merge.",
+    "landing.code.b1": "Tokens — theme, blur, radius, intensity, borders",
+    "landing.code.b2": "TSX — inline snippet or reusable CVA component",
+    "landing.code.b3": "Works with Cursor, Claude, Copilot, or copy by hand",
 
     "landing.steps.eyebrow": "How it works",
-    "landing.steps.title": "From design to deployed in three steps.",
+    "landing.steps.title": "Three steps.",
     "landing.step1.title": "Design in the playground",
-    "landing.step1.desc": "Pick a primitive, tune the glass, preview live across web and native.",
-    "landing.step2.title": "Export the right surface",
-    "landing.step2.desc": "TSX for web, NativeWind templates on the Native page, or a full GLASS.md prompt.",
-    "landing.step3.title": "Integrate with your AI agent",
-    "landing.step3.desc": "Drop GLASS.md into Cursor or Claude — the component lands ready.",
+    "landing.step1.desc":
+      "Pick a primitive, tune blur and tint, and preview on web and native with device frames and wallpapers.",
+    "landing.step2.title": "Export the right format",
+    "landing.step2.desc":
+      "Web TSX or NativeWind from the Native tab, inline or reusable CVA — plus GLASS.md with paths and tokens.",
+    "landing.step3.title": "Paste GLASS.md",
+    "landing.step3.desc":
+      "Drop it into Cursor, Claude, or Copilot — or use the checklist and copy what you need yourself.",
 
     "landing.stat.components": "Primitives",
-    "landing.stat.templates": "Templates",
-    "landing.stat.exports": "Surfaces",
-    "landing.stat.tokens": "Design tokens",
+    "landing.stat.templates": "Code variants",
+    "landing.stat.exports": "Export modes",
+    "landing.stat.controls": "Glass controls",
 
-    "landing.cta.eyebrow": "Start building",
-    "landing.cta.title": "Ship glass that feels iOS-native.",
+    "landing.cta.eyebrow": "Try it",
+    "landing.cta.title": "Open the playground.",
     "landing.cta.desc":
-      "Open the playground, design a component, copy the GLASS.md prompt, and let your AI agent do the rest.",
+      "Pick a component, adjust blur and tint, then copy TSX or GLASS.md into your project.",
 
-    "landing.footer": "Crafted for React Native + NativeWind. Tailwind on the web works too.",
+    "landing.footer":
+      "Playground for Tailwind (web) and NativeWind (React Native). Export TSX, CVA, and GLASS.md.",
 
     "actions.scrollTop": "Back to top",
 
     "native.tagline": "React Native + NativeWind",
-    "native.nav.web": "Web landing",
     "native.eyebrow": "Mobile surface",
-    "native.title": "Glass that ships to React Native.",
+    "native.title": "Same glass on React Native.",
     "native.desc":
-      "Every primitive exports as a NativeWind-ready View, Pressable, or TextInput — same tokens you tune in the playground, zero guesswork for mobile.",
+      "Each primitive exports as a NativeWind View, Pressable, or TextInput — same tokens as the web preview.",
     "native.cta.play": "Open playground",
-    "native.cta.back": "← Web landing",
     "native.feat1.title": "NativeWind classes",
     "native.feat1.desc": "backdrop-blur, borders, and CVA variants map 1:1 from the web playground.",
     "native.feat2.title": "Inline or reusable",
     "native.feat2.desc": "Drop a snippet into a screen or copy a typed component file.",
-    "native.feat3.title": "GLASS.md for agents",
-    "native.feat3.desc": "Your coding agent gets install steps, file paths, and acceptance checks for Expo.",
+    "native.feat3.title": "GLASS.md included",
+    "native.feat3.desc": "Install notes, file paths, and a short checklist for Expo.",
     "native.footer": "React Native · NativeWind · Expo-ready exports.",
 
     "actions.share": "Share",
     "actions.copied": "Copied",
-    "actions.star": "Star",
+    "actions.star": "Star on GitHub",
     "actions.presets": "Presets",
     "actions.copy": "Copy",
     "actions.copyWithUsage": "Copy component + usage",
@@ -148,6 +150,8 @@ export const dictionaries = {
     "panel.properties": "Properties",
     "panel.code": "Code",
     "panel.preview": "Preview",
+    "play.componentPicker": "Component type",
+    "play.mobile.tabs": "Playground panels",
     "panel.theme": "Theme",
     "panel.tint": "Tint",
     "panel.blur": "Blur",
@@ -168,11 +172,12 @@ export const dictionaries = {
     "panel.theme.light": "Light",
     "panel.theme.dark": "Dark",
     "panel.footer":
-      "Every change updates the live preview, the URL and the exported code. All utilities are NativeWind-compatible.",
+      "Every change updates the live preview, share URL, and exports. Utilities are NativeWind-compatible on native.",
 
     "code.inline": "Inline",
     "code.reusable": "Reusable",
-    "code.reusable.callout": "Reusable mode — \"Copy\" exports the full component file. \"Usage\" copies a ready-to-use call with your current props.",
+    "code.reusable.callout":
+      "Reusable mode — \"Copy\" exports the full component file. \"Usage\" copies a ready-to-use call with your current props.",
 
     "preview.wallpaper": "Wallpaper",
     "preview.wallpaper.upload": "Upload image",
@@ -188,7 +193,7 @@ export const dictionaries = {
     "presets.frosted.name": "Frosted",
     "presets.frosted.description": "Soft & airy — Apple Music card vibe",
     "presets.liquid.name": "Liquid Glass",
-    "presets.liquid.description": "iOS 26 tinted blue — heavy blur",
+    "presets.liquid.description": "Deep blue tint — strong blur",
     "presets.smoked.name": "Smoked",
     "presets.smoked.description": "Dark theatre — minimal & moody",
     "presets.crystal.name": "Crystal",
@@ -208,14 +213,15 @@ export const dictionaries = {
     "shortcuts.close": "Close dialogs",
 
     "footer.text":
-      "Built for React Native + NativeWind. Tailwind on the web works too.",
+      "Playground for Tailwind (web) and NativeWind (React Native). Export TSX, CVA, and GLASS.md.",
+    "footer.madeBy": "Made with ❤️ by",
   },
   es: {
     "brand.name": "Glass UI",
     "brand.tagline": "Generador Glassmorphism",
 
     "nav.card": "Card",
-    "nav.button": "Botón",
+    "nav.button": "Button",
     "nav.input": "Input",
     "nav.modal": "Modal",
     "nav.tabbar": "Tab Bar",
@@ -232,30 +238,30 @@ export const dictionaries = {
     "profile.other": "Otro",
 
     "glass.chars": "caracteres",
-    "glass.quick": "Prompt rápido",
+    "glass.quick": "Versión corta",
     "glass.copyAll": "Copiar GLASS.md",
-    "glass.toast.copied.title": "Prompt copiado",
-    "glass.toast.copied.description": "Pégalo en Cursor, Claude o tu agente de IA.",
+    "glass.toast.copied.title": "Copiado",
+    "glass.toast.copied.description": "Pégalo en tu editor o chat cuando quieras.",
     "glass.howTo.title": "Cómo usar",
     "glass.howTo.step1": "Ajusta el componente y el proyecto destino en el panel izquierdo.",
-    "glass.howTo.step2": "GLASS.md se actualiza en vivo con tu diseño y stack.",
-    "glass.howTo.step3": "Copia y pega en tu agente para integrar correctamente.",
+    "glass.howTo.step2": "GLASS.md cambia cuando mueves blur, tinte o modo de exportación.",
+    "glass.howTo.step3": "Cópialo al repo o pégalo en Cursor, Claude o Copilot.",
 
-    "landing.badge": "Componentes glass · v0.4",
-    "landing.headline": "Glassmorphism listo para producción.",
+    "landing.badge": "Componentes glass · v0.4.0",
+    "landing.headlineLead": "Glassmorphism",
+    "landing.headlineAccent": "sin vueltas.",
     "landing.subhead":
-      "Diseña componentes glass estilo iOS y expórtalos como TSX, componentes CVA o prompts GLASS.md que cualquier agente de IA puede integrar en tu proyecto.",
+      "Ajusta glass estilo iOS con vista previa en iPhone e iPad. Exporta TSX para Tailwind y NativeWind, componentes CVA, URLs para compartir y GLASS.md.",
     "landing.cta.play": "Abrir playground",
-    "landing.live": "En vivo — prueba cada componente",
+    "landing.live": "Vista previa en vivo abajo",
     "landing.scrollHint": "Primitivos",
     "landing.nav.playground": "Playground",
-    "landing.nav.native": "Nativo",
 
     "landing.showcase.eyebrow": "Primitivos",
-    "landing.showcase.title": "Siete componentes. Un solo sistema glass.",
+    "landing.showcase.title": "Siete componentes, mismo glass.",
     "landing.showcase.desc":
-      "Una pantalla Now Playing completa dentro de un iPhone — los mismos primitivos glass que afinas en el playground. Pasa el cursor sobre cada bloque para ver su nombre.",
-    "landing.showcase.deviceLabel": "Ensamblaje en vivo",
+      "Una pantalla Now Playing en un iPhone — los mismos bloques del playground. En escritorio, pasa el cursor; en móvil, toca para ver el nombre.",
+    "landing.showcase.deviceLabel": "Vista previa en vivo",
     "landing.showcase.appName": "En reproducción",
     "landing.showcase.back": "Biblioteca",
     "landing.showcase.done": "Editar",
@@ -272,56 +278,58 @@ export const dictionaries = {
     "landing.showcase.sectionPrefs": "Preferencias",
     "landing.showcase.sectionPrompt": "Confirmación",
 
-    "landing.code.title": "Un prompt que tu agente puede leer.",
+    "landing.code.title": "Exporta GLASS.md",
     "landing.code.desc":
-      "GLASS.md entrega cada detalle que tu agente necesita: tokens de diseño, código generado, rutas de archivos y criterios de aceptación — adaptado a tu proyecto.",
-    "landing.code.b1": "Spec de diseño — theme, blur, radius, intensity, border",
-    "landing.code.b2": "TSX generado — inline o componente CVA",
-    "landing.code.b3": "Pasos de integración para Cursor, Claude, Copilot",
+      "Un solo archivo con tus tokens, el TSX generado, rutas sugeridas y una lista corta para revisar antes de integrar.",
+    "landing.code.b1": "Tokens — tema, blur, radio, intensidad y bordes",
+    "landing.code.b2": "TSX — snippet inline o componente CVA reutilizable",
+    "landing.code.b3": "Sirve en Cursor, Claude, Copilot o a mano",
 
     "landing.steps.eyebrow": "Cómo funciona",
-    "landing.steps.title": "Del diseño al deploy en tres pasos.",
+    "landing.steps.title": "Tres pasos.",
     "landing.step1.title": "Diseña en el playground",
-    "landing.step1.desc": "Elige un primitivo, ajusta el glass, ve la preview en vivo web y native.",
+    "landing.step1.desc":
+      "Elige un primitivo, ajusta blur y tinte, y previsualiza en web y native con marcos de dispositivo y fondos.",
     "landing.step2.title": "Exporta el formato adecuado",
-    "landing.step2.desc": "TSX para web, templates NativeWind en la página Nativo, o un prompt GLASS.md completo.",
-    "landing.step3.title": "Integra con tu agente IA",
-    "landing.step3.desc": "Pega GLASS.md en Cursor o Claude — el componente aterriza listo.",
+    "landing.step2.desc":
+      "TSX web o NativeWind en la pestaña Native, inline o CVA — y GLASS.md con rutas y tokens.",
+    "landing.step3.title": "Pega GLASS.md",
+    "landing.step3.desc":
+      "En Cursor, Claude o Copilot — o usa la lista y copia solo lo que necesites.",
 
     "landing.stat.components": "Primitivos",
-    "landing.stat.templates": "Templates",
-    "landing.stat.exports": "Formatos",
-    "landing.stat.tokens": "Design tokens",
+    "landing.stat.templates": "Variantes de código",
+    "landing.stat.exports": "Modos de exportación",
+    "landing.stat.controls": "Controles glass",
 
-    "landing.cta.eyebrow": "Empieza a construir",
-    "landing.cta.title": "Envía glass que se siente nativo iOS.",
+    "landing.cta.eyebrow": "Pruébalo",
+    "landing.cta.title": "Abre el playground.",
     "landing.cta.desc":
-      "Abre el playground, diseña un componente, copia el prompt GLASS.md, y deja que tu agente IA haga el resto.",
+      "Elige un componente, mueve blur y tinte, y lleva el TSX o GLASS.md a tu proyecto.",
 
-    "landing.footer": "Hecho para React Native + NativeWind. También funciona con Tailwind en web.",
+    "landing.footer":
+      "Playground para Tailwind (web) y NativeWind (React Native). Exporta TSX, CVA y GLASS.md.",
 
     "actions.scrollTop": "Volver arriba",
 
     "native.tagline": "React Native + NativeWind",
-    "native.nav.web": "Landing web",
     "native.eyebrow": "Superficie móvil",
-    "native.title": "Glass listo para React Native.",
+    "native.title": "El mismo glass en React Native.",
     "native.desc":
-      "Cada primitivo exporta como View, Pressable o TextInput con NativeWind — los mismos tokens del playground, sin adivinar en mobile.",
+      "Cada primitivo sale como View, Pressable o TextInput con NativeWind — mismos tokens que en web.",
     "native.cta.play": "Abrir playground",
-    "native.cta.back": "← Landing web",
     "native.feat1.title": "Clases NativeWind",
     "native.feat1.desc": "backdrop-blur, bordes y variantes CVA 1:1 desde el playground web.",
     "native.feat2.title": "Inline o reutilizable",
     "native.feat2.desc": "Snippet en una pantalla o archivo de componente tipado.",
-    "native.feat3.title": "GLASS.md para agentes",
-    "native.feat3.desc": "Tu agente recibe install, rutas de archivo y criterios de aceptación para Expo.",
+    "native.feat3.title": "Incluye GLASS.md",
+    "native.feat3.desc": "Notas de install, rutas y un checklist breve para Expo.",
     "native.footer": "React Native · NativeWind · exports listos para Expo.",
 
     "actions.share": "Compartir",
     "actions.copied": "Copiado",
-    "actions.star": "Star",
-    "actions.presets": "Presets",
+    "actions.star": "Destacar en GitHub",
+    "actions.presets": "Estilos",
     "actions.copy": "Copiar",
     "actions.copyWithUsage": "Copiar componente + uso",
     "actions.copyUsageOnly": "Copiar uso",
@@ -334,7 +342,7 @@ export const dictionaries = {
 
     "share.toast.title": "Link copiado al portapapeles",
     "share.toast.description":
-      "Comparte este diseño con un amigo o compañero — verá exactamente lo mismo que tú.",
+      "Quien abra el link verá el mismo diseño que tú.",
     "share.toast.action": "Abrir",
     "code.toast.title": "Código copiado",
     "code.toast.description": "Pégalo en tu proyecto y listo.",
@@ -345,7 +353,9 @@ export const dictionaries = {
 
     "panel.properties": "Propiedades",
     "panel.code": "Código",
-    "panel.preview": "Preview",
+    "panel.preview": "Vista previa",
+    "play.componentPicker": "Tipo de componente",
+    "play.mobile.tabs": "Paneles del playground",
     "panel.theme": "Tema",
     "panel.tint": "Tinte",
     "panel.blur": "Blur",
@@ -366,13 +376,14 @@ export const dictionaries = {
     "panel.theme.light": "Claro",
     "panel.theme.dark": "Oscuro",
     "panel.footer":
-      "Cada cambio actualiza la preview, la URL y el código exportado. Todas las utilidades son compatibles con NativeWind.",
+      "Cada cambio actualiza la vista previa, la URL compartible y las exportaciones. En native, las utilidades son compatibles con NativeWind.",
 
     "code.inline": "Inline",
     "code.reusable": "Reutilizable",
-    "code.reusable.callout": "Modo reutilizable — \"Copiar\" exporta el componente completo. \"Uso\" copia la llamada lista con tus props actuales.",
+    "code.reusable.callout":
+      "Modo reutilizable — «Copiar» exporta el archivo del componente. «Uso» copia la llamada lista con tus props actuales.",
 
-    "preview.wallpaper": "Wallpaper",
+    "preview.wallpaper": "Fondo",
     "preview.wallpaper.upload": "Subir imagen",
     "preview.wallpaper.uploading": "Cargando…",
     "preview.wallpaper.tooLarge": "La imagen es demasiado grande (máx 5 MB)",
@@ -384,9 +395,9 @@ export const dictionaries = {
 
     "presets.title": "Estilos curados",
     "presets.frosted.name": "Frosted",
-    "presets.frosted.description": "Suave y aireado — vibe Apple Music",
+    "presets.frosted.description": "Suave y aireado — estilo Apple Music",
     "presets.liquid.name": "Liquid Glass",
-    "presets.liquid.description": "iOS 26 azul — blur intenso",
+    "presets.liquid.description": "Tinte azul profundo — blur intenso",
     "presets.smoked.name": "Smoked",
     "presets.smoked.description": "Oscuro y elegante — minimal",
     "presets.crystal.name": "Crystal",
@@ -406,7 +417,8 @@ export const dictionaries = {
     "shortcuts.close": "Cerrar diálogos",
 
     "footer.text":
-      "Hecho para React Native + NativeWind. También funciona con Tailwind en web.",
+      "Playground para Tailwind (web) y NativeWind (React Native). Exporta TSX, CVA y GLASS.md.",
+    "footer.madeBy": "Hecho con ❤️ por",
   },
 } as const
 
