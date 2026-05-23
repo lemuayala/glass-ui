@@ -1,54 +1,99 @@
-# Glass UI
+<div align="center">
 
-Playground to tune iOS-style glassmorphism and copy the result into your app.  
-Seven primitives, live preview on web and native, four export shapes, plus **GLASS.md** for pasting into Cursor, Claude, or Copilot.
+  <br/>
+  <h1>Glass UI</h1>
+  <p><b>Glassmorphism playground for web and React Native.</b></p>
+  <br/>
 
-**[Open playground →](https://glass-ui.vercel.app/play)** · [Landing](https://glass-ui.vercel.app)
+  <p>
+    Tune seven iOS-style primitives, preview on iPhone or iPad,<br/>
+    export Tailwind / NativeWind TSX, and copy <b>GLASS.md</b> for your editor or agent.
+  </p>
 
-<img width="1530" height="1249" alt="Glass UI playground" src="https://github.com/user-attachments/assets/310fa706-0369-4a65-a2a3-162e9bbb1958" />
+  <br/>
+
+  [![Live Demo](https://img.shields.io/badge/Live%20Demo-glass--ui.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://glass-ui.vercel.app/play)
+  [![Playground](https://img.shields.io/badge/Open-Playground-111827?style=for-the-badge)](https://glass-ui.vercel.app/play)
+  [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs)](https://nextjs.org)
+  [![React](https://img.shields.io/badge/React-19-149eca?style=for-the-badge&logo=react&logoColor=white)](https://react.dev)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+  [![License](https://img.shields.io/badge/License-MIT-black?style=for-the-badge)](LICENSE)
+  [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-black?style=for-the-badge)](CONTRIBUTING.md)
+
+  <br/>
+
+  <img width="1530" height="1249" alt="Glass UI playground" src="https://github.com/user-attachments/assets/310fa706-0369-4a65-a2a3-162e9bbb1958" />
+
+  <br/>
+  <br/>
+</div>
+
+<hr/>
 
 ## What you get
 
-- **Playground** (`/play`) — pick Card, Button, Input, Modal, Tab Bar, Switch, or Nav Bar; adjust blur, tint, radius, intensity, borders, padding, and shadow.
-- **Device preview** — iPhone, iPad, or full-width; optional wallpaper upload to check transparency.
-- **Presets** — Frosted, Liquid Glass, Smoked, Crystal, Sunset, Aqua (starting points, not locked styles).
-- **Export**
-  - Web: inline Tailwind snippet or reusable CVA component
-  - Native: NativeWind inline or typed component file
-  - **GLASS.md** — tokens, generated TSX, suggested paths, and a short checklist for your stack (Next, Vite, Expo, etc.)
-- **Shareable URL** — encodes component + props so someone else sees the same design.
-- **EN / ES** — UI strings; component names stay in English in the nav (Card, Button, …).
+- **Playground** (`/play`) — Card, Button, Input, Modal, Tab Bar, Switch, Nav Bar; blur, tint, radius, intensity, borders, padding, shadow.
+- **Device preview** — iPhone, iPad, or full-width; upload a wallpaper to check transparency.
+- **Presets** — Frosted, Liquid Glass, Smoked, Crystal, Sunset, Aqua.
+- **Export** — web inline or CVA component; native inline or typed file; **GLASS.md** with tokens, TSX, paths, and a short checklist.
+- **Share URL** — same design opens for anyone with the link.
+- **EN / ES** — UI translated; component names stay in English in the nav.
 
-No runtime npm package yet: you copy code into your repo. Styling lives in your Tailwind / NativeWind setup (`gg-glass` utilities in `app/globals.css`).
+Copy code into your project — no npm runtime package yet. Glass utilities live in `app/globals.css` (`gg-glass`).
+
+<br/>
 
 ## Components
 
-| Primitive | Web | React Native |
-|-----------|:---:|:------------:|
-| Card | ✓ | ✓ |
-| Button | ✓ | ✓ |
-| Input | ✓ | ✓ |
-| Modal | ✓ | ✓ |
-| Tab Bar | ✓ | ✓ |
-| Switch | ✓ | ✓ |
-| Nav Bar | ✓ | ✓ |
+<div align="center">
 
-Shared controls: `theme`, `blur`, `rounded`, `intensity`, `border`, `padding`, `shadow`, `tint` (see playground panel).
+| Primitive | Web | React Native |
+| :--- | :---: | :---: |
+| **Card** | ✅ | ✅ |
+| **Button** | ✅ | ✅ |
+| **Input** | ✅ | ✅ |
+| **Modal** | ✅ | ✅ |
+| **Tab Bar** | ✅ | ✅ |
+| **Switch** | ✅ | ✅ |
+| **Nav Bar** | ✅ | ✅ |
+
+</div>
+
+<br/>
+
+### Core properties
+
+| Property | Options |
+| :--- | :--- |
+| `theme` | `light` · `dark` |
+| `blur` | `none` · `sm` · `md` · `lg` · `xl` |
+| `rounded` | `none` · `md` · `lg` · `xl` · `2xl` · `3xl` · `full` |
+| `intensity` | `subtle` · `medium` · `strong` |
+| `border` | `none` · `subtle` · `strong` |
+| `padding` | `sm` · `md` · `lg` |
+| `shadow` | `none` · `sm` · `md` · `lg` |
+| `tint` | `none` · `blue` · `pink` · `orange` · `teal` |
+
+<br/>
 
 ## GLASS.md
 
-In the playground, open the code panel and copy **GLASS.md**. It reflects:
+Open the code panel in the playground and copy **GLASS.md**. It includes your current props, target project (framework, paths, Tailwind version, package manager), generated TSX, usage snippet, and integration steps — useful for Cursor, Claude, or Copilot without re-describing the design.
 
-- Your current props and preset
-- Target project (framework, component path, Tailwind version, package manager, shadcn flag)
-- Generated TSX + usage snippet
-- Steps to drop files in the right place
+<br/>
 
-Handy when you want an editor or agent to integrate without re-explaining the design.
+## Export modes
 
-## Run locally
+| Mode | Web | Native |
+| :--- | :--- | :--- |
+| Inline snippet | Tailwind classes in JSX | NativeWind on `View` / `Pressable` |
+| Reusable component | CVA + `forwardRef` | Typed component + variants |
 
-Requires **pnpm** (enforced in `preinstall`).
+<br/>
+
+## Quick start
+
+Requires **pnpm**.
 
 ```bash
 git clone https://github.com/lemuayala/glass-ui.git
@@ -57,68 +102,94 @@ pnpm install
 pnpm dev
 ```
 
-- Landing: http://localhost:3000  
-- Playground: http://localhost:3000/play  
+| URL | Route |
+| :--- | :--- |
+| [localhost:3000](http://localhost:3000) | Landing |
+| [localhost:3000/play](http://localhost:3000/play) | Playground |
 
-Optional env (see `.env.example`):
+Optional (see `.env.example`):
 
 ```bash
 NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
 NEXT_PUBLIC_GITHUB_URL=https://github.com/lemuayala/glass-ui
 ```
 
-Regenerate PNG icons from SVG:
-
 ```bash
-pnpm icons:export
+pnpm icons:export   # regenerate apple-icon PNGs from SVG
 ```
+
+<br/>
 
 ## Scripts
 
 | Command | Purpose |
-|---------|---------|
+| :--- | :--- |
 | `pnpm dev` | Dev server |
 | `pnpm build` | Production build |
-| `pnpm test` | Vitest (`lib/glass-core/integration-prompt.test.ts`) |
+| `pnpm test` | Vitest |
 | `pnpm lint` | ESLint |
-| `pnpm icons:export` | Build `apple-icon*.png` from `public/app-icon*.svg` |
 
-## Stack
+<br/>
 
-Next.js 16 (App Router), React 19, Tailwind CSS v4, CVA, NativeWind-oriented native templates, `next-themes`, small custom i18n dictionaries.
+## Tech stack
 
-Codegen lives under `lib/glass-core/` (variants + templates). Agent guidelines for contributors: `AGENTS.md`.
+| Layer | Technology |
+| :--- | :--- |
+| Framework | [Next.js 16](https://nextjs.org) (App Router) |
+| UI | [React 19](https://react.dev) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com) |
+| Variants | [CVA](https://cva.style) |
+| Native | NativeWind-oriented templates |
+| Theming | [next-themes](https://github.com/pacocoursey/next-themes) |
+| Highlighting | [prism-react-renderer](https://github.com/FormidableLabs/prism-react-renderer) |
+| i18n | Custom dictionaries (`lib/i18n/`) |
 
-## Keyboard shortcuts (playground)
+Codegen: `lib/glass-core/` · Contributor notes: [AGENTS.md](AGENTS.md)
 
-| Key | Action |
-|-----|--------|
+<br/>
+
+## Keyboard shortcuts
+
+| Shortcut | Action |
+| :--- | :--- |
 | `1`–`7` | Switch component |
-| `T` | Component light/dark |
+| `T` | Component theme |
 | `P` | Presets |
 | `S` | Copy share link |
 | `L` | Language |
 | `Shift+T` | App theme |
-| `?` | Shortcuts help |
+| `?` | Shortcuts |
 | `Esc` | Close dialogs |
+
+<br/>
 
 ## Roadmap
 
 - [x] Switch & Nav Bar
 - [x] GLASS.md + project profile
-- [x] Landing + `/play` split, share URLs
-- [ ] Publish `@glass-ui/core` (tokens + components)
+- [x] Landing + `/play`, share URLs
+- [ ] `@glass-ui/core` npm package
 - [ ] Figma plugin
 - [ ] Embedded native preview (Expo Snack)
 
+<br/>
+
 ## Deploy
 
-Production builds are deployed on **Vercel** from this repo (preview on PRs, production on `main`). You do not need GitHub Actions for hosting.
+Hosted on **[Vercel](https://vercel.com)** — preview on pull requests, production on `main`.
 
-## License
+<br/>
 
-MIT — see [LICENSE](LICENSE).
+<div align="center">
 
----
+  <p>Built with ❤️ by <a href="https://github.com/lemuayala">lemuayala</a></p>
 
-Built by [@lemuayala](https://github.com/lemuayala). Issues and PRs welcome.
+  <a href="https://github.com/lemuayala/glass-ui">⭐ Star on GitHub</a> ·
+  <a href="https://glass-ui.vercel.app/play">▶ Open playground</a> ·
+  <a href="https://github.com/lemuayala/glass-ui/issues">Report an issue</a>
+
+  <br/><br/>
+
+  <sub>MIT License</sub>
+
+</div>
