@@ -49,7 +49,7 @@ No dependencies on bulky UI libraries. No complex configuration. Just pure, drop
 
 ## 🧩 The Components
 
-We ship five meticulously designed primitives. Each adapts perfectly to light and dark themes and exposes the exact same **8 core properties**.
+We ship **seven** meticulously designed primitives. Each adapts to light and dark themes and exposes the same **8 core properties**.
 
 <div align="center">
 

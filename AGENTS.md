@@ -27,3 +27,11 @@
 
 - Generator: `lib/glass-core/integration-prompt.ts`
 - Spec: `docs/GLASS-PROMPT-SPEC.md`
+
+## App icon & SEO assets
+
+- Master SVG: `public/app-icon.svg` (dark), `public/app-icon-light.svg` (light)
+- UI + favicon: `public/apple-icon.png`, `public/apple-icon-light.png` (theme-aware via `BrandLogo`)
+- Social preview: `public/og-image.png` (1200×630)
+- SEO: `lib/seo.ts`, `app/sitemap.ts`, `app/robots.ts`, JSON-LD in layout
+- Re-export: `pnpm icons:export`
