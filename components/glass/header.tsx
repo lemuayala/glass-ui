@@ -1,26 +1,19 @@
 "use client"
 
-import Link from "next/link"
 import { forwardRef, useEffect, useState } from "react"
 import { useTheme } from "next-themes"
 import { toast } from "sonner"
-import {
-  Github,
-  Share2,
-  Star,
-  Sun,
-  Moon,
-  Languages,
-  Keyboard,
-} from "lucide-react"
+import { Share2, Sun, Moon, Languages, Keyboard } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { PresetsMenu } from "./presets-menu"
 import type { GlassPreset } from "@/lib/glass-core/presets"
 import type { ComponentKind, GlassOptions } from "@/lib/glass-core/types"
 import { useI18n, useT } from "@/lib/i18n/provider"
-import { GITHUB_REPO_URL, parseGitHubRepo, SITE } from "@/lib/config"
-import { BrandLogo } from "./brand-logo"
+import { SITE } from "@/lib/config"
+import { BrandLockup } from "./brand-lockup"
+import { GitHubStarLink } from "./github-star-link"
+import { playgroundSegmentItem, playgroundSegmentShell } from "./playground-mobile-tabs"
 
 const COMPONENT_KEYS: ComponentKind[] = [
   "glass-card",
@@ -71,28 +64,9 @@ export const Header = forwardRef<
   const { locale, toggleLocale } = useI18n()
   const { resolvedTheme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-  const [stars, setStars] = useState<number | null>(null)
 
   useEffect(() => {
     setMounted(true)
-  }, [])
-
-  useEffect(() => {
-    const repo = parseGitHubRepo(GITHUB_REPO_URL)
-    if (!repo) return
-    const ctrl = new AbortController()
-    fetch(`https://api.github.com/repos/${repo.owner}/${repo.repo}`, {
-      signal: ctrl.signal,
-      headers: { Accept: "application/vnd.github+json" },
-    })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data && typeof data.stargazers_count === "number") {
-          setStars(data.stargazers_count)
-        }
-      })
-      .catch(() => {})
-    return () => ctrl.abort()
   }, [])
 
   const isDark = mounted && resolvedTheme === "dark"
@@ -113,19 +87,9 @@ export const Header = forwardRef<
     }
   }
 
-  const formatStars = (n: number) =>
-    n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, "")}k` : String(n)
-
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-border bg-background/60 px-4 py-3 backdrop-blur-xl md:px-6">
-      {/* Brand */}
-      <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-90">
-        <BrandLogo size={32} />
-        <div className="flex flex-col leading-none">
-          <span className="text-sm font-semibold tracking-tight">{SITE.name}</span>
-          <span className="text-[10px] font-medium text-muted-foreground">{t("brand.tagline")}</span>
-        </div>
-      </Link>
+    <header className="sticky top-0 z-30 flex items-center justify-between gap-2 border-b border-border bg-background/60 px-3 py-2 backdrop-blur-xl sm:gap-3 sm:px-4 sm:py-3 md:px-6">
+      <BrandLockup href="/" logoSize={28} className="min-w-0 flex-1 sm:flex-none" />
 
       {/* Component pills */}
       <nav className="hidden max-w-[52vw] items-center gap-0.5 overflow-x-auto rounded-full border border-border bg-foreground/[0.03] p-1 lg:flex xl:max-w-none">
@@ -150,8 +114,8 @@ export const Header = forwardRef<
         })}
       </nav>
 
-      {/* Actions */}
-      <div className="flex items-center gap-1.5">
+      {/* Actions — icon-first on mobile */}
+      <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
         <PresetsMenu
           onApply={onApplyPreset}
           current={options}
@@ -166,10 +130,10 @@ export const Header = forwardRef<
                 type="button"
                 onClick={handleShare}
                 aria-label={t("actions.share")}
-                className="flex h-8 items-center gap-1.5 rounded-full border border-border bg-foreground/[0.03] px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+                className="hidden h-8 items-center gap-1.5 rounded-full border border-border bg-foreground/[0.03] px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground md:flex"
               >
                 <Share2 className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">{t("actions.share")}</span>
+                <span>{t("actions.share")}</span>
               </button>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={8}>
@@ -178,10 +142,10 @@ export const Header = forwardRef<
           </Tooltip>
         </TooltipProvider>
 
-        {/* Divider */}
-        <div className="hidden h-5 w-px bg-border md:block" aria-hidden />
+        <div className="hidden h-5 w-px bg-border lg:block" aria-hidden />
 
         <IconBtn
+          className="hidden md:flex"
           ariaLabel={t("actions.shortcuts")}
           tooltip={`${t("actions.shortcuts")} (?)`}
           onClick={onShowShortcuts}
@@ -194,10 +158,8 @@ export const Header = forwardRef<
           tooltip={`${t("actions.locale")} (L)`}
           onClick={toggleLocale}
         >
-          <Languages className="h-3.5 w-3.5" />
-          <span className="ml-1 text-[10px] font-semibold uppercase tracking-wider">
-            {locale}
-          </span>
+          <Languages className="hidden h-3.5 w-3.5 sm:block" />
+          <span className="text-[10px] font-semibold uppercase tracking-wider">{locale}</span>
         </IconBtn>
 
         <IconBtn
@@ -214,22 +176,7 @@ export const Header = forwardRef<
           )}
         </IconBtn>
 
-        <a
-          href={GITHUB_REPO_URL}
-          target="_blank"
-          rel="noreferrer"
-          aria-label={t("actions.star")}
-          className="flex h-8 items-center gap-1.5 rounded-full border border-border bg-foreground/[0.03] px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
-        >
-          <Github className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">{t("actions.star")}</span>
-          {stars !== null && (
-            <span className="hidden items-center gap-0.5 sm:flex">
-              <Star className="h-3 w-3 fill-current" strokeWidth={0} />
-              <span className="tabular-nums">{formatStars(stars)}</span>
-            </span>
-          )}
-        </a>
+        <GitHubStarLink compact />
       </div>
     </header>
   )
@@ -240,11 +187,13 @@ function IconBtn({
   onClick,
   ariaLabel,
   tooltip,
+  className,
 }: {
   children: React.ReactNode
   onClick: () => void
   ariaLabel: string
   tooltip: string
+  className?: string
 }) {
   return (
     <TooltipProvider>
@@ -254,7 +203,10 @@ function IconBtn({
             type="button"
             onClick={onClick}
             aria-label={ariaLabel}
-            className="flex h-8 min-w-8 items-center justify-center rounded-full border border-border bg-foreground/[0.03] px-2 text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+            className={cn(
+              "flex h-8 min-w-8 items-center justify-center rounded-full border border-border bg-foreground/[0.03] px-2 text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground",
+              className,
+            )}
           >
             {children}
           </button>
@@ -268,7 +220,7 @@ function IconBtn({
 }
 
 /* --------------------------------------------------------------
- * Mobile component switcher — render under the header on small screens.
+ * Mobile component switcher — same segmented glass as panel tabs.
  * ------------------------------------------------------------ */
 export function ComponentSwitcherMobile({
   component,
@@ -278,21 +230,28 @@ export function ComponentSwitcherMobile({
   onComponent: (id: ComponentKind) => void
 }) {
   const t = useT()
+
   return (
-    <div className="lg:hidden">
-      <div className="gg-scroll flex items-center gap-1 overflow-x-auto rounded-full border border-border bg-foreground/[0.03] p-1">
-        {COMPONENT_KEYS.map((id) => {
+    <nav
+      role="tablist"
+      aria-label={t("play.componentPicker")}
+      className={cn("flex shrink-0 flex-col gap-1 lg:hidden", playgroundSegmentShell)}
+    >
+      <div className="grid grid-cols-4 gap-1">
+        {COMPONENT_KEYS.slice(0, 4).map((id) => {
           const active = id === component
           return (
             <button
               key={id}
               type="button"
+              role="tab"
+              id={`play-component-${id}`}
+              aria-selected={active}
+              aria-controls="playground-preview"
               onClick={() => onComponent(id)}
-              className={cn(
-                "relative shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-200",
-                active
-                  ? "bg-foreground/10 text-foreground shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
-                  : "text-muted-foreground hover:text-foreground",
+              className={playgroundSegmentItem(
+                active,
+                "flex min-h-9 items-center justify-center px-1 py-2 text-center leading-tight",
               )}
             >
               {/* @ts-expect-error - keys are statically defined */}
@@ -301,6 +260,29 @@ export function ComponentSwitcherMobile({
           )
         })}
       </div>
-    </div>
+      <div className="grid grid-cols-3 gap-1">
+        {COMPONENT_KEYS.slice(4).map((id) => {
+          const active = id === component
+          return (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              id={`play-component-${id}`}
+              aria-selected={active}
+              aria-controls="playground-preview"
+              onClick={() => onComponent(id)}
+              className={playgroundSegmentItem(
+                active,
+                "flex min-h-9 items-center justify-center px-1 py-2 text-center leading-tight",
+              )}
+            >
+              {/* @ts-expect-error - keys are statically defined */}
+              {t(COMPONENT_LABEL_KEY[id])}
+            </button>
+          )
+        })}
+      </div>
+    </nav>
   )
 }
