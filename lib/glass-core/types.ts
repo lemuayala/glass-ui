@@ -23,6 +23,8 @@ export type ComponentKind =
   | "glass-input"
   | "glass-modal"
   | "glass-tabbar"
+  | "glass-switch"
+  | "glass-navbar"
 
 export interface GlassOptions {
   theme: GlassTheme

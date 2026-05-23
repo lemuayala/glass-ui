@@ -17,6 +17,9 @@ import type {
   GlassShadow,
   GlassTint,
 } from "@/lib/glass-core/types"
+import type { ProjectProfile } from "@/lib/glass-core/project-profile"
+import { panelInputClassName } from "./panel-field"
+import { ProjectProfileSection } from "./project-profile-section"
 
 export const DEFAULT_OPTIONS: GlassOptions = {
   theme: "light",
@@ -80,6 +83,30 @@ export function defaultsFor(component: ComponentKind): GlassOptions {
         tint: "none",
         text: "",
       }
+    case "glass-switch":
+      return {
+        theme: "dark",
+        blur: "md",
+        rounded: "full",
+        intensity: "medium",
+        border: "subtle",
+        padding: "md",
+        shadow: "sm",
+        tint: "none",
+        text: "Notifications",
+      }
+    case "glass-navbar":
+      return {
+        theme: "dark",
+        blur: "xl",
+        rounded: "none",
+        intensity: "medium",
+        border: "subtle",
+        padding: "md",
+        shadow: "sm",
+        tint: "none",
+        text: "Glass UI",
+      }
     case "glass-card":
     default:
       return DEFAULT_OPTIONS
@@ -92,6 +119,8 @@ const SIZE_KEY: Record<ComponentKind, { label: TranslationKey; description: Tran
   "glass-input": { label: "panel.size", description: "panel.size.desc" },
   "glass-modal": { label: "panel.padding", description: "panel.padding.desc" },
   "glass-tabbar": { label: "panel.height", description: "panel.height.desc" },
+  "glass-switch": { label: "panel.size", description: "panel.size.desc" },
+  "glass-navbar": { label: "panel.height", description: "panel.height.desc" },
 }
 
 const TEXT_KEY: Record<ComponentKind, { label: TranslationKey | null; placeholder: string }> = {
@@ -100,6 +129,8 @@ const TEXT_KEY: Record<ComponentKind, { label: TranslationKey | null; placeholde
   "glass-input": { label: "panel.placeholder", placeholder: "Search…" },
   "glass-modal": { label: "panel.title", placeholder: "Confirm action" },
   "glass-tabbar": { label: null, placeholder: "" },
+  "glass-switch": { label: "panel.label", placeholder: "Notifications" },
+  "glass-navbar": { label: "panel.title", placeholder: "Glass UI" },
 }
 
 const TINT_DOT: Record<GlassTint, string> = {
@@ -114,10 +145,14 @@ export function Controls({
   component,
   options,
   onChange,
+  profile,
+  onProfileChange,
 }: {
   component: ComponentKind
   options: GlassOptions
   onChange: (next: GlassOptions) => void
+  profile: ProjectProfile
+  onProfileChange: (patch: Partial<ProjectProfile>) => void
 }) {
   const t = useT()
   const set = <K extends keyof GlassOptions>(key: K, value: GlassOptions[K]) =>
@@ -238,7 +273,7 @@ export function Controls({
               value={options.text ?? ""}
               placeholder={textCfg.placeholder}
               onChange={(e) => set("text", e.target.value)}
-              className="h-9 w-full rounded-lg border border-border bg-foreground/[0.03] px-3 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/40 focus:bg-foreground/[0.05]"
+              className={panelInputClassName}
             />
           </div>
         )}
@@ -319,6 +354,8 @@ export function Controls({
           value={options.shadow}
           onChange={(v) => set("shadow", v)}
         />
+
+        <ProjectProfileSection profile={profile} onChange={onProfileChange} />
 
         {/* Footer hint */}
         <div className="rounded-xl border border-border bg-foreground/[0.02] p-3">

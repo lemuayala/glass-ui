@@ -1,11 +1,11 @@
-import { AppBackground } from "@/components/glass/app-background"
-import { Generator } from "@/components/glass/generator"
+import { LegacyPlaygroundRedirect } from "@/components/glass/legacy-redirect"
+import { LandingPage } from "@/components/glass/landing-page"
 
-export default function Page() {
+export default function HomePage() {
   return (
     <>
-      <AppBackground />
-      <Generator />
+      <LegacyPlaygroundRedirect />
+      <LandingPage />
     </>
   )
 }

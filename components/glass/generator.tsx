@@ -8,19 +8,29 @@ import { Controls, defaultsFor } from "./controls"
 import { Preview } from "./preview"
 import { CodePanel } from "./code-panel"
 import { ShortcutsDialog } from "./shortcuts-dialog"
+import {
+  PlaygroundMobileTabs,
+  playgroundPanelClass,
+  type PlaygroundMobilePanel,
+} from "./playground-mobile-tabs"
 import type { WallpaperId } from "./wallpaper"
 import { generateCode, generateUsageSnippet } from "@/lib/glass-core/codegen"
+import { generateGlassPrompt, generateShortGlassPrompt } from "@/lib/glass-core/integration-prompt"
 import type { ComponentKind, ExportMode, GlassOptions } from "@/lib/glass-core/types"
 import {
   type SerializedState,
   encodeState,
   readInitialState,
   useStateSync,
+  PLAYGROUND_PATH,
 } from "./use-url-state"
+import { useProjectProfile } from "@/hooks/use-project-profile"
 import { applyPreset, type GlassPreset } from "@/lib/glass-core/presets"
 import { useShortcuts } from "./use-shortcuts"
 import { useI18n, useT } from "@/lib/i18n/provider"
+import { SiteFooterCredit } from "./site-footer-credit"
 import { SITE } from "@/lib/config"
+import { cn } from "@/lib/utils"
 import type { Platform } from "@/lib/glass-core/types"
 
 const COMPONENTS_BY_INDEX: ComponentKind[] = [
@@ -29,6 +39,8 @@ const COMPONENTS_BY_INDEX: ComponentKind[] = [
   "glass-input",
   "glass-modal",
   "glass-tabbar",
+  "glass-switch",
+  "glass-navbar",
 ]
 
 const FALLBACK_STATE: SerializedState = {
@@ -53,6 +65,8 @@ export function Generator() {
   const [customWallpaper, setCustomWallpaper] = useState<string | null>(null)
   const [presetsOpen, setPresetsOpen] = useState(false)
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
+  const [mobilePanel, setMobilePanel] = useState<PlaygroundMobilePanel>("preview")
+  const { profile, updateProfile } = useProjectProfile()
 
   // Hydrate once on client from URL > localStorage > fallback.
   useEffect(() => {
@@ -91,13 +105,28 @@ export function Generator() {
     setWallpaper((curr) => (curr === "custom" ? "aurora" : curr))
   }, [])
 
-  const code = useMemo(() => generateCode({ component, mode, platform, options }), [component, mode, platform, options])
-  const usageSnippet = useMemo(() => generateUsageSnippet({ component, mode, platform, options }), [component, mode, platform, options])
+  const codegenInput = useMemo(
+    () => ({ component, mode, platform, options }),
+    [component, mode, platform, options],
+  )
+
+  const code = useMemo(() => generateCode(codegenInput), [codegenInput])
+  const usageSnippet = useMemo(() => generateUsageSnippet(codegenInput), [codegenInput])
 
   const shareUrl = useMemo(() => {
     if (typeof window === "undefined") return ""
-    return `${window.location.origin}${window.location.pathname}?${encodeState(state)}`
+    return `${window.location.origin}${PLAYGROUND_PATH}?${encodeState(state)}`
   }, [state])
+
+  const glassPrompt = useMemo(
+    () => generateGlassPrompt({ codegen: codegenInput, profile, shareUrl: shareUrl || undefined }),
+    [codegenInput, profile, shareUrl],
+  )
+
+  const shortGlassPrompt = useMemo(
+    () => generateShortGlassPrompt({ codegen: codegenInput, profile }),
+    [codegenInput, profile],
+  )
 
   const handleShare = useCallback(async () => {
     if (!shareUrl) return
@@ -131,7 +160,7 @@ export function Generator() {
   })
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden">
       <Header
         component={component}
         onComponent={handleComponent}
@@ -143,24 +172,37 @@ export function Generator() {
         onShowShortcuts={() => setShortcutsOpen(true)}
       />
 
-      {/* Mobile-only component switcher under the header */}
-      <div className="border-b border-border bg-background/40 px-4 py-3 lg:hidden">
-        <ComponentSwitcherMobile component={component} onComponent={handleComponent} />
-      </div>
-
       {/* Main grid — 3 columns on desktop, stack on mobile */}
-      <main className="flex-1 px-4 py-4 md:px-6 md:py-6">
-        <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-4 lg:h-[calc(100vh-8rem)] lg:grid-cols-[280px_1fr_minmax(400px,500px)] xl:grid-cols-[280px_1fr_480px] 2xl:grid-cols-[300px_1.1fr_560px]">
+      <main className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-6 lg:gap-4">
+        <div className="flex shrink-0 flex-col gap-2 lg:hidden">
+          <ComponentSwitcherMobile component={component} onComponent={handleComponent} />
+          <PlaygroundMobileTabs active={mobilePanel} onChange={setMobilePanel} />
+        </div>
+
+        <div className="mx-auto grid min-h-0 w-full max-w-[1600px] flex-1 grid-cols-1 gap-4 lg:grid-cols-[280px_1fr_minmax(400px,500px)] xl:grid-cols-[280px_1fr_480px] 2xl:grid-cols-[300px_1.1fr_560px]">
           <section
             aria-label={t("panel.properties")}
-            className="gg-glass gg-glass-inset overflow-hidden rounded-2xl max-lg:max-h-[60vh]"
+            className={cn(
+              "gg-glass gg-glass-inset rounded-2xl",
+              playgroundPanelClass("controls", mobilePanel),
+            )}
           >
-            <Controls component={component} options={options} onChange={setOptions} />
+            <Controls
+              component={component}
+              options={options}
+              onChange={setOptions}
+              profile={profile}
+              onProfileChange={updateProfile}
+            />
           </section>
 
           <section
+            id="playground-preview"
             aria-label={t("panel.preview")}
-            className="gg-glass gg-glass-inset overflow-hidden rounded-2xl max-lg:h-[70vh]"
+            className={cn(
+              "gg-glass gg-glass-inset rounded-2xl",
+              playgroundPanelClass("preview", mobilePanel),
+            )}
           >
             <Preview
               component={component}
@@ -175,18 +217,34 @@ export function Generator() {
 
           <section
             aria-label={t("panel.code")}
-            className="gg-glass gg-glass-inset overflow-hidden rounded-2xl max-lg:h-[70vh]"
+            className={cn(
+              "gg-glass gg-glass-inset rounded-2xl",
+              playgroundPanelClass("code", mobilePanel),
+            )}
           >
-            <CodePanel code={code} usageSnippet={usageSnippet} mode={mode} onMode={setMode} platform={platform} onPlatform={setPlatform} />
+            <CodePanel
+              code={code}
+              usageSnippet={usageSnippet}
+              glassPrompt={glassPrompt}
+              shortGlassPrompt={shortGlassPrompt}
+              component={component}
+              mode={mode}
+              onMode={setMode}
+              platform={platform}
+              onPlatform={setPlatform}
+            />
           </section>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border px-6 py-4">
-        <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-2 text-[11px] text-muted-foreground sm:flex-row">
-          <p>{t("footer.text")}</p>
-          <p className="font-mono">@glass-ui · v{SITE.version}</p>
+      <footer className="hidden shrink-0 border-t border-border px-4 py-3 sm:px-6 sm:py-4 lg:block">
+        <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-2 sm:flex-row">
+          <div className="flex flex-col items-center gap-1 sm:items-start">
+            <p className="text-[11px] text-muted-foreground">{t("footer.text")}</p>
+            <SiteFooterCredit className="text-center sm:text-left" />
+          </div>
+          <p className="font-mono text-[11px] text-muted-foreground">@glass-ui · v{SITE.version}</p>
         </div>
       </footer>
 
