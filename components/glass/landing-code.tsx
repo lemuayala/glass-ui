@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react"
 import { splitText, stagger, utils } from "animejs"
 import { FileCode2 } from "lucide-react"
 import { useT } from "@/lib/i18n/provider"
-import { cn } from "@/lib/utils"
+import { GlassMdLine } from "./glass-md-render"
 import { createEnterScene, prefersReducedMotion, revealVisible, setRevealPending } from "@/lib/landing-motion"
 
 const SAMPLE = `# GLASS.md — GlassCard
@@ -60,7 +60,7 @@ export function LandingCode() {
 
     setRevealPending(titleSplit.words, 26)
     setRevealPending(sub, 20)
-    utils.set(lines, { opacity: 0, translateX: -14, filter: "blur(6px)" })
+    utils.set(lines, { opacity: 0, translateX: -10 })
 
     const scene = createEnterScene(section, {
       lockTargets: () => [titleSplit.words, sub, lines],
@@ -70,10 +70,9 @@ export function LandingCode() {
         titleSplit.words,
         {
           opacity: [0, 1],
-          translateY: [26, 0],
-          filter: ["blur(10px)", "blur(0px)"],
-          delay: stagger(60),
-          duration: 700,
+          translateY: [22, 0],
+          delay: stagger(50),
+          duration: 600,
         },
         0,
       )
@@ -81,22 +80,20 @@ export function LandingCode() {
         sub,
         {
           opacity: [0, 1],
-          translateY: [20, 0],
-          filter: ["blur(8px)", "blur(0px)"],
-          duration: 600,
+          translateY: [16, 0],
+          duration: 500,
         },
-        200,
+        160,
       )
       .add(
         lines,
         {
           opacity: [0, 1],
-          translateX: [-16, 0],
-          filter: ["blur(6px)", "blur(0px)"],
-          delay: stagger(30, { start: 0 }),
-          duration: 350,
+          translateX: [-10, 0],
+          delay: stagger(24, { start: 0 }),
+          duration: 320,
         },
-        350,
+        280,
       )
 
     return () => {
@@ -159,39 +156,15 @@ export function LandingCode() {
             </div>
             <pre
               ref={codeRef}
-              className="gg-scroll max-h-[440px] overflow-auto px-5 py-5 font-mono text-[12px] leading-[1.7]"
+              className="gg-glass-prompt gg-scroll max-h-[440px] overflow-auto overscroll-contain px-3 py-4 font-mono text-[11px] leading-[1.65] sm:px-5 sm:py-5 sm:text-[12px] sm:leading-[1.7]"
             >
               {SAMPLE.split("\n").map((line, i) => (
-                <CodeLine key={i} line={line} />
+                <GlassMdLine key={i} line={line} />
               ))}
             </pre>
           </div>
         </div>
       </div>
     </section>
-  )
-}
-
-function CodeLine({ line }: { line: string }) {
-  /* Simple highlight by prefix */
-  const isHeading = line.startsWith("#")
-  const isTable = line.startsWith("|")
-  const isFence = line.startsWith("```")
-  const isBullet = line.startsWith("- [")
-  return (
-    <div data-line>
-      <span
-      className={cn(
-        "block min-h-[1.4em] whitespace-pre",
-        isHeading && "text-primary",
-        isFence && "text-emerald-400/80",
-        isTable && "text-muted-foreground",
-        isBullet && "text-amber-300/90",
-        !isHeading && !isFence && !isTable && !isBullet && "text-foreground/80",
-      )}
-      >
-        {line || "\u00A0"}
-      </span>
-    </div>
   )
 }

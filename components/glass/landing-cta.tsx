@@ -45,10 +45,9 @@ export function LandingCta() {
         titleSplit.words,
         {
           opacity: [0, 1],
-          translateY: [28, 0],
-          filter: ["blur(10px)", "blur(0px)"],
-          delay: stagger(60),
-          duration: 700,
+          translateY: [24, 0],
+          delay: stagger(50),
+          duration: 600,
         },
         80,
       )
@@ -56,22 +55,20 @@ export function LandingCta() {
         sub,
         {
           opacity: [0, 1],
-          translateY: [20, 0],
-          filter: ["blur(8px)", "blur(0px)"],
-          duration: 600,
+          translateY: [16, 0],
+          duration: 500,
         },
-        280,
+        240,
       )
       .add(
         cta,
         {
           opacity: [0, 1],
-          translateY: [20, 0],
-          scale: [0.97, 1],
-          filter: ["blur(8px)", "blur(0px)"],
-          duration: 600,
+          translateY: [16, 0],
+          scale: [0.98, 1],
+          duration: 550,
         },
-        400,
+        360,
       )
 
     return () => {
