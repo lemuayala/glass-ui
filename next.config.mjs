@@ -15,7 +15,10 @@ const nextConfig = {
     unoptimized: true,
   },
   async redirects() {
-    return [{ source: "/primitives", destination: "/#primitives", permanent: false }]
+    return [
+      { source: "/primitives", destination: "/#primitives", permanent: false },
+      { source: "/native", destination: "/#native", permanent: false },
+    ]
   },
 }
 
