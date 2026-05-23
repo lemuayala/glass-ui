@@ -105,10 +105,10 @@ export function LandingShowcase() {
       return
     }
 
-    setRevealPending(copy, 24)
-    utils.set(phone, { opacity: 0, scale: 0.96, translateY: 36, filter: "blur(12px)" })
-    if (env) utils.set(env, { opacity: 0, scale: 1.02, filter: "blur(8px)" })
-    utils.set(tiles, { opacity: 0, translateY: 24, scale: 0.94, filter: "blur(8px)" })
+    setRevealPending(copy, 20)
+    utils.set(phone, { opacity: 0, scale: 0.98, translateY: 28 })
+    if (env) utils.set(env, { opacity: 0, scale: 1.01 })
+    utils.set(tiles, { opacity: 0, translateY: 16, scale: 0.98 })
 
     const scene = createEnterScene(section, {
       lockTargets: lockAll,
@@ -120,10 +120,9 @@ export function LandingShowcase() {
         copy,
         {
           opacity: [0, 1],
-          translateY: [24, 0],
-          filter: ["blur(8px)", "blur(0px)"],
-          duration: 800,
-          ease: "out(4)",
+          translateY: [20, 0],
+          duration: 650,
+          ease: "out(3)",
         },
         0,
       )
@@ -131,13 +130,12 @@ export function LandingShowcase() {
         phone,
         {
           opacity: [0, 1],
-          scale: [0.96, 1],
-          translateY: [36, 0],
-          filter: ["blur(12px)", "blur(0px)"],
-          duration: 1000,
-          ease: "out(4)",
+          scale: [0.98, 1],
+          translateY: [28, 0],
+          duration: 800,
+          ease: "out(3)",
         },
-        120,
+        100,
       )
 
     if (env) {
@@ -145,12 +143,11 @@ export function LandingShowcase() {
         env,
         {
           opacity: [0, 1],
-          scale: [1.02, 1],
-          filter: ["blur(8px)", "blur(0px)"],
-          duration: 600,
+          scale: [1.01, 1],
+          duration: 500,
           ease: "out(3)",
         },
-        220,
+        180,
       )
     }
 
@@ -158,14 +155,13 @@ export function LandingShowcase() {
       tiles,
       {
         opacity: [0, 1],
-        translateY: [24, 0],
-        scale: [0.94, 1],
-        filter: ["blur(8px)", "blur(0px)"],
-        delay: stagger(85, { start: 0 }),
-        duration: 720,
-        ease: "out(4)",
+        translateY: [16, 0],
+        scale: [0.98, 1],
+        delay: stagger(70, { start: 0 }),
+        duration: 600,
+        ease: "out(3)",
       },
-      300,
+      260,
     )
 
     return () => {

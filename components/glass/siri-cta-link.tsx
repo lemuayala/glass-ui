@@ -20,7 +20,9 @@ export function SiriCtaLink({ href, children, className }: SiriCtaLinkProps) {
         href={href}
         className={cn(
           "relative z-10 inline-flex items-center gap-2.5 rounded-full bg-foreground px-8 py-4 text-base font-semibold text-background",
-          "shadow-[0_10px_30px_-12px_oklch(0.7_0.18_250_/_0.45)] transition-transform active:scale-[0.97]",
+          "shadow-[0_10px_30px_-12px_oklch(0.7_0.18_250_/_0.45)] transition-[transform,box-shadow] duration-300",
+          "group-hover:shadow-[0_12px_36px_-10px_oklch(0.65_0.22_250_/_0.55)]",
+          "active:scale-[0.97]",
           "group",
           className,
         )}

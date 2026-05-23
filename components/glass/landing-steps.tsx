@@ -38,8 +38,8 @@ export function LandingSteps() {
     }
 
     setRevealPending(titleSplit.words, 28)
-    utils.set(cards, { opacity: 0, translateY: 48, scale: 0.94, filter: "blur(8px)" })
-    utils.set(counters, { opacity: 0, translateY: 12, filter: "blur(6px)" })
+    utils.set(cards, { opacity: 0, translateY: 32, scale: 0.98 })
+    utils.set(counters, { opacity: 0, translateY: 10 })
     utils.set(statLabels, { opacity: 0 })
 
     const scene = createEnterScene(section, {
@@ -52,10 +52,9 @@ export function LandingSteps() {
         titleSplit.words,
         {
           opacity: [0, 1],
-          translateY: [28, 0],
-          filter: ["blur(10px)", "blur(0px)"],
-          delay: stagger(60),
-          duration: 700,
+          translateY: [24, 0],
+          delay: stagger(50),
+          duration: 600,
         },
         0,
       )
@@ -63,24 +62,22 @@ export function LandingSteps() {
         cards,
         {
           opacity: [0, 1],
-          translateY: [48, 0],
-          scale: [0.94, 1],
-          filter: ["blur(8px)", "blur(0px)"],
-          delay: stagger(120, { start: 0 }),
-          duration: 800,
+          translateY: [32, 0],
+          scale: [0.98, 1],
+          delay: stagger(90, { start: 0 }),
+          duration: 650,
         },
-        150,
+        120,
       )
       .add(
         [counters, statLabels],
         {
           opacity: [0, 1],
-          translateY: [12, 0],
-          filter: ["blur(6px)", "blur(0px)"],
-          delay: stagger(80, { start: 0 }),
-          duration: 500,
+          translateY: [10, 0],
+          delay: stagger(60, { start: 0 }),
+          duration: 450,
         },
-        400,
+        320,
       )
 
     return () => {
@@ -99,7 +96,7 @@ export function LandingSteps() {
     { value: 7, suffix: "", label: t("landing.stat.components") },
     { value: 28, suffix: "", label: t("landing.stat.templates") },
     { value: 4, suffix: "", label: t("landing.stat.exports") },
-    { value: 100, suffix: "+", label: t("landing.stat.tokens") },
+        { value: 8, suffix: "", label: t("landing.stat.controls") },
   ]
 
   return (
