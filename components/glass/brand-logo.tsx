@@ -1,4 +1,8 @@
+"use client"
+
 import Image from "next/image"
+import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 
 type BrandLogoProps = {
@@ -7,11 +11,21 @@ type BrandLogoProps = {
   priority?: boolean
 }
 
-/** Glass UI mark — transparent PNG, no v0 placeholder. */
+/** Squircle app icon — dark / light PNG pair for theme-aware UI. */
 export function BrandLogo({ size = 36, className, priority = false }: BrandLogoProps) {
+  const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const isLight = mounted && resolvedTheme === "light"
+  const src = isLight ? "/apple-icon-light.png" : "/apple-icon.png"
+
   return (
     <Image
-      src="/glass-logo.png"
+      src={src}
       alt="Glass UI"
       width={size}
       height={size}
