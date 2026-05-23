@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="72" y1="48" x2="440" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B0D14"/>
+      <stop offset="0.55" stop-color="#101525"/>
+      <stop offset="1" stop-color="#0A0C12"/>
+    </linearGradient>
+    <linearGradient id="aurora" x1="96" y1="80" x2="416" y2="432" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4F7CFF"/>
+      <stop offset="0.42" stop-color="#3CD9F5"/>
+      <stop offset="1" stop-color="#9B5CFF"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="128" y1="120" x2="384" y2="392" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.55"/>
+      <stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.28"/>
+    </linearGradient>
+    <radialGradient id="bloom" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(256 210) rotate(90) scale(170 140)">
+      <stop stop-color="#6FA8FF" stop-opacity="0.42"/>
+      <stop offset="0.65" stop-color="#6FA8FF" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#6FA8FF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="glass" x1="176" y1="152" x2="336" y2="320" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.22"/>
+      <stop offset="0.45" stop-color="#FFFFFF" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.16"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <clipPath id="iconClip">
+      <rect width="512" height="512" rx="112"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#iconClip)">
+    <rect width="512" height="512" fill="url(#bg)"/>
+    <circle cx="256" cy="210" r="168" fill="url(#bloom)" opacity="0.9"/>
+
+    <!-- Aurora halo ring -->
+    <rect x="34" y="34" width="444" height="444" rx="98" stroke="url(#aurora)" stroke-width="2.5" opacity="0.55"/>
+    <rect x="52" y="52" width="408" height="408" rx="90" stroke="url(#aurora)" stroke-width="1" opacity="0.22"/>
+
+    <!-- Frosted plate -->
+    <rect x="118" y="138" width="276" height="236" rx="62" fill="url(#glass)" stroke="url(#rim)" stroke-width="1.25"/>
+
+    <!-- Lens body -->
+    <circle cx="256" cy="248" r="86" fill="#FFFFFF" fill-opacity="0.07" stroke="url(#aurora)" stroke-width="2.2" opacity="0.95"/>
+    <circle cx="256" cy="248" r="68" fill="#FFFFFF" fill-opacity="0.05" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="1"/>
+
+    <!-- Faceted glass mark (distinct, not a sparkle) -->
+    <path d="M256 178 L312 248 L256 318 L200 248 Z" stroke="#FFFFFF" stroke-opacity="0.32" stroke-width="1.6" fill="#FFFFFF" fill-opacity="0.04"/>
+    <path d="M256 178 L256 318" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="1.2"/>
+    <path d="M200 248 L312 248" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="1.2"/>
+    <path d="M228 212 L284 284" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="1"/>
+    <path d="M284 212 L228 284" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="1"/>
+
+    <!-- Specular -->
+    <ellipse cx="222" cy="206" rx="46" ry="28" fill="#FFFFFF" fill-opacity="0.18" transform="rotate(-24 222 206)"/>
+    <ellipse cx="292" cy="278" rx="22" ry="14" fill="#FFFFFF" fill-opacity="0.06" transform="rotate(18 292 278)"/>
+
+    <!-- Bottom accent line (subtle UI cue) -->
+    <rect x="196" y="352" width="120" height="5" rx="2.5" fill="url(#aurora)" opacity="0.55"/>
+  </g>
+</svg>
