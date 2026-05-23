@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "icons:export": "node scripts/export-app-icons.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -70,6 +71,7 @@
     "@types/react-dom": "^19",
     "only-allow": "^1.2.1",
     "postcss": "^8.5",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.2.0",
     "tw-animate-css": "1.3.3",
     "typescript": "5.7.3",
