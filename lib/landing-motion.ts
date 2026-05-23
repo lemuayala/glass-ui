@@ -8,11 +8,18 @@ import { animate, createTimeline, onScroll, utils } from "animejs"
  */
 const SCROLL_ENTER = "top bottom-=10%"
 
-export function setRevealPending(targets: unknown, y = 28) {
+/** Fired when hero (or nav) jumps to a landing section — detail: { id: section id } */
+export const LANDING_REVEAL_EVENT = "glass:landing-reveal"
+
+export function requestLandingSectionReveal(sectionId: string) {
+  if (typeof window === "undefined") return
+  window.dispatchEvent(new CustomEvent(LANDING_REVEAL_EVENT, { detail: { id: sectionId } }))
+}
+
+export function setRevealPending(targets: unknown, y = 20) {
   utils.set(targets, {
     opacity: 0,
     translateY: y,
-    filter: "blur(8px)",
   })
 }
 
@@ -36,7 +43,8 @@ export function revealVisible(targets: unknown) {
 
 export function isPartiallyVisible(el: HTMLElement) {
   const r = el.getBoundingClientRect()
-  return r.top < window.innerHeight * 0.98 && r.bottom > 0
+  const vh = window.innerHeight
+  return r.top < vh * 0.92 && r.bottom > vh * 0.08
 }
 
 type EnterSceneOptions = {
@@ -53,38 +61,68 @@ export function createEnterScene(section: HTMLElement, options?: EnterSceneOptio
   }
 
   let locked = false
+  let playing = false
+
   const finish = () => {
     if (locked) return
     locked = true
+    playing = false
     const targets = options?.lockTargets?.()
     if (targets) revealVisible(targets)
     options?.onComplete?.()
   }
 
+  const playOnce = () => {
+    if (locked || playing) return
+    if (tl.progress >= 1) {
+      finish()
+      return
+    }
+    playing = true
+    tl.play()
+  }
+
   const tl = createTimeline({
-    autoplay: onScroll({
-      target: section,
-      enter: SCROLL_ENTER,
-      repeat: false,
-      sync: "play",
-      onEnter: () => {
-        if (!locked && tl.progress < 1) tl.play()
-      },
-    }),
+    autoplay: false,
     defaults: { ease: "out(4)" },
     onComplete: finish,
   })
 
+  const scrollObs = onScroll({
+    target: section,
+    enter: SCROLL_ENTER,
+    repeat: false,
+    onEnter: playOnce,
+  })
+
   const tryPlay = () => {
-    if (!locked && isPartiallyVisible(section) && tl.progress < 1) tl.play()
+    if (locked) return
+    if (isPartiallyVisible(section)) playOnce()
+  }
+
+  const onRevealRequest = (e: Event) => {
+    const id = (e as CustomEvent<{ id?: string }>).detail?.id
+    if (id && section.id !== id) return
+    requestAnimationFrame(tryPlay)
   }
 
   requestAnimationFrame(tryPlay)
   window.addEventListener("scroll", tryPlay, { passive: true })
+  window.addEventListener("scrollend", tryPlay, { passive: true })
+  window.addEventListener(LANDING_REVEAL_EVENT, onRevealRequest)
+
+  /** Never leave section stuck at opacity 0 if scroll / click misses enter. */
+  const safety = window.setTimeout(() => {
+    if (!locked) finish()
+  }, 2800)
 
   const origRevert = tl.revert?.bind(tl)
   tl.revert = () => {
+    window.clearTimeout(safety)
     window.removeEventListener("scroll", tryPlay)
+    window.removeEventListener("scrollend", tryPlay)
+    window.removeEventListener(LANDING_REVEAL_EVENT, onRevealRequest)
+    scrollObs.revert?.()
     origRevert?.()
   }
 
