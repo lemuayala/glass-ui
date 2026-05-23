@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { useT } from "@/lib/i18n/provider"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import type { ComponentKind, ExportMode, Platform } from "@/lib/glass-core/types"
+import { GlassMdLine } from "./glass-md-render"
 
 type ExportView = "code" | "glass"
 
@@ -101,18 +102,100 @@ export function CodePanel({
   }
 
   const displayCode = isGlass ? glassPrompt : code
-  const displayLang = isGlass ? "markdown" : "tsx"
+
+  const actionButtons = (
+    <>
+      <TooltipProvider>
+        <Tooltip delayDuration={300}>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              onClick={handleDownload}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-foreground/[0.04] text-muted-foreground transition-all hover:bg-foreground/[0.08] hover:text-foreground"
+              aria-label={t("actions.download")}
+            >
+              <Download className="h-3.5 w-3.5" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" sideOffset={6}>
+            {t("actions.download")}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      {isGlass ? (
+        <>
+          <button
+            type="button"
+            aria-label={t("glass.quick")}
+            onClick={() =>
+              copyText(shortGlassPrompt, () => {
+                setCopiedShort(true)
+                window.setTimeout(() => setCopiedShort(false), 2000)
+              })
+            }
+            className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-border bg-foreground/[0.04] px-2 text-xs font-medium text-muted-foreground transition-all hover:bg-foreground/[0.08] hover:text-foreground sm:px-2.5"
+          >
+            {copiedShort ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+            <span className="hidden sm:inline">{t("glass.quick")}</span>
+          </button>
+          <button
+            type="button"
+            aria-label={t("glass.copyAll")}
+            onClick={() =>
+              copyText(glassPrompt, () => {
+                setCopiedGlass(true)
+                window.setTimeout(() => setCopiedGlass(false), 2000)
+              })
+            }
+            className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-2 text-xs font-medium text-primary transition-all hover:bg-primary/20 sm:px-2.5"
+          >
+            {copiedGlass ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+            <span className="hidden sm:inline">{t("glass.copyAll")}</span>
+          </button>
+        </>
+      ) : isReusable ? (
+        <>
+          <button
+            type="button"
+            onClick={handleCopyUsageOnly}
+            className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-border bg-foreground/[0.04] px-2 text-xs font-medium text-muted-foreground transition-all hover:bg-foreground/[0.08] hover:text-foreground sm:px-2.5"
+          >
+            <Copy className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">{t("actions.copyUsageOnly")}</span>
+          </button>
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-2 text-xs font-medium text-primary transition-all hover:bg-primary/20 sm:px-2.5"
+          >
+            <Layers className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">{t("actions.copy")}</span>
+          </button>
+        </>
+      ) : (
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-border bg-foreground/[0.04] px-2.5 text-xs font-medium text-muted-foreground transition-all hover:bg-foreground/[0.08] hover:text-foreground"
+        >
+          <Copy className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">{t("actions.copy")}</span>
+        </button>
+      )}
+    </>
+  )
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-5 py-3">
-        <div className="flex items-center gap-2">
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="flex shrink-0 flex-col gap-2 border-b border-border px-3 py-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-5 sm:py-3">
+        <div className="flex min-w-0 items-center gap-2">
           {isGlass ? (
-            <FileText className="h-3.5 w-3.5 text-muted-foreground" />
+            <FileText className="hidden h-3.5 w-3.5 shrink-0 text-muted-foreground sm:block" />
           ) : (
-            <Code2 className="h-3.5 w-3.5 text-muted-foreground" />
+            <Code2 className="hidden h-3.5 w-3.5 shrink-0 text-muted-foreground sm:block" />
           )}
-          <div className="flex items-center gap-0.5 rounded-full border border-border bg-foreground/[0.03] p-0.5">
+          <div className="flex min-w-0 items-center gap-0.5 rounded-full border border-border bg-foreground/[0.03] p-0.5">
             <ModeTab active={view === "code"} onClick={() => setView("code")}>
               {t("panel.code")}
             </ModeTab>
@@ -121,13 +204,13 @@ export function CodePanel({
             </ModeTab>
           </div>
           {isGlass && (
-            <span className="text-[10px] tabular-nums text-muted-foreground/60">
+            <span className="hidden text-[10px] tabular-nums text-muted-foreground/60 sm:inline">
               {glassPrompt.length.toLocaleString()} {t("glass.chars")}
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
           {!isGlass && (
             <>
               <div className="flex items-center gap-0.5 rounded-full border border-border bg-foreground/[0.03] p-0.5">
@@ -138,7 +221,7 @@ export function CodePanel({
                   Native
                 </ModeTab>
               </div>
-              <div className="h-4 w-px bg-border" />
+              <div className="hidden h-4 w-px bg-border sm:block" />
               <div className="flex items-center gap-0.5 rounded-full border border-border bg-foreground/[0.03] p-0.5">
                 <ModeTab active={mode === "inline"} onClick={() => onMode("inline")}>
                   {t("code.inline")}
@@ -149,121 +232,46 @@ export function CodePanel({
               </div>
             </>
           )}
+          {actionButtons}
         </div>
       </div>
 
-      <div className="relative flex-1 overflow-hidden">
-        <Highlight code={displayCode.trim()} language={displayLang} theme={prismTheme}>
-          {({ className, style, tokens, getLineProps, getTokenProps }) => (
-            <pre
-              className={cn(
-                className,
-                "gg-scroll h-full overflow-auto px-5 py-4 font-mono text-[12.5px] leading-relaxed",
-              )}
-              style={{ ...style, backgroundColor: "transparent" }}
-            >
-              {tokens.map((line, i) => {
-                const lineProps = getLineProps({ line })
-                return (
-                  <div key={i} {...lineProps} className={cn(lineProps.className, "table-row")}>
-                    <span className="table-cell select-none pr-4 text-right text-muted-foreground/40 tabular-nums">
-                      {i + 1}
-                    </span>
-                    <span className="table-cell whitespace-pre-wrap break-words">
-                      {line.map((token, key) => {
-                        const tokenProps = getTokenProps({ token })
-                        return <span key={key} {...tokenProps} />
-                      })}
-                    </span>
-                  </div>
-                )
-              })}
-            </pre>
-          )}
-        </Highlight>
-
-        <div className="absolute right-4 top-4 flex items-center gap-1.5">
-          <TooltipProvider>
-            <Tooltip delayDuration={300}>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  onClick={handleDownload}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-foreground/[0.04] text-muted-foreground backdrop-blur-md transition-all hover:bg-foreground/[0.08] hover:text-foreground"
-                  aria-label={t("actions.download")}
-                >
-                  <Download className="h-3.5 w-3.5" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={6}>
-                {t("actions.download")}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          {isGlass ? (
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() =>
-                  copyText(shortGlassPrompt, () => {
-                    setCopiedShort(true)
-                    window.setTimeout(() => setCopiedShort(false), 2000)
-                  })
-                }
-                className="flex h-8 items-center gap-1.5 rounded-lg border border-border bg-foreground/[0.04] px-2.5 text-xs font-medium text-muted-foreground backdrop-blur-md transition-all hover:bg-foreground/[0.08] hover:text-foreground"
+      <div className="relative min-h-0 flex-1 overflow-hidden">
+        {isGlass ? (
+          <GlassPromptView source={displayCode} />
+        ) : (
+          <Highlight code={displayCode.trim()} language="tsx" theme={prismTheme}>
+            {({ className, style, tokens, getTokenProps }) => (
+              <pre
+                className={cn(
+                  className,
+                  "gg-scroll h-full overflow-auto px-3 py-3 font-mono text-[11.5px] leading-relaxed sm:px-5 sm:py-4 sm:text-[12.5px]",
+                )}
+                style={{ ...style, backgroundColor: "transparent", margin: 0 }}
               >
-                {copiedShort ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
-                <span className="hidden sm:inline">{t("glass.quick")}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  copyText(glassPrompt, () => {
-                    setCopiedGlass(true)
-                    window.setTimeout(() => setCopiedGlass(false), 2000)
-                  })
-                }
-                className="flex h-8 items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-2.5 text-xs font-medium text-primary backdrop-blur-md transition-all hover:bg-primary/20"
-              >
-                {copiedGlass ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                <span className="hidden sm:inline">{t("glass.copyAll")}</span>
-              </button>
-            </div>
-          ) : isReusable ? (
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={handleCopyUsageOnly}
-                className="flex h-8 items-center gap-1.5 rounded-lg border border-border bg-foreground/[0.04] px-2.5 text-xs font-medium text-muted-foreground backdrop-blur-md transition-all hover:bg-foreground/[0.08] hover:text-foreground"
-              >
-                <Copy className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">{t("actions.copyUsageOnly")}</span>
-              </button>
-              <button
-                type="button"
-                onClick={handleCopy}
-                className="flex h-8 items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-2.5 text-xs font-medium text-primary backdrop-blur-md transition-all hover:bg-primary/20"
-              >
-                <Layers className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">{t("actions.copy")}</span>
-              </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="flex h-8 items-center gap-1.5 rounded-lg border border-border bg-foreground/[0.04] px-3 text-xs font-medium text-muted-foreground backdrop-blur-md transition-all hover:bg-foreground/[0.08] hover:text-foreground"
-            >
-              <Copy className="h-3.5 w-3.5" />
-              {t("actions.copy")}
-            </button>
-          )}
-        </div>
+                <code className="block min-w-0 max-w-full sm:min-w-max">
+                  {tokens.map((line, i) => (
+                    <div key={i} className="flex min-w-0 sm:min-w-max">
+                      <span className="w-7 shrink-0 select-none pr-2 text-right text-muted-foreground/40 tabular-nums sm:w-9 sm:pr-4">
+                        {i + 1}
+                      </span>
+                      <span className="min-w-0 flex-1 whitespace-pre-wrap break-words sm:min-w-0 sm:whitespace-pre">
+                        {line.map((token, key) => {
+                          const tokenProps = getTokenProps({ token })
+                          return <span key={key} {...tokenProps} />
+                        })}
+                      </span>
+                    </div>
+                  ))}
+                </code>
+              </pre>
+            )}
+          </Highlight>
+        )}
       </div>
 
       {isGlass ? (
-        <div className="border-t border-border/60 bg-foreground/[0.02] px-4 py-2.5">
+        <div className="shrink-0 border-t border-border/60 bg-foreground/[0.02] px-3 py-2 sm:px-4 sm:py-2.5">
           <p className="text-[11px] font-medium text-muted-foreground">{t("glass.howTo.title")}</p>
           <ol className="mt-1 list-inside list-decimal space-y-0.5 text-[11px] leading-relaxed text-muted-foreground/90">
             <li>{t("glass.howTo.step1")}</li>
@@ -277,6 +285,21 @@ export function CodePanel({
           <p className="text-[11px] leading-relaxed text-muted-foreground">{t("code.reusable.callout")}</p>
         </div>
       ) : null}
+    </div>
+  )
+}
+
+/** GLASS.md — one line per row; tables and `**` stay intact (no Prism markdown token split). */
+function GlassPromptView({ source }: { source: string }) {
+  const lines = source.trim().split("\n")
+
+  return (
+    <div className="gg-glass-prompt gg-scroll h-full overflow-auto overscroll-contain px-3 py-3 sm:px-5 sm:py-4">
+      <code className="block w-full min-w-0 font-mono text-[11.5px] leading-[1.65] sm:text-[12.5px]">
+        {lines.map((line, i) => (
+          <GlassMdLine key={i} line={line} lineNumber={i + 1} />
+        ))}
+      </code>
     </div>
   )
 }
@@ -296,7 +319,7 @@ function ModeTab({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "rounded-full px-3.5 py-1 text-[11px] font-medium transition-all duration-200",
+        "rounded-full px-2.5 py-1 text-[10px] font-medium transition-all duration-200 sm:px-3.5 sm:text-[11px]",
         active
           ? "bg-foreground/10 text-foreground shadow-[inset_0_1px_0_0_var(--gg-glass-inset-light)]"
           : "text-muted-foreground hover:text-foreground",

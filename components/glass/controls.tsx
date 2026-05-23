@@ -18,6 +18,7 @@ import type {
   GlassTint,
 } from "@/lib/glass-core/types"
 import type { ProjectProfile } from "@/lib/glass-core/project-profile"
+import { panelInputClassName } from "./panel-field"
 import { ProjectProfileSection } from "./project-profile-section"
 
 export const DEFAULT_OPTIONS: GlassOptions = {
@@ -272,7 +273,7 @@ export function Controls({
               value={options.text ?? ""}
               placeholder={textCfg.placeholder}
               onChange={(e) => set("text", e.target.value)}
-              className="h-9 w-full rounded-lg border border-border bg-foreground/[0.03] px-3 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/40 focus:bg-foreground/[0.05]"
+              className={panelInputClassName}
             />
           </div>
         )}
