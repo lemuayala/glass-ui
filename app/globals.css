@@ -238,3 +238,375 @@
     0 1px 0 0 var(--gg-glass-inset-dark);
   will-change: box-shadow;
 }
+
+/* ────────────────────────────────────────────────────────────
+ *  SIRI GLOW — portfolio-style conic border (lemuel-ayala-portfolio)
+ * ─────────────────────────────────────────────────────────── */
+@property --liquid-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes liquid-rotate {
+  to {
+    --liquid-angle: 360deg;
+  }
+}
+
+.siri-glow {
+  position: relative;
+  isolation: isolate;
+  --liquid-angle: 0deg;
+  animation: liquid-rotate 7s linear infinite;
+}
+
+/* Ambient Siri halo — always on, soft */
+.siri-glow::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--liquid-angle),
+    rgba(56, 189, 248, 0.35) 0deg,
+    rgba(167, 139, 250, 0.4) 90deg,
+    rgba(244, 114, 182, 0.32) 180deg,
+    rgba(251, 191, 36, 0.28) 270deg,
+    rgba(34, 211, 238, 0.35) 360deg
+  );
+  filter: blur(16px);
+  opacity: 0.28;
+  transition: opacity 450ms ease, filter 450ms ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.siri-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2.5px;
+  background: conic-gradient(
+    from var(--liquid-angle),
+    rgba(255, 255, 255, 0.2) 0deg,
+    #38bdf8 50deg,
+    #a78bfa 110deg,
+    #f472b6 175deg,
+    #fbbf24 245deg,
+    #22d3ee 310deg,
+    rgba(255, 255, 255, 0.15) 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0.45;
+  transition:
+    opacity 450ms ease,
+    filter 450ms ease,
+    padding 450ms ease;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.siri-glow:hover::before,
+.siri-glow:focus-within::before {
+  opacity: 0.62;
+  filter: blur(22px);
+}
+
+.siri-glow:hover,
+.siri-glow:focus-within {
+  animation-duration: 2.8s;
+}
+
+.siri-glow:hover::after,
+.siri-glow:focus-within::after {
+  opacity: 1;
+  padding: 3px;
+  filter:
+    drop-shadow(0 0 12px rgba(56, 189, 248, 0.65))
+    drop-shadow(0 0 26px rgba(167, 139, 250, 0.5))
+    drop-shadow(0 0 42px rgba(244, 114, 182, 0.28));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .siri-glow,
+  .siri-glow::after {
+    animation: none;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+ *  LANDING — floating tiles, marquee, grid mesh
+ * ─────────────────────────────────────────────────────────── */
+@keyframes gg-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -10px, 0); }
+}
+
+.gg-float-1 { animation: gg-float 6s ease-in-out infinite; }
+.gg-float-2 { animation: gg-float 7.5s ease-in-out -1.4s infinite; }
+.gg-float-3 { animation: gg-float 8s ease-in-out -3s infinite; }
+.gg-float-4 { animation: gg-float 6.5s ease-in-out -0.8s infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gg-float-1, .gg-float-2, .gg-float-3, .gg-float-4 { animation: none; }
+}
+
+@keyframes gg-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.gg-marquee {
+  animation: gg-marquee 38s linear infinite;
+  will-change: transform;
+}
+
+.gg-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* iPhone 17 Pro Max — fixed logical viewport (landing + future playground) */
+.gg-device-iphone-pro-max {
+  width: 440px;
+  height: 956px;
+  max-width: 100%;
+  flex-shrink: 0;
+  transform-style: preserve-3d;
+}
+
+.gg-device-scale-wrap {
+  width: 440px;
+  max-width: calc(100vw - 3rem);
+  margin-inline: auto;
+}
+
+@media (max-width: 520px) {
+  .gg-device-scale-wrap {
+    --gg-device-scale: min(1, calc((100vw - 3rem) / 440));
+    transform: scale(var(--gg-device-scale));
+    transform-origin: top center;
+    width: 440px;
+    margin-bottom: calc(956px * (var(--gg-device-scale) - 1));
+  }
+}
+
+/* Playground preview — scale device by stage container, keep aspect ratio */
+.gg-preview-stage {
+  container-type: size;
+  container-name: preview;
+}
+
+.gg-preview-device-shell {
+  container-type: inline-size;
+  container-name: preview-device;
+  --gg-preview-gutter: clamp(0.75rem, 5cqw, 1.5rem);
+  --gg-preview-content: calc(100cqw - var(--gg-preview-gutter) * 2);
+  transform-origin: center center;
+  will-change: transform, opacity, max-width, max-height, border-radius;
+  transition:
+    max-width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    max-height 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.45s ease,
+    background-color 0.45s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gg-preview-device-shell {
+    transition: none;
+  }
+}
+
+/* Primitives inside device frame — width from shell (cqw), not collapsed parent */
+.gg-preview-primitive {
+  width: clamp(14rem, 85cqw, 20rem);
+  max-width: var(--gg-preview-content);
+  min-width: 0;
+  margin-inline: auto;
+}
+
+/* Search field */
+.gg-preview-primitive-input {
+  width: clamp(11rem, 78cqw, 18.75rem);
+  max-width: var(--gg-preview-content);
+  min-width: 0;
+  margin-inline: auto;
+}
+
+/* Bottom tab bar — ~88% of device width, cap 340px (iOS dock) */
+.gg-preview-primitive-dock {
+  width: clamp(17.5rem, 88cqw, 21.25rem);
+  max-width: var(--gg-preview-content);
+  min-width: min(17.5rem, var(--gg-preview-content));
+  margin-inline: auto;
+}
+
+/* Top navigation bar */
+.gg-preview-primitive-bar {
+  width: clamp(16rem, 90cqw, 20rem);
+  max-width: var(--gg-preview-content);
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.gg-preview-drag-surface {
+  padding: clamp(0.75rem, 5cqw, 1.5rem);
+}
+
+@container preview-device (max-width: 360px) {
+  .gg-preview-drag-surface {
+    padding-inline: clamp(0.625rem, 4cqw, 1rem);
+  }
+
+  .gg-preview-drag-hint-text {
+    display: none;
+  }
+}
+
+/* Showcase — aurora drift + post-assembly polish */
+.gg-showcase-device {
+  transform-style: preserve-3d;
+}
+
+.gg-showcase-main {
+  scrollbar-width: none;
+}
+
+.gg-showcase-main::-webkit-scrollbar {
+  display: none;
+}
+
+.gg-showcase-wallpaper {
+  animation: gg-showcase-aurora 18s ease-in-out infinite alternate;
+}
+
+@keyframes gg-showcase-aurora {
+  0% { transform: scale(1) translate3d(0, 0, 0); filter: saturate(1); }
+  100% { transform: scale(1.06) translate3d(-2%, -1%, 0); filter: saturate(1.12); }
+}
+
+.gg-showcase-live .gg-showcase-progress {
+  animation: gg-showcase-progress 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Keep assembled UI visible — Anime must not rewind tiles after lock */
+.gg-showcase-live [data-showcase-tile],
+.gg-showcase-live [data-showcase-env] {
+  opacity: 1 !important;
+  filter: blur(0) !important;
+  transform: none !important;
+}
+
+@keyframes gg-showcase-progress {
+  from { width: 38%; }
+  to { width: 62%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gg-showcase-wallpaper { animation: none; }
+  .gg-showcase-live .gg-showcase-progress { animation: none; width: 52%; }
+}
+
+/* Premium grid mesh — barely visible, more dense on hero */
+.gg-grid-mesh {
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--foreground) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 6%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+}
+
+/* Word splits — make every split character look perfect */
+.split-line {
+  overflow: hidden;
+  display: inline-block;
+}
+
+.split-word,
+.split-char {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}
+
+/* Subtle accent on one headline phrase — not full-title gradient */
+.gg-text-accent {
+  background: linear-gradient(
+    120deg,
+    color-mix(in oklch, var(--foreground) 88%, var(--primary)) 0%,
+    color-mix(in oklch, var(--primary) 70%, oklch(0.72 0.16 280)) 55%,
+    color-mix(in oklch, var(--foreground) 82%, oklch(0.75 0.14 320)) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Keep accent visible even if splitText runs on sibling lead */
+[data-headline-accent] {
+  opacity: 1;
+  display: inline;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Inicio hero luma — full-bleed behind copy */
+@keyframes gg-inicio-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.78;
+    transform: scale(1.05);
+  }
+}
+
+.gg-inicio-beam {
+  animation: gg-inicio-pulse 8s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+.gg-inicio-beam-2 {
+  animation-duration: 10s;
+  animation-delay: -3s;
+}
+
+.gg-inicio-beam-3 {
+  animation-duration: 12s;
+  animation-delay: -6s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gg-inicio-beam {
+    animation: none;
+    opacity: 0.62;
+  }
+}
+
+/* Subtle shimmer for code panels */
+@keyframes gg-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.gg-shimmer {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in oklch, var(--foreground) 8%, transparent) 50%,
+    transparent 100%);
+  background-size: 200% 100%;
+  animation: gg-shimmer 3s linear infinite;
+}

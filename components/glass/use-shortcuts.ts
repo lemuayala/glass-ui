@@ -15,7 +15,7 @@ interface ShortcutHandlers {
 /**
  * Registers app-wide keyboard shortcuts.
  *
- *   1 / 2 / 3 / 4 / 5  → switch component
+ *   1–7  → switch component
  *   D                  → toggle component (preview) theme
  *   T                  → toggle app theme (light/dark)
  *   L                  → toggle language (es/en)
@@ -51,6 +51,8 @@ export function useShortcuts(handlers: ShortcutHandlers) {
         case "3":
         case "4":
         case "5":
+        case "6":
+        case "7":
           e.preventDefault()
           handlers.onComponentByIndex(Number(e.key) - 1)
           break

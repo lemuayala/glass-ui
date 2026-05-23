@@ -44,6 +44,8 @@ export function ShortcutsDialog({ open, onClose }: { open: boolean; onClose: () 
           <Kbd>3</Kbd>
           <Kbd>4</Kbd>
           <Kbd>5</Kbd>
+          <Kbd>6</Kbd>
+          <Kbd>7</Kbd>
         </div>
       ),
     },

@@ -49,7 +49,7 @@ No dependencies on bulky UI libraries. No complex configuration. Just pure, drop
 
 ## 🧩 The Components
 
-We ship five meticulously designed primitives. Each adapts perfectly to light and dark themes and exposes the exact same **8 core properties**.
+We ship **seven** meticulously designed primitives. Each adapts to light and dark themes and exposes the same **8 core properties**.
 
 <div align="center">
 
@@ -60,6 +60,8 @@ We ship five meticulously designed primitives. Each adapts perfectly to light an
 | **Glass Input** | ✅ | ✅ |
 | **Glass Modal** | ✅ | ✅ |
 | **Glass Tab Bar** | ✅ | ✅ |
+| **Glass Switch** | ✅ | ✅ |
+| **Glass Navigation Bar** | ✅ | ✅ |
 
 </div>
 
@@ -134,7 +136,7 @@ generateUsageSnippet(CodegenInput)
 
 | Shortcut | Action |
 |---|---|
-| `1–5` | Switch component (Card, Button, Input, Modal, TabBar) |
+| `1–7` | Switch component (Card, Button, Input, Modal, TabBar, Switch, NavBar) |
 | `T` | Toggle component theme (light/dark) |
 | `P` | Open presets |
 | `S` | Copy share link |
@@ -156,19 +158,24 @@ git clone https://github.com/lemuayala/glass-ui.git
 # Enter the directory
 cd glass-ui
 
-# Install dependencies and start the engine
-npm install
-npm run dev
+# Install dependencies (pnpm only) and start the engine
+pnpm install
+pnpm dev
 ```
 
-Visit `http://localhost:3000` to start designing.
+Visit `http://localhost:3000/play` to open the playground. The landing page is at `http://localhost:3000`.
 
 <br/>
 
+## 🤖 GLASS.md — AI integration prompts
+
+Copy a full **GLASS.md** spec from the playground (tab next to Code) with your design props, generated TSX, usage snippet, and project integration steps for Cursor / Claude.
+
 ## 🗺️ Roadmap
 
-- [ ] `GlassSwitch` component
-- [ ] `GlassNavigationBar` component
+- [x] `GlassSwitch` component
+- [x] `GlassNavigationBar` component
+- [x] GLASS.md integration prompts
 - [ ] Export as NPM package (`@glass-ui/core`)
 - [ ] Figma plugin integration
 - [ ] Live preview for Native components (Expo Snack embed)
