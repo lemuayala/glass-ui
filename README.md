@@ -21,8 +21,10 @@
   [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-black?style=for-the-badge)](CONTRIBUTING.md)
 
   <br/>
+  
+  <img width="2028" height="1314" alt="Captura desde 2026-05-24 18-57-51" src="https://github.com/user-attachments/assets/9961b309-57ee-4c6c-a15b-5ca08ed42c4a" />
 
-  <img width="1530" height="1249" alt="Glass UI playground" src="https://github.com/user-attachments/assets/310fa706-0369-4a65-a2a3-162e9bbb1958" />
+  <img width="2028" height="1314" alt="Captura desde 2026-05-24 18-58-09" src="https://github.com/user-attachments/assets/8b628ee5-f3de-4f13-a9de-8f5f7fccd894" />
 
   <br/>
   <br/>
