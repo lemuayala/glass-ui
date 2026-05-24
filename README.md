@@ -12,8 +12,8 @@
 
   <br/>
 
-  [![Live Demo](https://img.shields.io/badge/Live%20Demo-glass--ui.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://glass-ui.vercel.app/play)
-  [![Playground](https://img.shields.io/badge/Open-Playground-111827?style=for-the-badge)](https://glass-ui.vercel.app/play)
+  [![Live Demo](https://img.shields.io/badge/Live%20Demo-glass--ui.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://glass-ui-play.vercel.app)
+  [![Playground](https://img.shields.io/badge/Open-Playground-111827?style=for-the-badge)](https://glass-ui-play.vercel.app/play)
   [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs)](https://nextjs.org)
   [![React](https://img.shields.io/badge/React-19-149eca?style=for-the-badge&logo=react&logoColor=white)](https://react.dev)
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
