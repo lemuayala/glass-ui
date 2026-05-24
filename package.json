@@ -69,6 +69,8 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "16.2.4",
     "only-allow": "^1.2.1",
     "postcss": "^8.5",
     "sharp": "^0.34.5",
