@@ -2,7 +2,6 @@
 
 import { animate, createTimeline, utils } from "animejs"
 import type { Timeline } from "animejs"
-import { isLandingLiteViewport } from "@/lib/mobile-landing"
 
 export const LANDING_REVEAL_EVENT = "glass:landing-reveal"
 
@@ -10,12 +9,6 @@ const REVEAL_IO: IntersectionObserverInit = {
   root: null,
   rootMargin: "0px 0px -8% 0px",
   threshold: [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.35, 0.45],
-}
-
-const REVEAL_IO_MOBILE: IntersectionObserverInit = {
-  root: null,
-  rootMargin: "0px 0px -2% 0px",
-  threshold: [0, 0.05, 0.1, 0.15, 0.2, 0.25],
 }
 
 export type EnterTimeline = Timeline & {
@@ -58,14 +51,7 @@ export function isRevealTargetInView(el: HTMLElement): boolean {
   const r = el.getBoundingClientRect()
   const vh = window.innerHeight
   if (r.height <= 0) return false
-  if (typeof window !== "undefined" && isLandingLiteViewport()) {
-    return r.top < vh * 0.92 && r.bottom > vh * 0.02
-  }
   return r.top < vh * 0.82 && r.bottom > vh * 0.06
-}
-
-export function isPartiallyVisible(el: HTMLElement) {
-  return isRevealTargetInView(el)
 }
 
 export type EnterSceneOptions = {
@@ -106,18 +92,14 @@ function armRevealObserver(
     handle.disconnect()
   }
 
-  const io =
-    typeof window !== "undefined" && isLandingLiteViewport() ? REVEAL_IO_MOBILE : REVEAL_IO
-  const minRatio = io === REVEAL_IO_MOBILE ? 0.05 : 0.08
-
   const observer = new IntersectionObserver((entries) => {
     for (const entry of entries) {
       if (entry.target !== anchor) continue
       if (!entry.isIntersecting) continue
-      if (entry.intersectionRatio < minRatio) continue
+      if (entry.intersectionRatio < 0.08) continue
       fire()
     }
-  }, io)
+  }, REVEAL_IO)
 
   const onScroll = () => fire()
 
@@ -186,7 +168,6 @@ function createDesktopScene(section: HTMLElement, options?: EnterSceneOptions): 
     handle = armRevealObserver(anchor, sectionId, play)
   }
 
-  const emergencyMs = isLandingLiteViewport() ? 8000 : 15000
   const emergency = window.setTimeout(() => {
     if (!played && !locked) {
       const targets = options?.lockTargets?.()
@@ -194,7 +175,7 @@ function createDesktopScene(section: HTMLElement, options?: EnterSceneOptions): 
       options?.onComplete?.()
       locked = true
     }
-  }, emergencyMs)
+  }, 15000)
 
   const origRevert = tl.revert?.bind(tl)
   tl.revert = () => {
@@ -219,72 +200,6 @@ export function createEnterScene(
   }
 
   return createDesktopScene(section, options)
-}
-
-export function createAssemblyScene(section: HTMLElement, options?: EnterSceneOptions) {
-  if (prefersReducedMotion()) {
-    const targets = options?.lockTargets?.()
-    if (targets) revealVisible(targets)
-    options?.onComplete?.()
-    return createTimeline({ autoplay: false })
-  }
-
-  let locked = false
-  let maxProgress = 0
-
-  const lock = () => {
-    if (locked) return
-    locked = true
-    const targets = options?.lockTargets?.()
-    if (targets) revealVisible(targets)
-    tl.seek(tl.duration)
-    options?.onComplete?.()
-  }
-
-  const holdLocked = () => {
-    if (!locked) return
-    const targets = options?.lockTargets?.()
-    if (targets) revealVisible(targets)
-    tl.seek(tl.duration)
-  }
-
-  const tl = createTimeline({
-    autoplay: false,
-    defaults: { ease: "out(4)", duration: 720 },
-  })
-
-  const syncFromScroll = () => {
-    if (locked) {
-      holdLocked()
-      return
-    }
-
-    const rect = section.getBoundingClientRect()
-    const vh = window.innerHeight
-    if (rect.bottom < 0 || rect.top > vh) return
-
-    const travel = Math.max(section.offsetHeight - vh * 0.35, vh * 0.95)
-    const raw = Math.min(1, Math.max(0, (vh * 0.52 - rect.top) / travel))
-    const progress = raw ** 1.35
-
-    maxProgress = Math.max(maxProgress, progress)
-    tl.seek(maxProgress * tl.duration)
-
-    if (maxProgress >= 0.97) lock()
-  }
-
-  requestAnimationFrame(syncFromScroll)
-  window.addEventListener("scroll", syncFromScroll, { passive: true })
-  window.addEventListener("resize", syncFromScroll, { passive: true })
-
-  const origRevert = tl.revert?.bind(tl)
-  tl.revert = () => {
-    window.removeEventListener("scroll", syncFromScroll)
-    window.removeEventListener("resize", syncFromScroll)
-    origRevert?.()
-  }
-
-  return tl
 }
 
 export function animateStatCounters(counters: NodeListOf<HTMLElement> | HTMLElement[]) {
