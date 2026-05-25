@@ -43,7 +43,7 @@ export function LandingNativeStrip() {
             {FEATS.map((feat) => (
               <li
                 key={feat.title}
-                className="rounded-2xl border border-white/[0.08] bg-foreground/[0.03] px-4 py-3.5 backdrop-blur-sm"
+                className="rounded-2xl border border-white/[0.08] bg-foreground/[0.03] px-4 py-3.5 max-md:backdrop-blur-none md:backdrop-blur-sm"
               >
                 <p className="text-sm font-semibold text-foreground">{t(feat.title)}</p>
                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t(feat.desc)}</p>

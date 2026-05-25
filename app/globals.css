@@ -596,6 +596,124 @@
   }
 }
 
+/* ────────────────────────────────────────────────────────────
+ *  LANDING LITE — mobile / reduced-motion (no heavy GPU layers)
+ * ─────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .gg-orb {
+    animation: none;
+    will-change: auto;
+  }
+
+  .gg-inicio-beam {
+    animation: none;
+    opacity: 0.55;
+  }
+
+  .siri-glow,
+  .siri-glow::before,
+  .siri-glow::after {
+    animation: none !important;
+  }
+
+  .siri-glow::before,
+  .siri-glow::after {
+    opacity: 0 !important;
+  }
+
+  .gg-marquee {
+    animation: none;
+    will-change: auto;
+  }
+
+  .gg-showcase-wallpaper {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .gg-landing-ambient-orbs {
+    display: none !important;
+  }
+}
+
+html.gg-viewport-mobile .gg-landing-ambient-orbs {
+  display: none !important;
+}
+
+html.gg-viewport-desktop .gg-landing-ambient-gradient,
+html.gg-viewport-desktop .gg-hero-ambient-lite {
+  display: none !important;
+}
+
+html.gg-landing-lite .gg-landing-ambient-orbs {
+  display: none !important;
+}
+
+.gg-landing-ambient-gradient {
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, oklch(0.62 0.2 265 / 0.22), transparent 55%),
+    radial-gradient(ellipse 60% 45% at 85% 35%, oklch(0.72 0.16 320 / 0.14), transparent 50%),
+    radial-gradient(ellipse 55% 40% at 10% 70%, oklch(0.75 0.14 195 / 0.1), transparent 50%),
+    linear-gradient(180deg, var(--background) 0%, color-mix(in oklch, var(--background) 92%, oklch(0.55 0.12 265)) 100%);
+}
+
+.gg-hero-ambient-lite {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 15%, oklch(0.62 0.22 265 / 0.28), transparent 62%),
+    radial-gradient(ellipse 45% 40% at 20% 55%, oklch(0.72 0.18 320 / 0.12), transparent 55%);
+}
+
+.gg-landing-lite-reveal {
+  animation: gg-landing-lite-fade 0.55s ease-out forwards;
+}
+
+@keyframes gg-landing-lite-fade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Playground — solid panels on mobile (glass stays on preview primitives) */
+@media (max-width: 1023px) {
+  .gg-playground-panel {
+    background: color-mix(in oklch, var(--background) 95%, transparent);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .gg-preview-stage-mobile {
+    min-height: min(52dvh, 100%);
+  }
+}
+
+/* Scroll-to-top — data attribute avoids React re-renders on scroll */
+html[data-scroll-top="1"] .gg-scroll-top {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.gg-scroll-top {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.75rem);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
 /* Subtle shimmer for code panels */
 @keyframes gg-shimmer {
   0% { background-position: -200% 0; }
