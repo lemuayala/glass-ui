@@ -1,15 +1,27 @@
 "use client"
 
-import { animate, createTimeline, onScroll, utils } from "animejs"
+import { animate, createTimeline, utils } from "animejs"
+import type { Timeline } from "animejs"
+import { isLandingLiteViewport } from "@/lib/mobile-landing"
 
-/**
- * Target top crosses viewport bottom edge → section just entered while scrolling down.
- * Works for footer blocks (CTA/stats); `top 90%` often never fires there.
- */
-const SCROLL_ENTER = "top bottom-=10%"
-
-/** Fired when hero (or nav) jumps to a landing section — detail: { id: section id } */
 export const LANDING_REVEAL_EVENT = "glass:landing-reveal"
+
+const REVEAL_IO: IntersectionObserverInit = {
+  root: null,
+  rootMargin: "0px 0px -8% 0px",
+  threshold: [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.35, 0.45],
+}
+
+const REVEAL_IO_MOBILE: IntersectionObserverInit = {
+  root: null,
+  rootMargin: "0px 0px -2% 0px",
+  threshold: [0, 0.05, 0.1, 0.15, 0.2, 0.25],
+}
+
+export type EnterTimeline = Timeline & {
+  /** Call after all `scene.add()` — arms scroll observer */
+  armReveal: () => void
+}
 
 export function requestLandingSectionReveal(sectionId: string) {
   if (typeof window === "undefined") return
@@ -41,27 +53,105 @@ export function revealVisible(targets: unknown) {
   })
 }
 
-export function isPartiallyVisible(el: HTMLElement) {
+/** Anchor intersects viewport while scrolling down (no upper band — avoids skip on fast scroll). */
+export function isRevealTargetInView(el: HTMLElement): boolean {
   const r = el.getBoundingClientRect()
   const vh = window.innerHeight
-  return r.top < vh * 0.92 && r.bottom > vh * 0.08
+  if (r.height <= 0) return false
+  if (typeof window !== "undefined" && isLandingLiteViewport()) {
+    return r.top < vh * 0.92 && r.bottom > vh * 0.02
+  }
+  return r.top < vh * 0.82 && r.bottom > vh * 0.06
 }
 
-type EnterSceneOptions = {
+export function isPartiallyVisible(el: HTMLElement) {
+  return isRevealTargetInView(el)
+}
+
+export type EnterSceneOptions = {
   lockTargets?: () => unknown
   onComplete?: () => void
+  /** Element that marks “user reached this block” — usually the section h2 */
+  anchor?: HTMLElement | (() => HTMLElement | null)
 }
 
-export function createEnterScene(section: HTMLElement, options?: EnterSceneOptions) {
-  if (prefersReducedMotion()) {
-    const targets = options?.lockTargets?.()
-    if (targets) revealVisible(targets)
-    options?.onComplete?.()
-    return createTimeline({ autoplay: false })
+function resolveAnchor(section: HTMLElement, options?: EnterSceneOptions): HTMLElement {
+  const raw = options?.anchor
+  const el = typeof raw === "function" ? raw() : raw
+  return el ?? section
+}
+
+function asEnterTimeline(tl: Timeline, armReveal: () => void): EnterTimeline {
+  const extended = tl as EnterTimeline
+  extended.armReveal = armReveal
+  return extended
+}
+
+type RevealHandle = {
+  disconnect: () => void
+}
+
+function armRevealObserver(
+  anchor: HTMLElement,
+  sectionId: string | undefined,
+  onFire: () => void,
+): RevealHandle {
+  let fired = false
+
+  const fire = () => {
+    if (fired) return
+    if (!isRevealTargetInView(anchor)) return
+    fired = true
+    onFire()
+    handle.disconnect()
   }
 
+  const io =
+    typeof window !== "undefined" && isLandingLiteViewport() ? REVEAL_IO_MOBILE : REVEAL_IO
+  const minRatio = io === REVEAL_IO_MOBILE ? 0.05 : 0.08
+
+  const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.target !== anchor) continue
+      if (!entry.isIntersecting) continue
+      if (entry.intersectionRatio < minRatio) continue
+      fire()
+    }
+  }, io)
+
+  const onScroll = () => fire()
+
+  const onRevealRequest = (e: Event) => {
+    const id = (e as CustomEvent<{ id?: string }>).detail?.id
+    if (sectionId && id && sectionId !== id) return
+    requestAnimationFrame(fire)
+  }
+
+  const handle: RevealHandle = {
+    disconnect: () => {
+      observer.disconnect()
+      window.removeEventListener("scroll", onScroll)
+      window.removeEventListener("scrollend", onScroll)
+      window.removeEventListener(LANDING_REVEAL_EVENT, onRevealRequest)
+    },
+  }
+
+  observer.observe(anchor)
+  window.addEventListener("scroll", onScroll, { passive: true })
+  window.addEventListener("scrollend", onScroll, { passive: true })
+  window.addEventListener(LANDING_REVEAL_EVENT, onRevealRequest)
+  requestAnimationFrame(fire)
+
+  return handle
+}
+
+function createDesktopScene(section: HTMLElement, options?: EnterSceneOptions): EnterTimeline {
+  const anchor = resolveAnchor(section, options)
+  const sectionId = section.id || undefined
   let locked = false
   let playing = false
+  let played = false
+  let handle: RevealHandle | null = null
 
   const finish = () => {
     if (locked) return
@@ -72,67 +162,65 @@ export function createEnterScene(section: HTMLElement, options?: EnterSceneOptio
     options?.onComplete?.()
   }
 
-  const playOnce = () => {
-    if (locked || playing) return
-    if (tl.progress >= 1) {
-      finish()
-      return
-    }
-    playing = true
-    tl.play()
-  }
-
   const tl = createTimeline({
     autoplay: false,
     defaults: { ease: "out(4)" },
     onComplete: finish,
   })
 
-  const scrollObs = onScroll({
-    target: section,
-    enter: SCROLL_ENTER,
-    repeat: false,
-    onEnter: playOnce,
-  })
-
-  const tryPlay = () => {
-    if (locked) return
-    if (isPartiallyVisible(section)) playOnce()
+  const play = () => {
+    if (played || locked || playing) return
+    if (tl.duration <= 0) {
+      finish()
+      return
+    }
+    played = true
+    playing = true
+    tl.pause()
+    tl.seek(0)
+    tl.play()
   }
 
-  const onRevealRequest = (e: Event) => {
-    const id = (e as CustomEvent<{ id?: string }>).detail?.id
-    if (id && section.id !== id) return
-    requestAnimationFrame(tryPlay)
+  const armReveal = () => {
+    if (handle) return
+    handle = armRevealObserver(anchor, sectionId, play)
   }
 
-  requestAnimationFrame(tryPlay)
-  window.addEventListener("scroll", tryPlay, { passive: true })
-  window.addEventListener("scrollend", tryPlay, { passive: true })
-  window.addEventListener(LANDING_REVEAL_EVENT, onRevealRequest)
-
-  /** Never leave section stuck at opacity 0 if scroll / click misses enter. */
-  const safety = window.setTimeout(() => {
-    if (!locked) finish()
-  }, 2800)
+  const emergencyMs = isLandingLiteViewport() ? 8000 : 15000
+  const emergency = window.setTimeout(() => {
+    if (!played && !locked) {
+      const targets = options?.lockTargets?.()
+      if (targets) revealVisible(targets)
+      options?.onComplete?.()
+      locked = true
+    }
+  }, emergencyMs)
 
   const origRevert = tl.revert?.bind(tl)
   tl.revert = () => {
-    window.clearTimeout(safety)
-    window.removeEventListener("scroll", tryPlay)
-    window.removeEventListener("scrollend", tryPlay)
-    window.removeEventListener(LANDING_REVEAL_EVENT, onRevealRequest)
-    scrollObs.revert?.()
+    window.clearTimeout(emergency)
+    handle?.disconnect()
     origRevert?.()
   }
 
-  return tl
+  return asEnterTimeline(tl, armReveal)
 }
 
-/**
- * Scroll-driven assembly — progress only moves forward (never rewinds on scroll up).
- * After ~98% the scene locks and targets stay visible via revealVisible.
- */
+export function createEnterScene(
+  section: HTMLElement,
+  options?: EnterSceneOptions,
+): EnterTimeline {
+  if (prefersReducedMotion()) {
+    const targets = options?.lockTargets?.()
+    if (targets) revealVisible(targets)
+    options?.onComplete?.()
+    const tl = createTimeline({ autoplay: false })
+    return asEnterTimeline(tl, () => {})
+  }
+
+  return createDesktopScene(section, options)
+}
+
 export function createAssemblyScene(section: HTMLElement, options?: EnterSceneOptions) {
   if (prefersReducedMotion()) {
     const targets = options?.lockTargets?.()
@@ -142,7 +230,6 @@ export function createAssemblyScene(section: HTMLElement, options?: EnterSceneOp
   }
 
   let locked = false
-  /** Monotonic scroll progress — fixes appear/disappear when scrolling back up. */
   let maxProgress = 0
 
   const lock = () => {
@@ -200,7 +287,6 @@ export function createAssemblyScene(section: HTMLElement, options?: EnterSceneOp
   return tl
 }
 
-/** Count-up numbers after stats row is visible. */
 export function animateStatCounters(counters: NodeListOf<HTMLElement> | HTMLElement[]) {
   const list = Array.from(counters as Iterable<HTMLElement>)
   list.forEach((el) => {

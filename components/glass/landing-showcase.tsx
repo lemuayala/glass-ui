@@ -38,6 +38,8 @@ import { useT } from "@/lib/i18n/provider"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Wallpaper } from "@/components/glass/wallpaper"
 import { IosBattery, IosCellular, IosWifi } from "@/components/glass/ios-icons"
+import { LandingShowcaseMobile } from "@/components/glass/landing-showcase-mobile"
+import { isLandingLiteViewport } from "@/lib/mobile-landing"
 
 const DARK: GlassOptions = {
   theme: "dark",
@@ -75,6 +77,7 @@ export function LandingShowcase() {
   const t = useT()
   const sectionRef = useRef<HTMLElement | null>(null)
   const copyRef = useRef<HTMLDivElement | null>(null)
+  const titleRef = useRef<HTMLHeadingElement | null>(null)
   const phoneRef = useRef<HTMLDivElement | null>(null)
   const deviceRef = useRef<HTMLDivElement | null>(null)
   const stageRef = useRef<HTMLDivElement | null>(null)
@@ -82,6 +85,23 @@ export function LandingShowcase() {
   useEffect(() => {
     const section = sectionRef.current
     const copy = copyRef.current
+    if (!section || !copy) return
+
+    if (isLandingLiteViewport()) {
+      if (prefersReducedMotion()) {
+        revealVisible(copy)
+        return
+      }
+      setRevealPending(copy, 14)
+      const scene = createEnterScene(section, {
+        anchor: () => titleRef.current,
+        lockTargets: () => copy,
+      })
+      scene.add(copy, { opacity: [0, 1], translateY: [14, 0], duration: 450, ease: "out(3)" }, 0)
+      scene.armReveal()
+      return () => scene.revert?.()
+    }
+
     const phone = phoneRef.current
     const device = deviceRef.current
     const stage = stageRef.current
@@ -111,6 +131,7 @@ export function LandingShowcase() {
     utils.set(tiles, { opacity: 0, translateY: 16, scale: 0.98 })
 
     const scene = createEnterScene(section, {
+      anchor: () => titleRef.current,
       lockTargets: lockAll,
       onComplete: onBuilt,
     })
@@ -164,11 +185,13 @@ export function LandingShowcase() {
       260,
     )
 
+    scene.armReveal()
+
     return () => {
       device?.classList.remove("gg-showcase-live")
       scene.revert?.()
     }
-  }, [])
+  }, [t])
 
   return (
     <section
@@ -180,7 +203,10 @@ export function LandingShowcase() {
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-foreground/[0.04] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
             {t("landing.showcase.eyebrow")}
           </span>
-          <h2 className="mt-5 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
+          <h2
+            ref={titleRef}
+            className="mt-5 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl"
+          >
             {t("landing.showcase.title")}
           </h2>
           <p className="mt-4 text-balance text-sm leading-relaxed text-muted-foreground md:text-base">
@@ -188,6 +214,10 @@ export function LandingShowcase() {
           </p>
         </div>
 
+      <div className="md:hidden">
+        <LandingShowcaseMobile />
+      </div>
+      <div className="hidden md:block">
       <TooltipProvider delayDuration={280}>
         <div ref={phoneRef} className="relative mx-auto mt-12 flex flex-col items-center md:mt-16">
             <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground/80">
@@ -401,6 +431,7 @@ export function LandingShowcase() {
             </div>
           </div>
       </TooltipProvider>
+      </div>
     </section>
   )
 }
@@ -421,12 +452,12 @@ export function LandingMarquee() {
     "Backdrop Blur",
   ]
   return (
-    <div className="relative w-full overflow-hidden py-8 [mask-image:linear-gradient(to_right,transparent,#000_15%,#000_85%,transparent)]">
+    <div className="relative hidden w-full overflow-hidden py-8 [mask-image:linear-gradient(to_right,transparent,#000_15%,#000_85%,transparent)] md:block">
       <div className="gg-marquee flex w-max items-center gap-3">
         {[...items, ...items].map((label, i) => (
           <span
             key={`${label}-${i}`}
-            className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/[0.08] bg-foreground/[0.03] px-4 py-2 text-[12px] font-medium uppercase tracking-wider text-muted-foreground backdrop-blur-md"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/[0.08] bg-foreground/[0.03] px-4 py-2 text-[12px] font-medium uppercase tracking-wider text-muted-foreground md:backdrop-blur-md"
           >
             <span className="inline-block h-1 w-1 rounded-full bg-primary/70" />
             {label}

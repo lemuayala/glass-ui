@@ -43,6 +43,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var r=document.documentElement,m=matchMedia("(max-width:767px)").matches;r.classList.toggle("gg-viewport-mobile",m);r.classList.toggle("gg-viewport-desktop",!m)}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         <SiteJsonLd />
         <Providers>{children}</Providers>

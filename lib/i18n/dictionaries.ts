@@ -73,6 +73,8 @@ export const dictionaries = {
     "landing.showcase.sectionActions": "Quick actions",
     "landing.showcase.sectionPrefs": "Preferences",
     "landing.showcase.sectionPrompt": "Confirmation",
+    "landing.showcase.mobileMore": "Open the playground for all seven primitives — navbar, modal, tab bar, and switch.",
+    "landing.showcase.mobileCta": "Open playground",
 
     "landing.code.title": "GLASS.md export",
     "landing.code.desc":
@@ -277,6 +279,8 @@ export const dictionaries = {
     "landing.showcase.sectionActions": "Acciones rápidas",
     "landing.showcase.sectionPrefs": "Preferencias",
     "landing.showcase.sectionPrompt": "Confirmación",
+    "landing.showcase.mobileMore": "Abre el playground para los siete primitivos: navbar, modal, tab bar y switch.",
+    "landing.showcase.mobileCta": "Abrir playground",
 
     "landing.code.title": "Exporta GLASS.md",
     "landing.code.desc":

@@ -11,6 +11,7 @@ import {
   revealVisible,
   setRevealPending,
 } from "@/lib/landing-motion"
+import { isLandingLiteViewport } from "@/lib/mobile-landing"
 
 export function LandingSteps() {
   const t = useT()
@@ -26,16 +27,67 @@ export function LandingSteps() {
     const stats = statsRef.current
     if (!section || !title || !steps || !stats) return
 
-    const titleSplit = splitText(title, { words: { wrap: "clip" } })
     const cards = steps.querySelectorAll<HTMLElement>("[data-step]")
     const counters = stats.querySelectorAll<HTMLElement>("[data-counter]")
     const statLabels = stats.querySelectorAll<HTMLElement>("p:not([data-counter])")
+    const lite = isLandingLiteViewport()
 
     if (prefersReducedMotion()) {
-      revealVisible([titleSplit.words, cards, counters, statLabels])
+      revealVisible([title, cards, counters, statLabels])
       animateStatCounters(counters)
-      return () => titleSplit.revert?.()
+      return
     }
+
+    if (lite) {
+      setRevealPending([title], 20)
+      utils.set(cards, { opacity: 0, translateY: 22, scale: 0.99 })
+      utils.set(counters, { opacity: 0, translateY: 8 })
+      utils.set(statLabels, { opacity: 0 })
+
+      const scene = createEnterScene(section, {
+        anchor: () => titleRef.current,
+        lockTargets: () => [title, cards],
+      })
+      scene
+        .add(title, { opacity: [0, 1], translateY: [18, 0], duration: 420 }, 0)
+        .add(
+          cards,
+          {
+            opacity: [0, 1],
+            translateY: [22, 0],
+            scale: [0.99, 1],
+            delay: stagger(55, { start: 0 }),
+            duration: 480,
+          },
+          100,
+        )
+
+      const statsEl = stats
+      const statsScene = createEnterScene(statsEl, {
+        anchor: () => statsEl,
+        lockTargets: () => [counters, statLabels],
+        onComplete: () => animateStatCounters(counters),
+      })
+      statsScene.add(
+        [counters, statLabels],
+        {
+          opacity: [0, 1],
+          translateY: [8, 0],
+          delay: stagger(40, { start: 0 }),
+          duration: 380,
+        },
+        0,
+      )
+
+      scene.armReveal()
+      statsScene.armReveal()
+      return () => {
+        scene.revert?.()
+        statsScene.revert?.()
+      }
+    }
+
+    const titleSplit = splitText(title, { words: { wrap: "clip" } })
 
     setRevealPending(titleSplit.words, 28)
     utils.set(cards, { opacity: 0, translateY: 32, scale: 0.98 })
@@ -43,8 +95,8 @@ export function LandingSteps() {
     utils.set(statLabels, { opacity: 0 })
 
     const scene = createEnterScene(section, {
-      lockTargets: () => [titleSplit.words, cards, counters, statLabels],
-      onComplete: () => animateStatCounters(counters),
+      anchor: () => titleRef.current,
+      lockTargets: () => [titleSplit.words, cards],
     })
 
     scene
@@ -69,19 +121,31 @@ export function LandingSteps() {
         },
         120,
       )
-      .add(
-        [counters, statLabels],
-        {
-          opacity: [0, 1],
-          translateY: [10, 0],
-          delay: stagger(60, { start: 0 }),
-          duration: 450,
-        },
-        320,
-      )
+
+    const statsEl = stats
+    const statsScene = createEnterScene(statsEl, {
+      anchor: () => statsEl,
+      lockTargets: () => [counters, statLabels],
+      onComplete: () => animateStatCounters(counters),
+    })
+
+    statsScene.add(
+      [counters, statLabels],
+      {
+        opacity: [0, 1],
+        translateY: [10, 0],
+        delay: stagger(60, { start: 0 }),
+        duration: 450,
+      },
+      0,
+    )
+
+    scene.armReveal()
+    statsScene.armReveal()
 
     return () => {
       scene.revert?.()
+      statsScene.revert?.()
       titleSplit.revert?.()
     }
   }, [t])
@@ -142,11 +206,12 @@ export function LandingSteps() {
       </div>
 
       <div
+        id="steps-stats"
         ref={statsRef}
         className="mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-border bg-foreground/[0.03] md:grid-cols-4"
       >
         {stats.map((s) => (
-          <div key={s.label} className="bg-background/40 px-6 py-8 text-center backdrop-blur-md">
+          <div key={s.label} className="bg-background/40 px-6 py-8 text-center max-md:backdrop-blur-none md:backdrop-blur-md">
             <p
               data-counter={s.value}
               data-suffix={s.suffix}

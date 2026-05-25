@@ -5,6 +5,7 @@ import { splitText, stagger } from "animejs"
 import { ArrowRight, Sparkles } from "lucide-react"
 import { useT } from "@/lib/i18n/provider"
 import { createEnterScene, prefersReducedMotion, revealVisible, setRevealPending } from "@/lib/landing-motion"
+import { isLandingLiteViewport } from "@/lib/mobile-landing"
 import { SiriCtaLink } from "./siri-cta-link"
 
 export function LandingCta() {
@@ -25,17 +26,36 @@ export function LandingCta() {
     const cta = ctaRef.current
     if (!section || !inner || !eyebrow || !title || !sub || !cta) return
 
-    const titleSplit = splitText(title, { words: { wrap: "clip" } })
-    const targets = [eyebrow, titleSplit.words, sub, cta]
+    const lite = isLandingLiteViewport()
 
     if (prefersReducedMotion()) {
-      revealVisible(targets)
-      return () => titleSplit.revert?.()
+      revealVisible([eyebrow, title, sub, cta])
+      return
     }
+
+    if (lite) {
+      const targets = [eyebrow, title, sub, cta]
+      setRevealPending(targets, 18)
+      const scene = createEnterScene(section, {
+        anchor: () => titleRef.current,
+        lockTargets: () => targets,
+      })
+      scene
+        .add(eyebrow, { opacity: [0, 1], translateY: [12, 0], duration: 380 }, 0)
+        .add(title, { opacity: [0, 1], translateY: [16, 0], duration: 420 }, 70)
+        .add(sub, { opacity: [0, 1], translateY: [12, 0], duration: 380 }, 160)
+        .add(cta, { opacity: [0, 1], translateY: [12, 0], scale: [0.98, 1], duration: 420 }, 240)
+      scene.armReveal()
+      return () => scene.revert?.()
+    }
+
+    const titleSplit = splitText(title, { words: { wrap: "clip" } })
+    const targets = [eyebrow, titleSplit.words, sub, cta]
 
     setRevealPending(targets, 24)
 
     const scene = createEnterScene(section, {
+      anchor: () => titleRef.current,
       lockTargets: () => targets,
     })
 
@@ -71,6 +91,8 @@ export function LandingCta() {
         360,
       )
 
+    scene.armReveal()
+
     return () => {
       scene.revert?.()
       titleSplit.revert?.()
@@ -79,12 +101,13 @@ export function LandingCta() {
 
   return (
     <section
+      id="cta"
       ref={sectionRef}
-      className="relative mx-auto mt-32 w-full max-w-5xl scroll-mt-8 px-6 pb-24 md:mt-48 md:pb-32"
+      className="relative mx-auto mt-32 w-full max-w-5xl scroll-mt-24 px-6 pb-24 md:mt-48 md:pb-32"
     >
       <div
         ref={innerRef}
-        className="relative overflow-visible rounded-[2.5rem] border border-white/[0.08] bg-foreground/[0.03] px-6 py-20 text-center backdrop-blur-xl"
+        className="relative overflow-visible rounded-[2.5rem] border border-white/[0.08] bg-foreground/[0.03] px-6 py-20 text-center max-md:backdrop-blur-none md:backdrop-blur-xl"
       >
         <div className="pointer-events-none absolute -top-32 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,_oklch(0.7_0.18_250_/_0.35),_transparent_70%)] blur-3xl" />
         <div className="pointer-events-none absolute -bottom-40 -right-10 h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle,_oklch(0.75_0.18_340_/_0.25),_transparent_70%)] blur-3xl" />

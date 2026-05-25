@@ -174,33 +174,16 @@ export function Generator() {
 
       {/* Main grid — 3 columns on desktop, stack on mobile */}
       <main className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-6 lg:gap-4">
-        <div className="flex shrink-0 flex-col gap-2 lg:hidden">
-          <ComponentSwitcherMobile component={component} onComponent={handleComponent} />
-          <PlaygroundMobileTabs active={mobilePanel} onChange={setMobilePanel} />
-        </div>
-
-        <div className="mx-auto grid min-h-0 w-full max-w-[1600px] flex-1 grid-cols-1 gap-4 lg:grid-cols-[280px_1fr_minmax(400px,500px)] xl:grid-cols-[280px_1fr_480px] 2xl:grid-cols-[300px_1.1fr_560px]">
-          <section
-            aria-label={t("panel.properties")}
-            className={cn(
-              "gg-glass gg-glass-inset rounded-2xl",
-              playgroundPanelClass("controls", mobilePanel),
-            )}
-          >
-            <Controls
-              component={component}
-              options={options}
-              onChange={setOptions}
-              profile={profile}
-              onProfileChange={updateProfile}
-            />
-          </section>
+        <div className="mx-auto grid min-h-0 w-full max-w-[1600px] flex-1 grid-cols-1 gap-3 max-lg:flex max-lg:flex-col max-lg:gap-2 lg:grid-cols-[280px_1fr_minmax(400px,500px)] lg:gap-4 xl:grid-cols-[280px_1fr_480px] 2xl:grid-cols-[300px_1.1fr_560px]">
+          <div className="order-1 shrink-0 lg:hidden">
+            <PlaygroundMobileTabs active={mobilePanel} onChange={setMobilePanel} />
+          </div>
 
           <section
             id="playground-preview"
             aria-label={t("panel.preview")}
             className={cn(
-              "gg-glass gg-glass-inset rounded-2xl",
+              "gg-glass gg-glass-inset gg-playground-panel order-2 rounded-2xl max-lg:min-h-[min(52dvh,100%)] max-lg:flex-1 lg:order-2",
               playgroundPanelClass("preview", mobilePanel),
             )}
           >
@@ -216,9 +199,25 @@ export function Generator() {
           </section>
 
           <section
+            aria-label={t("panel.properties")}
+            className={cn(
+              "gg-glass gg-glass-inset gg-playground-panel order-2 rounded-2xl lg:order-1",
+              playgroundPanelClass("controls", mobilePanel),
+            )}
+          >
+            <Controls
+              component={component}
+              options={options}
+              onChange={setOptions}
+              profile={profile}
+              onProfileChange={updateProfile}
+            />
+          </section>
+
+          <section
             aria-label={t("panel.code")}
             className={cn(
-              "gg-glass gg-glass-inset rounded-2xl",
+              "gg-glass gg-glass-inset gg-playground-panel order-2 rounded-2xl lg:order-3",
               playgroundPanelClass("code", mobilePanel),
             )}
           >
@@ -234,6 +233,10 @@ export function Generator() {
               onPlatform={setPlatform}
             />
           </section>
+
+          <div className="order-3 shrink-0 lg:hidden">
+            <ComponentSwitcherMobile component={component} onComponent={handleComponent} />
+          </div>
         </div>
       </main>
 

@@ -7,6 +7,7 @@ import { BrandLockup } from "./brand-lockup"
 import { GitHubStarLink } from "./github-star-link"
 import { Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useLandingLiteDocument } from "@/hooks/use-landing-lite-document"
 import { LandingHero } from "./landing-hero"
 import { LandingShowcase, LandingMarquee } from "./landing-showcase"
 import { LandingCode } from "./landing-code"
@@ -19,17 +20,24 @@ import { SiteFooterCredit } from "./site-footer-credit"
 export function LandingPage() {
   const t = useT()
   const { locale, toggleLocale } = useI18n()
+  useLandingLiteDocument()
+
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-x-clip">
-      {/* Ambient orbs — sit behind everything */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0 md:hidden"
+      >
+        <div className="gg-landing-ambient-gradient h-full w-full" />
+      </div>
+      <div aria-hidden className="pointer-events-none gg-landing-ambient-orbs fixed inset-0 -z-10 hidden md:block">
         <div className="gg-orb absolute -top-40 left-1/2 h-[620px] w-[620px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,_oklch(0.7_0.2_250_/_0.36),_transparent_70%)] blur-3xl" />
         <div className="gg-orb gg-orb-2 absolute top-1/3 -left-32 h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle,_oklch(0.75_0.18_340_/_0.26),_transparent_70%)] blur-3xl" />
         <div className="gg-orb gg-orb-3 absolute top-2/3 right-0 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,_oklch(0.78_0.18_195_/_0.22),_transparent_70%)] blur-3xl" />
         <div className="gg-grid-mesh absolute inset-0 opacity-55" />
       </div>
 
-      <header className="sticky top-0 z-30 flex w-full items-center justify-between gap-2 border-b border-white/[0.06] bg-background/40 px-3 py-2 backdrop-blur-xl sm:px-6 sm:py-3">
+      <header className="sticky top-0 z-30 flex w-full items-center justify-between gap-2 border-b border-white/[0.06] bg-background/90 px-3 py-2 backdrop-blur-none max-md:bg-background/90 md:bg-background/40 md:backdrop-blur-xl sm:px-6 sm:py-3">
         <BrandLockup href="/" logoSize={28} priority />
         <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
           <Link
@@ -71,7 +79,7 @@ export function LandingPage() {
         <LandingCta />
       </main>
 
-      <footer className="relative z-10 flex flex-col items-center gap-2 border-t border-white/[0.06] bg-background/40 px-6 py-6 text-center backdrop-blur-xl">
+      <footer className="relative z-10 flex flex-col items-center gap-2 border-t border-white/[0.06] bg-background/90 px-6 py-6 text-center backdrop-blur-none max-md:bg-background/90 md:bg-background/40 md:backdrop-blur-xl">
         <p className="text-[11px] text-muted-foreground">
           {t("landing.footer")} · <span className="font-mono">v{SITE.version}</span>
         </p>
