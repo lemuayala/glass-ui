@@ -6,6 +6,7 @@ import { FileCode2 } from "lucide-react"
 import { useT } from "@/lib/i18n/provider"
 import { GlassMdLine } from "./glass-md-render"
 import { createEnterScene, prefersReducedMotion, revealVisible, setRevealPending } from "@/lib/landing-motion"
+import { isLandingLiteViewport } from "@/lib/mobile-landing"
 
 const SAMPLE = `# GLASS.md — GlassCard
 
@@ -50,19 +51,47 @@ export function LandingCode() {
     const sub = subRef.current
     if (!section || !code || !title || !sub) return
 
-    const titleSplit = splitText(title, { words: { wrap: "clip" } })
     const lines = code.querySelectorAll<HTMLElement>("[data-line]")
+    const lite = isLandingLiteViewport()
 
     if (prefersReducedMotion()) {
-      revealVisible([titleSplit.words, sub, lines])
-      return () => titleSplit.revert?.()
+      revealVisible([title, sub, lines])
+      return
     }
+
+    if (lite) {
+      setRevealPending([title, sub], 18)
+      utils.set(lines, { opacity: 0, translateX: -8 })
+
+      const scene = createEnterScene(section, {
+        anchor: () => titleRef.current,
+        lockTargets: () => [title, sub, lines],
+      })
+      scene
+        .add(title, { opacity: [0, 1], translateY: [18, 0], duration: 420 }, 0)
+        .add(sub, { opacity: [0, 1], translateY: [12, 0], duration: 380 }, 100)
+        .add(
+          lines,
+          {
+            opacity: [0, 1],
+            translateX: [-8, 0],
+            delay: stagger(18, { start: 0 }),
+            duration: 280,
+          },
+          200,
+        )
+      scene.armReveal()
+      return () => scene.revert?.()
+    }
+
+    const titleSplit = splitText(title, { words: { wrap: "clip" } })
 
     setRevealPending(titleSplit.words, 26)
     setRevealPending(sub, 20)
     utils.set(lines, { opacity: 0, translateX: -10 })
 
     const scene = createEnterScene(section, {
+      anchor: () => titleRef.current,
       lockTargets: () => [titleSplit.words, sub, lines],
     })
     scene
@@ -96,6 +125,8 @@ export function LandingCode() {
         280,
       )
 
+    scene.armReveal()
+
     return () => {
       scene.revert?.()
       titleSplit.revert?.()
@@ -104,8 +135,9 @@ export function LandingCode() {
 
   return (
     <section
+      id="code"
       ref={sectionRef}
-      className="relative mx-auto mt-32 w-full max-w-6xl px-6 md:mt-48"
+      className="relative mx-auto mt-32 w-full max-w-6xl scroll-mt-24 px-6 md:mt-48"
     >
       <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
         {/* Left — copy */}
