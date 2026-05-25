@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useLayoutEffect, useRef } from "react"
 import { stagger, utils } from "animejs"
 import {
   Bell,
@@ -39,7 +39,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Wallpaper } from "@/components/glass/wallpaper"
 import { IosBattery, IosCellular, IosWifi } from "@/components/glass/ios-icons"
 import { LandingShowcaseMobile } from "@/components/glass/landing-showcase-mobile"
-import { isLandingLiteViewport } from "@/lib/mobile-landing"
+import { LANDING_LITE_MEDIA } from "@/lib/mobile-landing"
 
 const DARK: GlassOptions = {
   theme: "dark",
@@ -78,118 +78,147 @@ export function LandingShowcase() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const copyRef = useRef<HTMLDivElement | null>(null)
   const titleRef = useRef<HTMLHeadingElement | null>(null)
+  const mobileStageRef = useRef<HTMLDivElement | null>(null)
+  const mobileDeviceRef = useRef<HTMLDivElement | null>(null)
   const phoneRef = useRef<HTMLDivElement | null>(null)
   const deviceRef = useRef<HTMLDivElement | null>(null)
   const stageRef = useRef<HTMLDivElement | null>(null)
 
-  useEffect(() => {
-    const section = sectionRef.current
-    const copy = copyRef.current
-    if (!section || !copy) return
+  useLayoutEffect(() => {
+    let disposed = false
+    let cleanup: (() => void) | undefined
+    let retry = 0
 
-    if (isLandingLiteViewport()) {
-      if (prefersReducedMotion()) {
-        revealVisible(copy)
+    const setup = () => {
+      if (disposed) return
+
+      const section = sectionRef.current
+      const copy = copyRef.current
+      if (!section || !copy) {
+        if (retry++ < 24) requestAnimationFrame(setup)
         return
       }
-      setRevealPending(copy, 14)
+
+      const lite = window.matchMedia(LANDING_LITE_MEDIA).matches
+      const stage = lite ? mobileStageRef.current : stageRef.current
+      const device = lite ? mobileDeviceRef.current : deviceRef.current
+      const phone = lite ? device : phoneRef.current
+
+      if (!phone || !stage) {
+        if (retry++ < 24) requestAnimationFrame(setup)
+        return
+      }
+
+      const env = stage.querySelector<HTMLElement>("[data-showcase-env]")
+      const tiles = Array.from(stage.querySelectorAll<HTMLElement>("[data-showcase-tile]"))
+      if (!tiles.length) {
+        if (retry++ < 24) requestAnimationFrame(setup)
+        return
+      }
+
+      retry = 0
+      cleanup?.()
+      section.classList.remove("gg-showcase-ready")
+      device?.classList.remove("gg-showcase-live")
+
+      const lockAll = () => {
+        revealVisible([copy, phone, env, ...tiles].filter(Boolean))
+      }
+
+      const onBuilt = () => {
+        lockAll()
+        section.classList.add("gg-showcase-ready")
+        device?.classList.add("gg-showcase-live")
+      }
+
+      if (prefersReducedMotion()) {
+        onBuilt()
+        return
+      }
+
+      setRevealPending(copy, 20)
+      utils.set(phone, { opacity: 0, scale: 0.96, translateY: 28 })
+      if (env) utils.set(env, { opacity: 0, scale: 1.01 })
+      utils.set(tiles, { opacity: 0, translateY: 18, scale: 0.96 })
+
       const scene = createEnterScene(section, {
-        anchor: () => titleRef.current,
-        lockTargets: () => copy,
+        anchor: () =>
+          lite ? mobileDeviceRef.current ?? titleRef.current : titleRef.current,
+        lockTargets: lockAll,
+        onComplete: onBuilt,
       })
-      scene.add(copy, { opacity: [0, 1], translateY: [14, 0], duration: 450, ease: "out(3)" }, 0)
-      scene.armReveal()
-      return () => scene.revert?.()
-    }
 
-    const phone = phoneRef.current
-    const device = deviceRef.current
-    const stage = stageRef.current
-    if (!section || !copy || !phone || !stage) return
+      scene
+        .add(
+          copy,
+          {
+            opacity: [0, 1],
+            translateY: [20, 0],
+            duration: 650,
+            ease: "out(3)",
+          },
+          0,
+        )
+        .add(
+          phone,
+          {
+            opacity: [0, 1],
+            scale: [0.96, 1.03, 1],
+            translateY: [28, -4, 0],
+            duration: 860,
+            ease: "out(3)",
+          },
+          100,
+        )
 
-    const env = stage.querySelector<HTMLElement>("[data-showcase-env]")
-    const tiles = Array.from(stage.querySelectorAll<HTMLElement>("[data-showcase-tile]"))
-    if (!tiles.length) return
+      if (env) {
+        scene.add(
+          env,
+          {
+            opacity: [0, 1],
+            scale: [1.01, 1],
+            duration: 500,
+            ease: "out(3)",
+          },
+          180,
+        )
+      }
 
-    const lockAll = () => {
-      revealVisible([copy, phone, env, ...tiles].filter(Boolean))
-    }
-
-    const onBuilt = () => {
-      lockAll()
-      device?.classList.add("gg-showcase-live")
-    }
-
-    if (prefersReducedMotion()) {
-      onBuilt()
-      return
-    }
-
-    setRevealPending(copy, 20)
-    utils.set(phone, { opacity: 0, scale: 0.98, translateY: 28 })
-    if (env) utils.set(env, { opacity: 0, scale: 1.01 })
-    utils.set(tiles, { opacity: 0, translateY: 16, scale: 0.98 })
-
-    const scene = createEnterScene(section, {
-      anchor: () => titleRef.current,
-      lockTargets: lockAll,
-      onComplete: onBuilt,
-    })
-
-    scene
-      .add(
-        copy,
-        {
-          opacity: [0, 1],
-          translateY: [20, 0],
-          duration: 650,
-          ease: "out(3)",
-        },
-        0,
-      )
-      .add(
-        phone,
-        {
-          opacity: [0, 1],
-          scale: [0.98, 1],
-          translateY: [28, 0],
-          duration: 800,
-          ease: "out(3)",
-        },
-        100,
-      )
-
-    if (env) {
       scene.add(
-        env,
+        tiles,
         {
           opacity: [0, 1],
-          scale: [1.01, 1],
-          duration: 500,
+          translateY: [18, -3, 0],
+          scale: [0.96, 1.02, 1],
+          delay: stagger(70, { start: 0 }),
+          duration: 620,
           ease: "out(3)",
         },
-        180,
+        260,
       )
+
+      scene.armReveal()
+
+      cleanup = () => {
+        section.classList.remove("gg-showcase-ready")
+        device?.classList.remove("gg-showcase-live")
+        scene.revert?.()
+      }
     }
 
-    scene.add(
-      tiles,
-      {
-        opacity: [0, 1],
-        translateY: [16, 0],
-        scale: [0.98, 1],
-        delay: stagger(70, { start: 0 }),
-        duration: 600,
-        ease: "out(3)",
-      },
-      260,
-    )
+    requestAnimationFrame(() => requestAnimationFrame(setup))
 
-    scene.armReveal()
+    const mql = window.matchMedia(LANDING_LITE_MEDIA)
+    const onBreakpoint = () => {
+      retry = 0
+      requestAnimationFrame(setup)
+    }
+    mql.addEventListener("change", onBreakpoint)
 
     return () => {
-      device?.classList.remove("gg-showcase-live")
-      scene.revert?.()
+      disposed = true
+      mql.removeEventListener("change", onBreakpoint)
+      cleanup?.()
     }
   }, [t])
 
@@ -214,8 +243,8 @@ export function LandingShowcase() {
           </p>
         </div>
 
-      <div className="md:hidden">
-        <LandingShowcaseMobile />
+      <div ref={mobileStageRef} className="md:hidden">
+        <LandingShowcaseMobile deviceRef={mobileDeviceRef} />
       </div>
       <div className="hidden md:block">
       <TooltipProvider delayDuration={280}>
@@ -299,7 +328,10 @@ export function LandingShowcase() {
                             <div className="flex items-start gap-3">
                               <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/15">
                                 <Music className="h-5 w-5 text-white" />
-                                <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-400 ring-2 ring-black/40" />
+                                <span
+                                  className="gg-live-dot absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-400 ring-2 ring-black/40"
+                                  aria-hidden
+                                />
                               </div>
                               <div className="min-w-0 flex-1">
                                 <p className="truncate text-sm font-semibold text-white">Aurora — Side B</p>

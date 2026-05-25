@@ -344,22 +344,8 @@
 }
 
 /* ────────────────────────────────────────────────────────────
- *  LANDING — floating tiles, marquee, grid mesh
+ *  LANDING — marquee, grid mesh
  * ─────────────────────────────────────────────────────────── */
-@keyframes gg-float {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50% { transform: translate3d(0, -10px, 0); }
-}
-
-.gg-float-1 { animation: gg-float 6s ease-in-out infinite; }
-.gg-float-2 { animation: gg-float 7.5s ease-in-out -1.4s infinite; }
-.gg-float-3 { animation: gg-float 8s ease-in-out -3s infinite; }
-.gg-float-4 { animation: gg-float 6.5s ease-in-out -0.8s infinite; }
-
-@media (prefers-reduced-motion: reduce) {
-  .gg-float-1, .gg-float-2, .gg-float-3, .gg-float-4 { animation: none; }
-}
-
 @keyframes gg-marquee {
   from { transform: translate3d(0, 0, 0); }
   to { transform: translate3d(-50%, 0, 0); }
@@ -499,12 +485,47 @@
   animation: gg-showcase-progress 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+/* Live / online indicator — soft ring pulse (hero + showcase) */
+.gg-live-dot {
+  box-shadow: 0 0 0 0 oklch(0.72 0.19 155 / 0.5);
+  animation: gg-live-dot-pulse 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes gg-live-dot-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 oklch(0.72 0.19 155 / 0.45);
+  }
+  55% {
+    box-shadow: 0 0 0 5px oklch(0.72 0.19 155 / 0);
+  }
+}
+
 /* Keep assembled UI visible — Anime must not rewind tiles after lock */
 .gg-showcase-live [data-showcase-tile],
 .gg-showcase-live [data-showcase-env] {
   opacity: 1 !important;
   filter: blur(0) !important;
   transform: none !important;
+}
+
+/* Mobile: short settle pop once assembly is live (Anime handles enter) */
+@media (max-width: 767px) {
+  #primitives.gg-showcase-ready .gg-showcase-live.gg-showcase-device {
+    animation: gg-showcase-device-settle 0.72s cubic-bezier(0.34, 1.45, 0.64, 1) both;
+  }
+}
+
+@keyframes gg-showcase-device-settle {
+  0% {
+    transform: scale(0.98) translate3d(0, 6px, 0);
+  }
+  55% {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
 }
 
 @keyframes gg-showcase-progress {
@@ -515,6 +536,8 @@
 @media (prefers-reduced-motion: reduce) {
   .gg-showcase-wallpaper { animation: none; }
   .gg-showcase-live .gg-showcase-progress { animation: none; width: 52%; }
+  .gg-showcase-live.gg-showcase-device { animation: none; }
+  .gg-live-dot { animation: none; box-shadow: none; }
 }
 
 /* Premium grid mesh — barely visible, more dense on hero */
@@ -668,21 +691,6 @@ html.gg-landing-lite .gg-landing-ambient-orbs {
   background:
     radial-gradient(ellipse 70% 55% at 50% 15%, oklch(0.62 0.22 265 / 0.28), transparent 62%),
     radial-gradient(ellipse 45% 40% at 20% 55%, oklch(0.72 0.18 320 / 0.12), transparent 55%);
-}
-
-.gg-landing-lite-reveal {
-  animation: gg-landing-lite-fade 0.55s ease-out forwards;
-}
-
-@keyframes gg-landing-lite-fade {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* Playground — solid panels on mobile (glass stays on preview primitives) */
