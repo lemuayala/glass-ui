@@ -63,6 +63,7 @@ import { cn } from "@/lib/utils"
 import { useT } from "@/lib/i18n/provider"
 import { prefersReducedMotion } from "@/lib/landing-motion"
 import { PREVIEW_DEVICE_FRAMES, type PreviewDeviceFrame } from "@/lib/device-frame"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 /**
  * Live preview.
@@ -91,12 +92,23 @@ export function Preview({
   onCustomClear: () => void
 }) {
   const t = useT()
+  const isMobile = useIsMobile()
   const stageRef = useRef<HTMLDivElement>(null)
   const deviceShellRef = useRef<HTMLDivElement>(null)
   const [pos, setPos] = useState({ x: 0, y: 0 })
   const [dragging, setDragging] = useState(false)
-  const [showBackdrop, setShowBackdrop] = useState(true)
-  const [deviceFrame, setDeviceFrame] = useState<PreviewDeviceFrame>("iphone")
+  const [showBackdrop, setShowBackdrop] = useState(false)
+  const [deviceFrame, setDeviceFrame] = useState<PreviewDeviceFrame>("none")
+
+  useEffect(() => {
+    if (isMobile) {
+      setShowBackdrop(false)
+      setDeviceFrame("none")
+      return
+    }
+    setShowBackdrop(true)
+    setDeviceFrame((prev) => (prev === "none" ? "iphone" : prev))
+  }, [isMobile])
   const deviceSpec = deviceFrame !== "none" ? PREVIEW_DEVICE_FRAMES[deviceFrame] : null
   const dragStart = useRef<{ px: number; py: number; x: number; y: number } | null>(null)
 
@@ -168,7 +180,7 @@ export function Preview({
   return (
     <div className="flex h-full flex-col">
       {/* Chrome bar — outside device frame so pills never overlap the shell */}
-      <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border/60 bg-background/55 px-2 py-2 backdrop-blur-md sm:px-3">
+      <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border/60 bg-background/90 px-2 py-2 backdrop-blur-none max-lg:bg-background/90 lg:bg-background/55 lg:backdrop-blur-md sm:px-3">
         <div className="flex min-w-0 flex-1 items-center gap-1">
           {(
             [
@@ -225,7 +237,7 @@ export function Preview({
         <div
           className={cn(
             "absolute inset-0 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
-            deviceFrame === "none" ? "p-0" : "p-3 sm:p-5 lg:p-8",
+            deviceFrame === "none" ? "p-0" : "p-2 max-lg:p-2 sm:p-5 lg:p-8",
           )}
         >
           <div
@@ -323,7 +335,7 @@ export function Preview({
       </div>
 
       {/* Wallpaper picker bar */}
-      <div className="flex shrink-0 flex-col gap-2 border-t border-border bg-background/40 px-3 py-2.5 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5 sm:py-3">
+      <div className="flex shrink-0 flex-col gap-2 border-t border-border bg-background/90 px-3 py-2.5 backdrop-blur-none max-lg:bg-background/90 lg:bg-background/40 lg:backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5 sm:py-3">
         <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
           {t("preview.wallpaper")}
         </span>

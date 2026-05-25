@@ -88,7 +88,7 @@ export const Header = forwardRef<
   }
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between gap-2 border-b border-border bg-background/60 px-3 py-2 backdrop-blur-xl sm:gap-3 sm:px-4 sm:py-3 md:px-6">
+    <header className="sticky top-0 z-30 flex items-center justify-between gap-2 border-b border-border bg-background/90 px-3 py-2 backdrop-blur-none max-lg:bg-background/90 lg:bg-background/60 lg:backdrop-blur-xl sm:gap-3 sm:px-4 sm:py-3 md:px-6">
       <BrandLockup href="/" logoSize={28} className="min-w-0 flex-1 sm:flex-none" />
 
       {/* Component pills */}
