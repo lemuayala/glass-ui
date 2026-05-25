@@ -185,7 +185,10 @@ export function LandingHero() {
           ref={tickerRef}
           className="mt-10 inline-flex items-center gap-2 text-[11px] text-muted-foreground/80"
         >
-          <span className="inline-block h-1 w-1 rounded-full bg-emerald-400/90" />
+          <span
+            className="gg-live-dot inline-block h-1.5 w-1.5 rounded-full bg-emerald-400"
+            aria-hidden
+          />
           <span className="font-mono uppercase tracking-wider">{t("landing.live")}</span>
         </div>
 
