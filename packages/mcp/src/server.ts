@@ -92,7 +92,7 @@ export function printMcpClientConfig(): string {
 export function createGlassMcpServer(): McpServer {
   const server = new McpServer({
     name: "glass-ui",
-    version: "0.5.0",
+    version: "0.5.1",
   })
 
   server.registerResource(

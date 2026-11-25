@@ -12,7 +12,7 @@
 export const SITE = {
   name: "Glass UI",
   tagline: "Glassmorphism Generator",
-  version: "0.5.0",
+  version: "0.5.1",
 } as const
 
 /** Canonical site URL for SEO, Open Graph, and sitemap. Set NEXT_PUBLIC_SITE_URL in production. */
