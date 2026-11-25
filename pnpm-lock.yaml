@@ -8,7 +8,7 @@ importers:
 
   .:
     dependencies:
-      '@glass-ui/core':
+      '@lemuayala/glass-ui-core':
         specifier: workspace:*
         version: link:packages/core
       '@radix-ui/react-select':
@@ -133,7 +133,7 @@ importers:
 
   packages/mcp:
     dependencies:
-      '@glass-ui/core':
+      '@lemuayala/glass-ui-core':
         specifier: workspace:*
         version: link:../core
       '@modelcontextprotocol/sdk':

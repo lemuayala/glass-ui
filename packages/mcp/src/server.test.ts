@@ -3,7 +3,7 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 import { createGlassMcpServer, printMcpClientConfig } from "./server.js"
 
-describe("@glass-ui/mcp server end-to-end over MCP protocol", () => {
+describe("@lemuayala/glass-ui-mcp server end-to-end over MCP protocol", () => {
   let client: Client
 
   beforeEach(async () => {
@@ -20,7 +20,7 @@ describe("@glass-ui/mcp server end-to-end over MCP protocol", () => {
   it("exposes client config JSON helper", () => {
     const cfg = JSON.parse(printMcpClientConfig())
     expect(cfg.mcpServers["glass-ui"].command).toBe("npx")
-    expect(cfg.mcpServers["glass-ui"].args).toEqual(["-y", "@glass-ui/mcp"])
+    expect(cfg.mcpServers["glass-ui"].args).toEqual(["-y", "@lemuayala/glass-ui-mcp"])
   })
 
   it("lists all 4 tools and 2 resources and serves resource contents", async () => {

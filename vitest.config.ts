@@ -48,7 +48,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@glass-ui/core": path.resolve(__dirname, "packages/core/src/index.ts"),
+      "@lemuayala/glass-ui-core": path.resolve(__dirname, "packages/core/src/index.ts"),
       "@": path.resolve(__dirname, "."),
     },
   },

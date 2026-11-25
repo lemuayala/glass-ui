@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   publish:
-    name: Publish @glass-ui/core, @glass-ui/mcp and MCP Registry entry
+    name: Publish @lemuayala/glass-ui-core, @lemuayala/glass-ui-mcp and MCP Registry entry
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -53,7 +53,7 @@ jobs:
       - name: Build packages
         run: pnpm run build:packages
 
-      - name: Verify server.json matches @glass-ui/mcp
+      - name: Verify server.json matches @lemuayala/glass-ui-mcp
         run: |
           node -e '
             const pkg = require("./packages/mcp/package.json");
@@ -67,7 +67,7 @@ jobs:
             if (errors.length) { console.error(errors.join("\n")); process.exit(1); }
           '
 
-      - name: Publish @glass-ui/core (skip if version already on npm)
+      - name: Publish @lemuayala/glass-ui-core (skip if version already on npm)
         id: core
         run: |
           NAME=$(node -p "require('./packages/core/package.json').name")
@@ -80,7 +80,7 @@ jobs:
             echo "published=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Publish @glass-ui/mcp (skip if version already on npm)
+      - name: Publish @lemuayala/glass-ui-mcp (skip if version already on npm)
         id: mcp
         run: |
           NAME=$(node -p "require('./packages/mcp/package.json').name")

@@ -29,11 +29,11 @@ export interface CliIo {
   stderr: (msg: string) => void
 }
 
-const HELP_TEXT = `Glass UI CLI (@glass-ui/core)
+const HELP_TEXT = `Glass UI CLI (@lemuayala/glass-ui-core)
 
 Usage:
-  npx @glass-ui/core add <primitive|all> [options]
-  npx @glass-ui/core list
+  npx @lemuayala/glass-ui-core add <primitive|all> [options]
+  npx @lemuayala/glass-ui-core list
 
 Primitives:
   card, button, input, modal, tabbar, switch, navbar, all
@@ -72,7 +72,7 @@ export function runGlassCli(argv: string[], io: CliIo): number {
 
   const targetArg = argv[1]
   if (!targetArg || targetArg.startsWith("-")) {
-    io.stderr("Missing primitive name (e.g. `npx @glass-ui/core add card` or `all`).")
+    io.stderr("Missing primitive name (e.g. `npx @lemuayala/glass-ui-core add card` or `all`).")
     return 1
   }
 
@@ -84,7 +84,7 @@ export function runGlassCli(argv: string[], io: CliIo): number {
         : []
 
   if (targets.length === 0) {
-    io.stderr(`Unknown primitive "${targetArg}". Run \`npx @glass-ui/core list\` to see options.`)
+    io.stderr(`Unknown primitive "${targetArg}". Run \`npx @lemuayala/glass-ui-core list\` to see options.`)
     return 1
   }
 

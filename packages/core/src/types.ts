@@ -2,7 +2,7 @@
  * Shared types for the Glass UI generator.
  * These power the live preview, the CVA variants and the codegen.
  *
- * Future packages will live under `@glass-ui/*` (see README).
+ * Future packages will live under `@lemuayala/glass-ui-*` (see README).
  */
 
 export type GlassTheme = "light" | "dark"

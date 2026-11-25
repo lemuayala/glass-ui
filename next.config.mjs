@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@glass-ui/core"],
+  transpilePackages: ["@lemuayala/glass-ui-core"],
   images: {
     unoptimized: true,
   },

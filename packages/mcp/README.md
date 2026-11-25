@@ -1,4 +1,4 @@
-# @glass-ui/mcp
+# @lemuayala/glass-ui-mcp
 
 Official [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server for **[Glass UI](https://glass-ui-play.vercel.app)** — lets Claude Code, Cursor, VS Code Copilot, Windsurf, and Antigravity inspect primitives/presets and generate production-ready Web (Tailwind CSS) and React Native (`expo-blur` `<BlurView>` + NativeWind) glass components directly via tool calls.
 
@@ -6,7 +6,7 @@ Official [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server 
 
 ### Claude Code
 ```bash
-claude mcp add glass-ui -- npx -y @glass-ui/mcp
+claude mcp add glass-ui -- npx -y @lemuayala/glass-ui-mcp
 ```
 
 ### Cursor / Windsurf / Antigravity (`mcp.json`)
@@ -15,7 +15,7 @@ claude mcp add glass-ui -- npx -y @glass-ui/mcp
   "mcpServers": {
     "glass-ui": {
       "command": "npx",
-      "args": ["-y", "@glass-ui/mcp"]
+      "args": ["-y", "@lemuayala/glass-ui-mcp"]
     }
   }
 }
