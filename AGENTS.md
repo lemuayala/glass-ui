@@ -5,8 +5,8 @@
 - Next.js App Router, React 19, Tailwind CSS v4
 - Glass tokens in `app/globals.css` (`--gg-glass-*`, `.gg-glass`, `.gg-glass-inset`)
 - Workspace packages:
-  - `packages/core/` (`@glass-ui/core` — CVA variants, presets, TSX templates, `GLASS.md` builder, CLI installer; re-exported in `lib/glass-core/`)
-  - `packages/mcp/` (`@glass-ui/mcp` — stdio MCP server exposing primitives, presets, and codegen tools)
+  - `packages/core/` (`@lemuayala/glass-ui-core` — CVA variants, presets, TSX templates, `GLASS.md` builder, CLI installer; re-exported in `lib/glass-core/`)
+  - `packages/mcp/` (`@lemuayala/glass-ui-mcp` — stdio MCP server exposing primitives, presets, and codegen tools)
 
 ## Adding a component
 

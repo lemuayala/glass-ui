@@ -12,7 +12,7 @@
   "packages": [
     {
       "registryType": "npm",
-      "identifier": "@glass-ui/mcp",
+      "identifier": "@lemuayala/glass-ui-mcp",
       "version": "0.5.0",
       "transport": {
         "type": "stdio"

@@ -14,7 +14,7 @@ import {
   type ComponentKind,
   type GlassOptions,
   type ProjectProfile,
-} from "@glass-ui/core"
+} from "@lemuayala/glass-ui-core"
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { z } from "zod"
 
@@ -80,7 +80,7 @@ export function printMcpClientConfig(): string {
       mcpServers: {
         "glass-ui": {
           command: "npx",
-          args: ["-y", "@glass-ui/mcp"],
+          args: ["-y", "@lemuayala/glass-ui-mcp"],
         },
       },
     },

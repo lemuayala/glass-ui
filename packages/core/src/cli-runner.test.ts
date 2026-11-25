@@ -4,7 +4,7 @@ import { join } from "node:path"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 import { runGlassCli } from "./cli-runner.js"
 
-describe("@glass-ui/core CLI installer (runGlassCli)", () => {
+describe("@lemuayala/glass-ui-core CLI installer (runGlassCli)", () => {
   let tempDir: string
   let out: string[]
   let err: string[]

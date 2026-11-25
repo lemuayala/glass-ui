@@ -5,16 +5,16 @@ import { createGlassMcpServer, printMcpClientConfig } from "./server.js"
 const args = process.argv.slice(2)
 
 if (args.includes("-h") || args.includes("--help")) {
-  process.stdout.write(`Glass UI MCP Server (@glass-ui/mcp)
+  process.stdout.write(`Glass UI MCP Server (@lemuayala/glass-ui-mcp)
 
 Run over stdio (used by MCP clients):
-  npx -y @glass-ui/mcp
+  npx -y @lemuayala/glass-ui-mcp
 
 Print MCP client JSON config:
-  npx -y @glass-ui/mcp --print-config
+  npx -y @lemuayala/glass-ui-mcp --print-config
 
 Add to Claude Code in one command:
-  claude mcp add glass-ui -- npx -y @glass-ui/mcp
+  claude mcp add glass-ui -- npx -y @lemuayala/glass-ui-mcp
 `)
   process.exit(0)
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@glass-ui/core",
+  "name": "@lemuayala/glass-ui-core",
   "version": "0.5.0",
   "description": "Glassmorphism primitives, CVA variants, TSX codegen (Tailwind & React Native expo-blur / NativeWind), GLASS.md prompt generator, and CLI installer.",
   "license": "MIT",
