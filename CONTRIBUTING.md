@@ -13,27 +13,29 @@ First off, thank you for considering contributing to Glass UI! It's people like 
 
 ### Pull Requests
 1. Fork the repo and create your branch from `dev`.
-2. If you've added code that should be tested, add tests.
+2. If you've added code that should be tested, add tests (`pnpm test`).
 3. If you've changed APIs, update the documentation.
-4. Ensure the test suite passes.
-5. Make sure your code lints.
-6. Issue that pull request!
+4. Ensure TypeScript, ESLint, and production build pass (`pnpm lint && pnpm build`).
+5. Issue that pull request against `dev`!
 
 ## Technical Guidelines
 
-- **Components**: New components should follow the existing structure:
+- **Components**: New components should follow the existing structure (see [AGENTS.md](AGENTS.md)):
     - Add to `ComponentKind` in `lib/glass-core/types.ts`.
-    - Add CVA variants in `lib/glass-core/variants.ts`.
+    - Add CVA variants + `getGlass*Classes` in `lib/glass-core/variants.ts`.
     - Create 4 templates: Web (Inline/Reusable) and Native (Inline/Reusable).
-- **Styling**: Use Tailwind CSS v4. Avoid arbitrary values; stick to the design system.
+    - Register in `lib/glass-core/codegen.ts`, preview stage, controls, header nav, and URL state.
+- **Styling**: Use Tailwind CSS v4. Avoid arbitrary values; stick to the design system (`app/globals.css`).
 - **i18n**: Every new UI string must be added to `lib/i18n/dictionaries.ts` for both **English** and **Spanish**.
 - **Types**: Use TypeScript strictly. Use `forwardRef` for reusable components.
 
 ## Development Setup
 
+Requires **pnpm** (enforced via `preinstall`).
+
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 ## Community

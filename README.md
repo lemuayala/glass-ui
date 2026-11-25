@@ -12,7 +12,7 @@
 
   <br/>
 
-  [![Live Demo](https://img.shields.io/badge/Live%20Demo-glass--ui.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://glass-ui-play.vercel.app)
+  [![Live Demo](https://img.shields.io/badge/Live%20Demo-glass--ui--play.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://glass-ui-play.vercel.app)
   [![Playground](https://img.shields.io/badge/Open-Playground-111827?style=for-the-badge)](https://glass-ui-play.vercel.app/play)
   [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs)](https://nextjs.org)
   [![React](https://img.shields.io/badge/React-19-149eca?style=for-the-badge&logo=react&logoColor=white)](https://react.dev)
@@ -128,8 +128,11 @@ pnpm icons:export   # regenerate apple-icon PNGs from SVG
 | :--- | :--- |
 | `pnpm dev` | Dev server |
 | `pnpm build` | Production build |
-| `pnpm test` | Vitest |
 | `pnpm lint` | ESLint |
+| `pnpm typecheck` | TypeScript check |
+| `pnpm test` | Unit & integration tests (Vitest) |
+| `pnpm test:coverage` | Tests with V8 coverage thresholds |
+| `pnpm test:e2e` | Browser E2E suite (Playwright, desktop + mobile) |
 
 <br/>
 
@@ -187,7 +190,7 @@ Hosted on **[Vercel](https://vercel.com)** — preview on pull requests, product
   <p>Built with ❤️ by <a href="https://github.com/lemuayala">lemuayala</a></p>
 
   <a href="https://github.com/lemuayala/glass-ui">⭐ Star on GitHub</a> ·
-  <a href="https://glass-ui.vercel.app/play">▶ Open playground</a> ·
+  <a href="https://glass-ui-play.vercel.app/play">▶ Open playground</a> ·
   <a href="https://github.com/lemuayala/glass-ui/issues">Report an issue</a>
 
   <br/><br/>

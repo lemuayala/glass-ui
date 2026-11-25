@@ -12,13 +12,13 @@
 export const SITE = {
   name: "Glass UI",
   tagline: "Glassmorphism Generator",
-  version: "0.4.0",
+  version: "0.4.1",
 } as const
 
 /** Canonical site URL for SEO, Open Graph, and sitemap. Set NEXT_PUBLIC_SITE_URL in production. */
 export const SITE_URL = (
   typeof process !== "undefined" ? process.env.NEXT_PUBLIC_SITE_URL : undefined
-)?.replace(/\/$/, "") || "https://glass-ui.vercel.app"
+)?.replace(/\/$/, "") || "https://glass-ui-play.vercel.app"
 
 const ENV_GITHUB =
   typeof process !== "undefined" ? process.env.NEXT_PUBLIC_GITHUB_URL : undefined
