@@ -1,9 +1,10 @@
 import { getGlassNavbarClasses } from "../variants"
 import type { GlassOptions } from "../types"
+import { escapeJsxText } from "./_shared"
 
 export function renderGlassNavbarInline(options: GlassOptions): string {
   const classes = getGlassNavbarClasses(options).trim().replace(/\s+/g, " ")
-  const title = (options.text || "Glass UI").replace(/"/g, '\\"')
+  const title = escapeJsxText(options.text || "Glass UI")
   const isDark = options.theme === "dark"
   const fg = isDark ? "text-white" : "text-neutral-900"
   const muted = isDark ? "text-white/60" : "text-neutral-600"

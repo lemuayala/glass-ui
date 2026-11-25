@@ -1,11 +1,13 @@
 import { getGlassCardClasses } from "../variants"
 import type { GlassOptions } from "../types"
+import { escapeJsxText } from "./_shared"
 
 /**
  * Inline export — a single <div> snippet with all Tailwind classes applied.
  */
 export function renderGlassCardInline(options: GlassOptions): string {
   const classes = getGlassCardClasses(options).trim().replace(/\s+/g, " ")
+  const title = escapeJsxText(options.text || "Glass Card")
 
   return `// 👇 Paste this anywhere in your React component.
 export function Example() {
@@ -14,7 +16,7 @@ export function Example() {
       <h3 className="text-base font-semibold ${
         options.theme === "dark" ? "text-white" : "text-neutral-900"
       }">
-        Glass Card
+        ${title}
       </h3>
       <p className="mt-1 text-sm ${
         options.theme === "dark" ? "text-white/70" : "text-neutral-700"

@@ -1,5 +1,6 @@
 import type { GlassOptions } from "../../types"
 import { getGlassCardClasses } from "../../variants"
+import { escapeJsxText } from "../_shared"
 
 export function renderGlassCardNativeReusable(options: GlassOptions): string {
   const { theme, blur, rounded, intensity, border, padding, shadow, tint } = options
@@ -145,6 +146,7 @@ import { Text } from "react-native"
 
 export function renderGlassCardNativeInline(options: GlassOptions): string {
   const classes = getGlassCardClasses(options).trim().replace(/\s+/g, " ")
+  const title = escapeJsxText(options.text || "Glass Card")
 
   return `// 👇 Paste this anywhere inside your screen.
 // Requires: react-native + nativewind configured.
@@ -156,7 +158,7 @@ export function Example() {
       <Text className="text-base font-semibold ${
         options.theme === "dark" ? "text-white" : "text-neutral-900"
       }">
-        Glass Card
+        ${title}
       </Text>
       <Text className="mt-1 text-sm ${
         options.theme === "dark" ? "text-white/70" : "text-neutral-700"

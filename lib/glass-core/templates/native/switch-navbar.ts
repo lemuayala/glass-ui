@@ -1,5 +1,6 @@
 import type { GlassOptions } from "../../types"
 import { getGlassNavbarClasses, getGlassSwitchClasses } from "../../variants"
+import { TINT_COMPOUNDS_SNIPPET, escapeJsxText } from "../_shared"
 
 export function renderGlassSwitchNativeReusable(options: GlassOptions): string {
   const { theme, blur, rounded, intensity, border, padding, shadow, tint } = options
@@ -14,7 +15,7 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const glassSwitchVariants = cva("relative overflow-hidden", {
+export const glassSwitchVariants = cva("relative justify-center overflow-hidden", {
   variants: {
     theme: { light: "", dark: "" },
     blur: { none: "", sm: "backdrop-blur-sm", md: "backdrop-blur-md", lg: "backdrop-blur-lg", xl: "backdrop-blur-xl" },
@@ -28,20 +29,28 @@ export const glassSwitchVariants = cva("relative overflow-hidden", {
   compoundVariants: [
     { theme: "light", intensity: "subtle", className: "bg-white/25" },
     { theme: "light", intensity: "medium", className: "bg-white/40" },
+    { theme: "light", intensity: "strong", className: "bg-white/55" },
+    { theme: "dark", intensity: "subtle", className: "bg-white/10" },
     { theme: "dark", intensity: "medium", className: "bg-white/18" },
+    { theme: "dark", intensity: "strong", className: "bg-white/28" },
+    { theme: "light", border: "subtle", className: "border-white/40" },
+    { theme: "light", border: "strong", className: "border-white/60" },
     { theme: "dark", border: "subtle", className: "border-white/15" },
+    { theme: "dark", border: "strong", className: "border-white/25" },
+${TINT_COMPOUNDS_SNIPPET}
   ],
   defaultVariants: { theme: "${theme}", blur: "${blur}", rounded: "${rounded}", intensity: "${intensity}", border: "${border}", size: "${padding}", shadow: "${shadow}", tint: "${tint}" },
 })
 
 export type GlassSwitchProps = PressableProps &
   VariantProps<typeof glassSwitchVariants> & {
+    className?: string
     checked?: boolean
     onCheckedChange?: (v: boolean) => void
     label?: string
   }
 
-export const GlassSwitch = React.forwardRef<typeof Pressable, GlassSwitchProps>(
+export const GlassSwitch = React.forwardRef<React.ElementRef<typeof Pressable>, GlassSwitchProps>(
   ({ checked = false, onCheckedChange, label, theme, blur, rounded, intensity, border, size, shadow, tint, className, ...props }, ref) => {
     const thumb = checked ? (theme === "dark" ? "bg-white ml-6" : "bg-neutral-900 ml-6") : (theme === "dark" ? "bg-white/70 ml-0.5" : "bg-neutral-600 ml-0.5")
     return (
@@ -60,7 +69,7 @@ GlassSwitch.displayName = "GlassSwitch"
 
 export function renderGlassSwitchNativeInline(options: GlassOptions): string {
   const classes = getGlassSwitchClasses(options).trim().replace(/\s+/g, " ")
-  const label = options.text || "Notifications"
+  const label = escapeJsxText(options.text || "Notifications")
   const textColor = options.theme === "dark" ? "text-white" : "text-neutral-900"
   return `import { View, Text, Pressable } from "react-native"
 import { useState } from "react"
@@ -104,14 +113,26 @@ export const glassNavbarVariants = cva("flex-row w-full items-center justify-bet
     tint: { none: "", blue: "", pink: "", orange: "", teal: "" },
   },
   compoundVariants: [
+    { theme: "light", intensity: "subtle", className: "bg-white/20" },
+    { theme: "light", intensity: "medium", className: "bg-white/35" },
+    { theme: "light", intensity: "strong", className: "bg-white/50" },
+    { theme: "dark", intensity: "subtle", className: "bg-black/25" },
     { theme: "dark", intensity: "medium", className: "bg-black/45" },
+    { theme: "dark", intensity: "strong", className: "bg-black/65" },
+    { theme: "light", border: "subtle", className: "border-white/30" },
+    { theme: "light", border: "strong", className: "border-white/50" },
     { theme: "dark", border: "subtle", className: "border-white/10" },
+    { theme: "dark", border: "strong", className: "border-white/20" },
+${TINT_COMPOUNDS_SNIPPET}
   ],
   defaultVariants: { theme: "${theme}", blur: "${blur}", rounded: "${rounded}", intensity: "${intensity}", border: "${border}", padding: "${padding}", shadow: "${shadow}", tint: "${tint}" },
 })
 
 export type GlassNavigationBarProps = ViewProps &
-  VariantProps<typeof glassNavbarVariants> & { title?: string }
+  VariantProps<typeof glassNavbarVariants> & {
+    className?: string
+    title?: string
+  }
 
 export const GlassNavigationBar = React.forwardRef<View, GlassNavigationBarProps>(
   ({ title, theme, blur, rounded, intensity, border, padding, shadow, tint, className, children, ...props }, ref) => {
@@ -130,7 +151,7 @@ GlassNavigationBar.displayName = "GlassNavigationBar"
 
 export function renderGlassNavbarNativeInline(options: GlassOptions): string {
   const classes = getGlassNavbarClasses(options).trim().replace(/\s+/g, " ")
-  const title = options.text || "Glass UI"
+  const title = escapeJsxText(options.text || "Glass UI")
   const fg = options.theme === "dark" ? "text-white" : "text-neutral-900"
   const muted = options.theme === "dark" ? "text-white/60" : "text-neutral-600"
   return `import { View, Text, Pressable } from "react-native"

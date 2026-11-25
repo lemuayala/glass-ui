@@ -78,7 +78,7 @@ export function generateGlassPrompt(input: GlassPromptInput): string {
   const label = COMPONENT_LABELS[component]
   const file = componentFileName(component)
   const code = generateCode(codegen)
-  const usage = generateUsageSnippet(codegen)
+  const usage = generateUsageSnippet(codegen, profile.componentPath)
   const modeLabel = mode === "inline" ? "Inline snippet" : "Reusable CVA component"
   const platformLabel = platform === "web" ? "React Web (Tailwind CSS)" : "React Native (NativeWind)"
 
@@ -182,5 +182,9 @@ export function generateShortGlassPrompt(input: GlassPromptInput): string {
   const { codegen, profile } = input
   const { component, mode, platform, options } = codegen
   const label = COMPONENT_LABELS[component]
-  return `Integrate ${label} (${mode}, ${platform}) into my ${frameworkLabel(profile.framework)} project at \`${profile.componentPath}\`. Glass props: theme=${options.theme}, blur=${options.blur}, rounded=${options.rounded}, intensity=${options.intensity}, border=${options.border}, padding=${options.padding}, shadow=${options.shadow}, tint=${options.tint}. Use CVA + tailwind-merge${profile.hasCnHelper ? "; reuse existing cn()" : ""}. Tailwind v${profile.tailwindVersion}. Follow GLASS.md rules: backdrop-blur, compound intensity variants, iOS-like borders. Deliver the component file and one usage example that compiles.`
+  const propsSummary = `Glass props: theme=${options.theme}, blur=${options.blur}, rounded=${options.rounded}, intensity=${options.intensity}, border=${options.border}, padding=${options.padding}, shadow=${options.shadow}, tint=${options.tint}.`
+  if (mode === "inline") {
+    return `Integrate ${label} (inline, ${platform}) into my ${frameworkLabel(profile.framework)} project. ${propsSummary} Inline Tailwind v${profile.tailwindVersion} classes directly (no separate CVA wrapper file). Follow GLASS.md rules: backdrop-blur, intensity alpha, iOS-like borders. Deliver a ready-to-paste JSX snippet that compiles.`
+  }
+  return `Integrate ${label} (reusable, ${platform}) into my ${frameworkLabel(profile.framework)} project at \`${profile.componentPath}\`. ${propsSummary} Use CVA + tailwind-merge${profile.hasCnHelper ? "; reuse existing cn()" : ""}. Tailwind v${profile.tailwindVersion}. Follow GLASS.md rules: backdrop-blur, compound intensity variants, iOS-like borders. Deliver the component file and one usage example that compiles.`
 }

@@ -5,6 +5,7 @@ import {
   getGlassModalClasses,
   getGlassTabBarClasses,
 } from "../../variants"
+import { escapeJsxAttr, escapeJsxText } from "../_shared"
 
 /* ─────────────────────────────────────────────────────────────────────────────
    BUTTON
@@ -133,7 +134,7 @@ GlassButton.displayName = "GlassButton"
 
 export function renderGlassButtonNativeInline(options: GlassOptions): string {
   const classes = getGlassButtonClasses(options).trim().replace(/\s+/g, " ")
-  const label = (options.text || "Continue").replace(/"/g, '\\"')
+  const label = escapeJsxText(options.text || "Continue")
   const textColor = options.theme === "dark" ? "text-white" : "text-neutral-900"
   return `// 👇 Paste this anywhere inside your screen.
 // Requires: react-native + nativewind configured.
@@ -271,7 +272,7 @@ GlassInput.displayName = "GlassInput"
 
 export function renderGlassInputNativeInline(options: GlassOptions): string {
   const classes = getGlassInputClasses(options).trim().replace(/\s+/g, " ")
-  const placeholder = (options.text || "Search…").replace(/"/g, '\\"')
+  const placeholder = escapeJsxAttr(options.text || "Search…")
   const placeholderColor = options.theme === "dark" ? "rgba(255,255,255,0.55)" : "rgba(23,23,23,0.6)"
   return `// 👇 Paste this anywhere inside your screen.
 // Requires: react-native + nativewind configured.
@@ -284,7 +285,7 @@ export function Example() {
     <TextInput
       value={value}
       onChangeText={setValue}
-      placeholder="${placeholder}"
+      placeholder=${placeholder}
       placeholderTextColor="${placeholderColor}"
       className="${classes}"
     />
@@ -410,7 +411,7 @@ GlassModal.displayName = "GlassModal"
 
 export function renderGlassModalNativeInline(options: GlassOptions): string {
   const classes = getGlassModalClasses(options).trim().replace(/\s+/g, " ")
-  const title = options.text || "Confirm action"
+  const title = escapeJsxText(options.text || "Confirm action")
   const textColor = options.theme === "dark" ? "text-white" : "text-neutral-900"
   const textMuted = options.theme === "dark" ? "text-white/70" : "text-neutral-700"
   return `// 👇 Paste this anywhere inside your screen.

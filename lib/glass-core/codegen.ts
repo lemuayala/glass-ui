@@ -1,4 +1,5 @@
 import type { CodegenInput } from "./types"
+import { escapeJsxAttr, escapeJsxText } from "./templates/_shared"
 import { renderGlassCardInline } from "./templates/glass-card-inline"
 import { renderGlassCardReusable } from "./templates/glass-card-reusable"
 import { renderGlassButtonInline } from "./templates/glass-button-inline"
@@ -72,19 +73,25 @@ export * from "./variants"
  * Returns a concise usage snippet showing how to call the reusable component
  * with the user's current options as explicit props.
  */
-export function generateUsageSnippet(input: CodegenInput): string {
+export function generateUsageSnippet(
+  input: CodegenInput,
+  componentPath = "components/ui",
+): string {
   const { component, platform, options } = input
   const { theme, blur, rounded, intensity, border, padding, shadow, tint, text } = options
   const textColor = theme === "dark" ? "text-white" : "text-neutral-900"
   const textColorMuted = theme === "dark" ? "text-white/70" : "text-neutral-700"
+  const cleanPath = componentPath.trim().replace(/^\/+|\/+$/g, "") || "components/ui"
+  const importBase =
+    cleanPath.startsWith(".") || cleanPath.startsWith("@/") ? cleanPath : `./${cleanPath}`
 
   const sharedProps = `theme="${theme}" blur="${blur}" rounded="${rounded}" intensity="${intensity}" border="${border}" shadow="${shadow}"${tint !== "none" ? ` tint="${tint}"` : ""}`
 
   if (platform === "native") {
     switch (component) {
       case "glass-card": {
-        const title = text || "Now Playing"
-        return `import { GlassCard } from "./components/ui/glass-card"
+        const title = escapeJsxText(text || "Now Playing")
+        return `import { GlassCard } from "${importBase}/glass-card"
 import { Text } from "react-native"
 
 <GlassCard ${sharedProps} padding="${padding}">
@@ -93,44 +100,45 @@ import { Text } from "react-native"
 </GlassCard>`
       }
       case "glass-button": {
-        const label = text || "Continue"
-        return `import { GlassButton } from "./components/ui/glass-button"
+        const label = escapeJsxText(text || "Continue")
+        return `import { GlassButton } from "${importBase}/glass-button"
 
 <GlassButton ${sharedProps} size="${padding}">
   ${label}
 </GlassButton>`
       }
       case "glass-input": {
-        const placeholder = text || "Search…"
-        return `import { GlassInput } from "./components/ui/glass-input"
+        const placeholder = escapeJsxAttr(text || "Search…")
+        return `import { GlassInput } from "${importBase}/glass-input"
 
-<GlassInput placeholder="${placeholder}" ${sharedProps} size="${padding}" />`
+<GlassInput placeholder=${placeholder} ${sharedProps} size="${padding}" />`
       }
       case "glass-modal": {
-        const title = text || "Confirm action"
-        return `import { GlassModal } from "./components/ui/glass-modal"
+        const title = escapeJsxText(text || "Confirm action")
+        return `import { GlassModal } from "${importBase}/glass-modal"
+import { Text } from "react-native"
 
 <GlassModal ${sharedProps} padding="${padding}">
   <Text className="text-base font-semibold ${textColor}">${title}</Text>
 </GlassModal>`
       }
       case "glass-tabbar":
-        return `import { GlassTabBar } from "./components/ui/glass-tabbar"
+        return `import { GlassTabBar } from "${importBase}/glass-tabbar"
 
 <GlassTabBar ${sharedProps} padding="${padding}">
   {/* your tab items here */}
 </GlassTabBar>`
       case "glass-switch": {
-        const label = text || "Notifications"
-        return `import { GlassSwitch } from "./components/ui/glass-switch"
+        const label = escapeJsxAttr(text || "Notifications")
+        return `import { GlassSwitch } from "${importBase}/glass-switch"
 
-<GlassSwitch ${sharedProps} size="${padding}" checked label="${label}" onCheckedChange={setOn} />`
+<GlassSwitch ${sharedProps} size="${padding}" checked label=${label} onCheckedChange={setOn} />`
       }
       case "glass-navbar": {
-        const title = text || "Glass UI"
-        return `import { GlassNavigationBar } from "./components/ui/glass-navbar"
+        const title = escapeJsxAttr(text || "Glass UI")
+        return `import { GlassNavigationBar } from "${importBase}/glass-navbar"
 
-<GlassNavigationBar ${sharedProps} padding="${padding}" title="${title}" />`
+<GlassNavigationBar ${sharedProps} padding="${padding}" title=${title} />`
       }
       default:
         return ""
@@ -139,8 +147,8 @@ import { Text } from "react-native"
 
   switch (component) {
     case "glass-card": {
-      const title = text || "Now Playing"
-      return `import { GlassCard } from "./components/ui/glass-card"
+      const title = escapeJsxText(text || "Now Playing")
+      return `import { GlassCard } from "${importBase}/glass-card"
 
 <GlassCard ${sharedProps} padding="${padding}">
   <h3 className="text-base font-semibold ${textColor}">${title}</h3>
@@ -148,44 +156,44 @@ import { Text } from "react-native"
 </GlassCard>`
     }
     case "glass-button": {
-      const label = text || "Continue"
-      return `import { GlassButton } from "./components/ui/glass-button"
+      const label = escapeJsxText(text || "Continue")
+      return `import { GlassButton } from "${importBase}/glass-button"
 
 <GlassButton ${sharedProps} size="${padding}">
   ${label}
 </GlassButton>`
     }
     case "glass-input": {
-      const placeholder = text || "Search…"
-      return `import { GlassInput } from "./components/ui/glass-input"
+      const placeholder = escapeJsxAttr(text || "Search…")
+      return `import { GlassInput } from "${importBase}/glass-input"
 
-<GlassInput placeholder="${placeholder}" ${sharedProps} size="${padding}" />`
+<GlassInput placeholder=${placeholder} ${sharedProps} size="${padding}" />`
     }
     case "glass-modal": {
-      const title = text || "Confirm action"
-      return `import { GlassModal } from "./components/ui/glass-modal"
+      const title = escapeJsxText(text || "Confirm action")
+      return `import { GlassModal } from "${importBase}/glass-modal"
 
 <GlassModal ${sharedProps} padding="${padding}">
   <h2 className="text-xl font-bold ${textColor}">${title}</h2>
 </GlassModal>`
     }
     case "glass-tabbar":
-      return `import { GlassTabBar } from "./components/ui/glass-tabbar"
+      return `import { GlassTabBar } from "${importBase}/glass-tabbar"
 
 <GlassTabBar ${sharedProps} padding="${padding}">
   {/* your tab items here */}
 </GlassTabBar>`
     case "glass-switch": {
-      const label = text || "Notifications"
-      return `import { GlassSwitch } from "./components/ui/glass-switch"
+      const label = escapeJsxAttr(text || "Notifications")
+      return `import { GlassSwitch } from "${importBase}/glass-switch"
 
-<GlassSwitch ${sharedProps} size="${padding}" checked label="${label}" onCheckedChange={setOn} />`
+<GlassSwitch ${sharedProps} size="${padding}" checked label=${label} onCheckedChange={setOn} />`
     }
     case "glass-navbar": {
-      const title = text || "Glass UI"
-      return `import { GlassNavigationBar } from "./components/ui/glass-navbar"
+      const title = escapeJsxAttr(text || "Glass UI")
+      return `import { GlassNavigationBar } from "${importBase}/glass-navbar"
 
-<GlassNavigationBar ${sharedProps} padding="${padding}" title="${title}" />`
+<GlassNavigationBar ${sharedProps} padding="${padding}" title=${title} />`
     }
     default:
       return ""

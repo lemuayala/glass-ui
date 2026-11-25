@@ -1,4 +1,5 @@
 import type { GlassOptions } from "../types"
+import { TINT_COMPOUNDS_SNIPPET, TINT_VARIANT_SNIPPET } from "./_shared"
 
 export function renderGlassModalReusable(options: GlassOptions): string {
   const { theme, blur, rounded, intensity, border, padding, shadow, tint } = options
@@ -14,8 +15,8 @@ function cn(...inputs: ClassValue[]) {
 export const glassModalVariants = cva("overflow-hidden shadow-2xl", {
   variants: {
     theme: {
-      light: "bg-white/40 text-neutral-900",
-      dark: "bg-black/60 text-white",
+      light: "text-neutral-900",
+      dark: "text-white",
     },
     blur: {
       none: "",
@@ -40,8 +41,8 @@ export const glassModalVariants = cva("overflow-hidden shadow-2xl", {
     },
     border: {
       none: "",
-      subtle: "border border-white/20",
-      strong: "border-2 border-white/30",
+      subtle: "border",
+      strong: "border-2",
     },
     padding: {
       sm: "p-6",
@@ -54,13 +55,7 @@ export const glassModalVariants = cva("overflow-hidden shadow-2xl", {
       md: "shadow-md",
       lg: "shadow-xl",
     },
-    tint: {
-      none: "",
-      blue: "bg-blue-500/10",
-      pink: "bg-pink-500/10",
-      orange: "bg-orange-500/10",
-      teal: "bg-teal-500/10",
-    },
+    ${TINT_VARIANT_SNIPPET},
   },
   compoundVariants: [
     { theme: "light", intensity: "subtle", className: "bg-white/20" },
@@ -73,6 +68,7 @@ export const glassModalVariants = cva("overflow-hidden shadow-2xl", {
     { theme: "light", border: "strong", className: "border-white/50" },
     { theme: "dark", border: "subtle", className: "border-white/10" },
     { theme: "dark", border: "strong", className: "border-white/20" },
+${TINT_COMPOUNDS_SNIPPET}
   ],
   defaultVariants: {
     theme: "${theme}",
@@ -102,28 +98,5 @@ export const GlassModal = React.forwardRef<HTMLDivElement, GlassModalProps>(
   },
 )
 GlassModal.displayName = "GlassModal"
-`
-}
-
-export function renderGlassModalInline(options: GlassOptions): string {
-  const { theme } = options
-  const textColor = theme === "dark" ? "text-white" : "text-neutral-900"
-  const textMuted = theme === "dark" ? "text-white/70" : "text-neutral-700"
-  const title = options.text || "Confirm action"
-  return `// 👇 Paste this anywhere in your React component.
-export function Example() {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
-      <div className="w-full max-w-md overflow-hidden rounded-3xl border border-white/20 bg-black/60 p-8 shadow-2xl backdrop-blur-xl">
-        <h2 className="text-xl font-bold ${textColor}">${title}</h2>
-        <p className="mt-2 ${textMuted}">This action can be undone from settings.</p>
-        <div className="mt-6 flex justify-end gap-2">
-          <button className="h-9 rounded-full px-4 text-xs font-medium ${textMuted} hover:bg-white/10">Cancel</button>
-          <button className="h-9 rounded-full bg-white/20 px-4 text-xs font-semibold ${textColor}">Confirm</button>
-        </div>
-      </div>
-    </div>
-  )
-}
 `
 }

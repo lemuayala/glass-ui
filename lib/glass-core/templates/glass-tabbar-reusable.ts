@@ -1,4 +1,5 @@
 import type { GlassOptions } from "../types"
+import { TINT_COMPOUNDS_SNIPPET, TINT_VARIANT_SNIPPET } from "./_shared"
 
 export function renderGlassTabBarReusable(options: GlassOptions): string {
   const { theme, blur, rounded, intensity, border, padding, shadow, tint } = options
@@ -16,8 +17,8 @@ export const glassTabBarVariants = cva(
   {
     variants: {
       theme: {
-        light: "bg-white/40 text-neutral-900",
-        dark: "bg-black/40 text-white",
+        light: "text-neutral-900",
+        dark: "text-white",
       },
       blur: {
         none: "",
@@ -42,8 +43,8 @@ export const glassTabBarVariants = cva(
       },
       border: {
         none: "",
-        subtle: "border border-white/20",
-        strong: "border-2 border-white/30",
+        subtle: "border",
+        strong: "border-2",
       },
       padding: {
         sm: "h-12 px-4",
@@ -56,13 +57,7 @@ export const glassTabBarVariants = cva(
         md: "shadow-md",
         lg: "shadow-xl",
       },
-      tint: {
-        none: "",
-        blue: "bg-blue-500/10",
-        pink: "bg-pink-500/10",
-        orange: "bg-orange-500/10",
-        teal: "bg-teal-500/10",
-      },
+      ${TINT_VARIANT_SNIPPET},
     },
     compoundVariants: [
       { theme: "light", intensity: "subtle", className: "bg-white/20" },
@@ -75,6 +70,7 @@ export const glassTabBarVariants = cva(
       { theme: "light", border: "strong", className: "border-white/50" },
       { theme: "dark", border: "subtle", className: "border-white/10" },
       { theme: "dark", border: "strong", className: "border-white/20" },
+${TINT_COMPOUNDS_SNIPPET}
     ],
     defaultVariants: {
       theme: "${theme}",
@@ -105,31 +101,5 @@ export const GlassTabBar = React.forwardRef<HTMLElement, GlassTabBarProps>(
   },
 )
 GlassTabBar.displayName = "GlassTabBar"
-`
-}
-
-export function renderGlassTabBarInline(options: GlassOptions): string {
-  const { theme } = options
-  const iconColor = theme === "dark" ? "bg-white/30" : "bg-black/20"
-  const iconActive = theme === "dark" ? "bg-white/80" : "bg-black/70"
-  return `// 👇 Paste this anywhere in your React component.
-export function Example() {
-  return (
-    <nav className="flex h-14 w-full max-w-sm items-center justify-around overflow-hidden rounded-full border border-white/20 bg-black/40 px-6 shadow-lg backdrop-blur-xl">
-      <button className="flex flex-col items-center gap-0.5">
-        <div className="h-5 w-5 rounded-full ${iconActive}" />
-        <span className="text-[9px] text-white">Home</span>
-      </button>
-      <button className="flex flex-col items-center gap-0.5">
-        <div className="h-5 w-5 rounded-full ${iconColor}" />
-        <span className="text-[9px] text-white/55">Search</span>
-      </button>
-      <button className="flex flex-col items-center gap-0.5">
-        <div className="h-5 w-5 rounded-full ${iconColor}" />
-        <span className="text-[9px] text-white/55">Profile</span>
-      </button>
-    </nav>
-  )
-}
 `
 }

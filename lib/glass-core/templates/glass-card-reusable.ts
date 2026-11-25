@@ -109,13 +109,13 @@ GlassCard.displayName = "GlassCard"
 
 /* ---------- Usage ----------
 import { GlassCard } from "./components/ui/glass-card"
-import { Text } from "react-native"
 
 <GlassCard theme="${options.theme}" blur="${options.blur}" rounded="${options.rounded}" tint="${options.tint}">
-  <Text className="text-base font-semibold ${options.theme === "dark" ? "text-white" : "text-neutral-900"
-    }">
+  <h3 className="text-base font-semibold ${
+    options.theme === "dark" ? "text-white" : "text-neutral-900"
+  }">
     Glass Card
-  </Text>
+  </h3>
 </GlassCard>
 ---------------------------- */
 `

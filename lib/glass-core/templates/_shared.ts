@@ -27,3 +27,25 @@ export const TINT_COMPOUNDS_SNIPPET = `      { tint: "blue", intensity: "subtle"
       { tint: "teal", intensity: "subtle", className: "bg-teal-500/15" },
       { tint: "teal", intensity: "medium", className: "bg-teal-500/25" },
       { tint: "teal", intensity: "strong", className: "bg-teal-500/40" },`
+
+/**
+ * Safely serialize user text inside JSX children (`<tag>${escapeJsxText(s)}</tag>`).
+ * Plain text stays readable; strings with `{`, `}`, `<`, `>`, or newlines become `{JSON.stringify(s)}`.
+ */
+export function escapeJsxText(value: string): string {
+  if (/[\{\}<>\r\n]/.test(value)) {
+    return `{${JSON.stringify(value)}}`
+  }
+  return value
+}
+
+/**
+ * Safely serialize a string attribute (`placeholder=${escapeJsxAttr(s)}`).
+ * Normal strings emit `"..."`; quotes/backslashes/newlines wrap in `{JSON.stringify(s)}` when needed.
+ */
+export function escapeJsxAttr(value: string): string {
+  if (/["\\\r\n]/.test(value)) {
+    return `{${JSON.stringify(value)}}`
+  }
+  return `"${value}"`
+}

@@ -114,3 +114,17 @@ export const PRESETS: GlassPreset[] = [
 export function applyPreset(preset: GlassPreset, currentText?: string): GlassOptions {
   return { ...preset.options, text: currentText ?? "" }
 }
+
+export function findMatchingPreset(options: GlassOptions): GlassPreset | undefined {
+  return PRESETS.find(
+    (p) =>
+      p.options.theme === options.theme &&
+      p.options.blur === options.blur &&
+      p.options.rounded === options.rounded &&
+      p.options.intensity === options.intensity &&
+      p.options.border === options.border &&
+      p.options.padding === options.padding &&
+      p.options.shadow === options.shadow &&
+      p.options.tint === options.tint,
+  )
+}

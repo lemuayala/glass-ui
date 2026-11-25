@@ -1,12 +1,13 @@
 import { getGlassSwitchClasses } from "../variants"
 import type { GlassOptions } from "../types"
+import { escapeJsxText } from "./_shared"
 
 export function renderGlassSwitchInline(options: GlassOptions): string {
   const trackClasses = getGlassSwitchClasses(options).trim().replace(/\s+/g, " ")
   const isDark = options.theme === "dark"
   const thumbOn = isDark ? "bg-white translate-x-6" : "bg-neutral-900 translate-x-6"
   const thumbOff = isDark ? "bg-white/70 translate-x-0.5" : "bg-neutral-700/80 translate-x-0.5"
-  const label = (options.text || "Notifications").replace(/"/g, '\\"')
+  const label = escapeJsxText(options.text || "Notifications")
 
   return `// 👇 Paste this anywhere in your React component.
 "use client"
