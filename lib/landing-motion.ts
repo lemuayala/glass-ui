@@ -1,9 +1,11 @@
 "use client"
 
 import { animate, createTimeline, utils } from "animejs"
-import type { Timeline } from "animejs"
+import type { TargetsParam, Timeline } from "animejs"
 
 export const LANDING_REVEAL_EVENT = "glass:landing-reveal"
+
+export type RevealTargets = TargetsParam | ReadonlyArray<TargetsParam | null | undefined>
 
 const REVEAL_IO: IntersectionObserverInit = {
   root: null,
@@ -21,8 +23,8 @@ export function requestLandingSectionReveal(sectionId: string) {
   window.dispatchEvent(new CustomEvent(LANDING_REVEAL_EVENT, { detail: { id: sectionId } }))
 }
 
-export function setRevealPending(targets: unknown, y = 20) {
-  utils.set(targets, {
+export function setRevealPending(targets: RevealTargets, y = 20) {
+  utils.set(targets as TargetsParam, {
     opacity: 0,
     translateY: y,
   })
@@ -35,8 +37,8 @@ export function prefersReducedMotion() {
   )
 }
 
-export function revealVisible(targets: unknown) {
-  utils.set(targets, {
+export function revealVisible(targets: RevealTargets) {
+  utils.set(targets as TargetsParam, {
     opacity: 1,
     translateY: 0,
     scale: 1,
@@ -55,7 +57,7 @@ export function isRevealTargetInView(el: HTMLElement): boolean {
 }
 
 export type EnterSceneOptions = {
-  lockTargets?: () => unknown
+  lockTargets?: () => RevealTargets | void
   onComplete?: () => void
   /** Element that marks “user reached this block” — usually the section h2 */
   anchor?: HTMLElement | (() => HTMLElement | null)
@@ -181,7 +183,7 @@ function createDesktopScene(section: HTMLElement, options?: EnterSceneOptions): 
   tl.revert = () => {
     window.clearTimeout(emergency)
     handle?.disconnect()
-    origRevert?.()
+    return origRevert ? origRevert() : tl
   }
 
   return asEnterTimeline(tl, armReveal)
