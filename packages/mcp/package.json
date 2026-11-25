@@ -1,6 +1,7 @@
 {
   "name": "@glass-ui/mcp",
   "version": "0.5.0",
+  "mcpName": "io.github.lemuayala/glass-ui",
   "description": "Model Context Protocol (MCP) server for Glass UI — generate iOS-style glassmorphism components and GLASS.md specs for Web (Tailwind) and React Native (expo-blur / NativeWind).",
   "license": "MIT",
   "author": "lemuayala",
@@ -35,7 +36,8 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "server.json"
   ],
   "publishConfig": {
     "access": "public"
