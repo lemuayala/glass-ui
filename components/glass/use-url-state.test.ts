@@ -12,6 +12,7 @@ const fallback: SerializedState = {
   component: "glass-card",
   mode: "reusable",
   platform: "web",
+  nativeBlur: "expo-blur",
   options: {
     theme: "dark",
     blur: "lg",
@@ -39,6 +40,7 @@ describe("use-url-state encodeState / decodeState / sanitization", () => {
       component: "glass-navbar",
       mode: "inline",
       platform: "native",
+      nativeBlur: "nativewind",
       options: {
         ...fallback.options,
         tint: "teal",
@@ -48,6 +50,7 @@ describe("use-url-state encodeState / decodeState / sanitization", () => {
     }
     const qs = encodeState(state)
     expect(qs).toContain("pl=native")
+    expect(qs).toContain("nb=nativewind")
     const decoded = decodeState(`?${qs}`, fallback)
     expect(decoded).toEqual(state)
   })
