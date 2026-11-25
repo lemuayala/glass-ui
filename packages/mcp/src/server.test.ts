@@ -23,6 +23,27 @@ describe("@lemuayala/glass-ui-mcp server end-to-end over MCP protocol", () => {
     expect(cfg.mcpServers["glass-ui"].args).toEqual(["-y", "@lemuayala/glass-ui-mcp"])
   })
 
+  it("sends usage instructions on initialize so agents prefer the generator tools", () => {
+    const instructions = client.getInstructions() ?? ""
+    expect(instructions).toContain("generate_component")
+    expect(instructions).toContain("Do not hand-write glass styles")
+  })
+
+  it("serves the glass_component prompt with the user's request", async () => {
+    const prompts = await client.listPrompts()
+    expect(prompts.prompts.map((p) => p.name)).toEqual(["glass_component"])
+
+    const prompt = await client.getPrompt({
+      name: "glass_component",
+      arguments: { request: "a frosted login card", platform: "native" },
+    })
+    const first = prompt.messages[0]?.content
+    const text = first && first.type === "text" ? first.text : ""
+    expect(text).toContain("a frosted login card")
+    expect(text).toContain("Platform: native.")
+    expect(text).toContain("generate_component")
+  })
+
   it("lists all 4 tools and 2 resources and serves resource contents", async () => {
     const tools = await client.listTools()
     expect(tools.tools.map((t) => t.name).sort()).toEqual([
