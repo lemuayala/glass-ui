@@ -1,0 +1,59 @@
+{
+  "name": "@glass-ui/mcp",
+  "version": "0.5.0",
+  "mcpName": "io.github.lemuayala/glass-ui",
+  "description": "Model Context Protocol (MCP) server for Glass UI — generate iOS-style glassmorphism components and GLASS.md specs for Web (Tailwind) and React Native (expo-blur / NativeWind).",
+  "license": "MIT",
+  "author": "lemuayala",
+  "homepage": "https://glass-ui-play.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lemuayala/glass-ui.git",
+    "directory": "packages/mcp"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "glassmorphism",
+    "glass-ui",
+    "claude",
+    "cursor",
+    "tailwind",
+    "react-native",
+    "expo-blur"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "glass-ui-mcp": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "server.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepack": "pnpm run build"
+  },
+  "dependencies": {
+    "@glass-ui/core": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "typescript": "^5.7.3"
+  }
+}

@@ -43,7 +43,7 @@ export const dictionaries = {
     "glass.howTo.step2": "GLASS.md updates as you change blur, tint, and export mode.",
     "glass.howTo.step3": "Copy it into your repo, or paste it into Cursor, Claude, or Copilot.",
 
-    "landing.badge": "Glass components · v0.4.1",
+    "landing.badge": "Glass components · v0.5.0",
     "landing.headlineLead": "Glassmorphism",
     "landing.headlineAccent": "that ships.",
     "landing.subhead":
@@ -114,10 +114,10 @@ export const dictionaries = {
     "native.eyebrow": "Mobile surface",
     "native.title": "Same glass on React Native.",
     "native.desc":
-      "Each primitive exports as a NativeWind View, Pressable, or TextInput — same tokens as the web preview.",
+      "Each primitive exports with real iOS/Android BlurView (expo-blur) or pure NativeWind classes — same tokens as the web preview.",
     "native.cta.play": "Open playground",
-    "native.feat1.title": "NativeWind classes",
-    "native.feat1.desc": "backdrop-blur, borders, and CVA variants map 1:1 from the web playground.",
+    "native.feat1.title": "Real BlurView + NativeWind",
+    "native.feat1.desc": "Switch between expo-blur hardware BlurView and pure NativeWind classes.",
     "native.feat2.title": "Inline or reusable",
     "native.feat2.desc": "Drop a snippet into a screen or copy a typed component file.",
     "native.feat3.title": "GLASS.md included",
@@ -179,6 +179,7 @@ export const dictionaries = {
 
     "code.inline": "Inline",
     "code.reusable": "Reusable",
+    "code.nativeBlur": "Native blur mode",
     "code.reusable.callout":
       "Reusable mode — \"Copy\" exports the full component file. \"Usage\" copies a ready-to-use call with your current props.",
 
@@ -250,7 +251,7 @@ export const dictionaries = {
     "glass.howTo.step2": "GLASS.md cambia cuando mueves blur, tinte o modo de exportación.",
     "glass.howTo.step3": "Cópialo al repo o pégalo en Cursor, Claude o Copilot.",
 
-    "landing.badge": "Componentes glass · v0.4.1",
+    "landing.badge": "Componentes glass · v0.5.0",
     "landing.headlineLead": "Glassmorphism",
     "landing.headlineAccent": "sin vueltas.",
     "landing.subhead":
@@ -321,10 +322,10 @@ export const dictionaries = {
     "native.eyebrow": "Superficie móvil",
     "native.title": "El mismo glass en React Native.",
     "native.desc":
-      "Cada primitivo sale como View, Pressable o TextInput con NativeWind — mismos tokens que en web.",
+      "Cada primitivo exporta con BlurView nativo real (expo-blur) o clases puras de NativeWind — mismos tokens que en web.",
     "native.cta.play": "Abrir playground",
-    "native.feat1.title": "Clases NativeWind",
-    "native.feat1.desc": "backdrop-blur, bordes y variantes CVA 1:1 desde el playground web.",
+    "native.feat1.title": "BlurView real + NativeWind",
+    "native.feat1.desc": "Alterna entre BlurView nativo (expo-blur) y clases puras de NativeWind.",
     "native.feat2.title": "Inline o reutilizable",
     "native.feat2.desc": "Snippet en una pantalla o archivo de componente tipado.",
     "native.feat3.title": "Incluye GLASS.md",
@@ -386,6 +387,7 @@ export const dictionaries = {
 
     "code.inline": "Inline",
     "code.reusable": "Reutilizable",
+    "code.nativeBlur": "Modo de blur nativo",
     "code.reusable.callout":
       "Modo reutilizable — «Copiar» exporta el archivo del componente. «Uso» copia la llamada lista con tus props actuales.",
 

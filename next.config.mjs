@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ["@glass-ui/core"],
   images: {
     unoptimized: true,
   },

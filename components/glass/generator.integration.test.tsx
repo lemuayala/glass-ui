@@ -29,9 +29,14 @@ describe("<Generator /> full playground integration", () => {
     await user.keyboard("2")
     expect(codeSection).toHaveTextContent("glassButtonVariants")
 
-    // Switch platform to Native
+    // Switch platform to Native (defaults to expo-blur BlurView)
     await user.click(within(codeSection).getByRole("button", { name: "Native" }))
     expect(codeSection).toHaveTextContent("react-native")
+    expect(codeSection).toHaveTextContent("expo-blur")
+
+    // Toggle Native blur mode to pure NativeWind classes
+    await user.click(within(codeSection).getByRole("button", { name: "NativeWind" }))
+    expect(codeSection).not.toHaveTextContent('from "expo-blur"')
 
     // Switch export mode to Inline
     await user.click(within(codeSection).getByRole("button", { name: "Inline" }))

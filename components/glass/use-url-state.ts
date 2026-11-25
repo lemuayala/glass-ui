@@ -1,7 +1,14 @@
 "use client"
 
 import { useCallback, useEffect, useRef } from "react"
-import type { ComponentKind, ExportMode, GlassOptions, GlassTint, Platform } from "@/lib/glass-core/types"
+import type {
+  ComponentKind,
+  ExportMode,
+  GlassOptions,
+  GlassTint,
+  NativeBlurMode,
+  Platform,
+} from "@/lib/glass-core/types"
 import type { WallpaperId } from "./wallpaper"
 
 /**
@@ -20,6 +27,7 @@ export interface SerializedState {
   component: ComponentKind
   mode: ExportMode
   platform: Platform
+  nativeBlur: NativeBlurMode
   options: GlassOptions
   wallpaper: WallpaperId
   customWallpaper: string | null
@@ -50,11 +58,14 @@ const COMPONENT_FROM: Record<string, ComponentKind> = {
 }
 
 export function encodeState(state: SerializedState): string {
-  const { component, mode, platform, options, wallpaper } = state
+  const { component, mode, platform, nativeBlur, options, wallpaper } = state
   const params = new URLSearchParams()
   params.set("c", COMPONENT_SHORT[component])
   params.set("m", mode)
   params.set("pl", platform)
+  if (platform === "native" || nativeBlur !== "expo-blur") {
+    params.set("nb", nativeBlur)
+  }
   params.set("t", options.theme)
   params.set("b", options.blur)
   params.set("r", options.rounded)
@@ -70,6 +81,7 @@ export function encodeState(state: SerializedState): string {
 
 const VALID_MODES: readonly ExportMode[] = ["inline", "reusable"]
 const VALID_PLATFORMS: readonly Platform[] = ["web", "native"]
+const VALID_NATIVE_BLURS: readonly NativeBlurMode[] = ["expo-blur", "nativewind"]
 const VALID_THEMES: readonly GlassOptions["theme"][] = ["light", "dark"]
 const VALID_BLURS: readonly GlassOptions["blur"][] = ["none", "sm", "md", "lg", "xl"]
 const VALID_ROUNDED: readonly GlassOptions["rounded"][] = ["none", "md", "lg", "xl", "2xl", "3xl", "full"]
@@ -92,6 +104,7 @@ export function decodeState(search: string, fallback: SerializedState): Serializ
   const component = COMPONENT_FROM[params.get("c") ?? ""] ?? fallback.component
   const mode = pickValid(params.get("m"), VALID_MODES, fallback.mode)
   const platform = pickValid(params.get("pl"), VALID_PLATFORMS, fallback.platform)
+  const nativeBlur = pickValid(params.get("nb"), VALID_NATIVE_BLURS, fallback.nativeBlur)
   const wallpaper = pickValid(params.get("w"), VALID_WALLPAPERS, fallback.wallpaper)
   const rawTxt = params.get("txt")
   const text = rawTxt !== null ? rawTxt.slice(0, MAX_TEXT_LENGTH) : (fallback.options.text ?? "")
@@ -111,6 +124,7 @@ export function decodeState(search: string, fallback: SerializedState): Serializ
     component,
     mode,
     platform,
+    nativeBlur,
     options,
     wallpaper,
     customWallpaper: fallback.customWallpaper,

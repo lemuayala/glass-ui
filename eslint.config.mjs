@@ -8,6 +8,7 @@ export default defineConfig([
     "out/**",
     "build/**",
     "coverage/**",
+    "packages/*/dist/**",
     "playwright-report/**",
     "test-results/**",
     "next-env.d.ts",

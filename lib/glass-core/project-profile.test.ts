@@ -18,9 +18,14 @@ describe("project-profile helpers", () => {
     expect(getInstallCommand({ ...DEFAULT_PROJECT_PROFILE, packageManager: "npm" }, "web")).toBe(
       "npm install class-variance-authority clsx tailwind-merge",
     )
-    expect(getInstallCommand({ ...DEFAULT_PROJECT_PROFILE, packageManager: "pnpm" }, "native")).toBe(
-      "pnpm add class-variance-authority clsx tailwind-merge nativewind",
+    expect(
+      getInstallCommand({ ...DEFAULT_PROJECT_PROFILE, packageManager: "pnpm" }, "native", "expo-blur"),
+    ).toBe(
+      "npx expo install expo-blur\npnpm add class-variance-authority clsx tailwind-merge nativewind",
     )
+    expect(
+      getInstallCommand({ ...DEFAULT_PROJECT_PROFILE, packageManager: "pnpm" }, "native", "nativewind"),
+    ).toBe("pnpm add class-variance-authority clsx tailwind-merge nativewind")
     expect(getInstallCommand({ ...DEFAULT_PROJECT_PROFILE, packageManager: "yarn" }, "web")).toBe(
       "yarn add class-variance-authority clsx tailwind-merge",
     )

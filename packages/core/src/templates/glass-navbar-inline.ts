@@ -1,6 +1,6 @@
-import { getGlassNavbarClasses } from "../variants"
-import type { GlassOptions } from "../types"
-import { escapeJsxText } from "./_shared"
+import { getGlassNavbarClasses } from "../variants.js"
+import type { GlassOptions } from "../types.js"
+import { escapeJsxText } from "./_shared.js"
 
 export function renderGlassNavbarInline(options: GlassOptions): string {
   const classes = getGlassNavbarClasses(options).trim().replace(/\s+/g, " ")

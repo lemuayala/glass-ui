@@ -1,0 +1,120 @@
+name: Release
+
+# Runs when code lands on main (PR merge). Publishes only versions that are not yet on npm,
+# so merging docs-only changes is a safe no-op. Auth is npm Trusted Publishing (OIDC) — no NPM_TOKEN.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish @glass-ui/core, @glass-ui/mcp and MCP Registry entry
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write # npm trusted publishing + MCP Registry GitHub OIDC
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      # Trusted publishing needs npm >= 11.5.1 (pnpm publish delegates to the npm CLI).
+      - name: Upgrade npm for OIDC trusted publishing
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Quality gate (lint, typecheck, tests with coverage)
+        run: |
+          pnpm lint
+          pnpm typecheck
+          pnpm test:coverage
+
+      - name: Build packages
+        run: pnpm run build:packages
+
+      - name: Verify server.json matches @glass-ui/mcp
+        run: |
+          node -e '
+            const pkg = require("./packages/mcp/package.json");
+            const server = require("./packages/mcp/server.json");
+            const npmPkg = server.packages.find((p) => p.registryType === "npm");
+            const errors = [];
+            if (pkg.mcpName !== server.name) errors.push(`mcpName ${pkg.mcpName} != server.json name ${server.name}`);
+            if (server.version !== pkg.version) errors.push(`server.json version ${server.version} != package version ${pkg.version}`);
+            if (!npmPkg || npmPkg.identifier !== pkg.name) errors.push("server.json npm identifier does not match package name");
+            if (npmPkg && npmPkg.version !== pkg.version) errors.push("server.json npm package version mismatch");
+            if (errors.length) { console.error(errors.join("\n")); process.exit(1); }
+          '
+
+      - name: Publish @glass-ui/core (skip if version already on npm)
+        id: core
+        run: |
+          NAME=$(node -p "require('./packages/core/package.json').name")
+          VERSION=$(node -p "require('./packages/core/package.json').version")
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "$NAME@$VERSION already published — skipping"
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          else
+            pnpm --filter "$NAME" publish --access public --provenance --no-git-checks
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish @glass-ui/mcp (skip if version already on npm)
+        id: mcp
+        run: |
+          NAME=$(node -p "require('./packages/mcp/package.json').name")
+          VERSION=$(node -p "require('./packages/mcp/package.json').version")
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "$NAME@$VERSION already published — skipping"
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          else
+            pnpm --filter "$NAME" publish --access public --provenance --no-git-checks
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # MCP Registry validates the npm package (mcpName) live, so it must run after the npm publish.
+      - name: Install Cosign
+        if: steps.mcp.outputs.published == 'true'
+        uses: sigstore/cosign-installer@v3
+
+      - name: Publish to MCP Registry
+        if: steps.mcp.outputs.published == 'true'
+        working-directory: packages/mcp
+        env:
+          MCP_PUBLISHER_VERSION: v1.8.1
+        run: |
+          set -euo pipefail
+          archive="mcp-publisher_linux_amd64.tar.gz"
+          base_url="https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}"
+          curl --fail --location --silent --show-error --output "$archive" "$base_url/$archive"
+          curl --fail --location --silent --show-error --output "$archive.sigstore.json" "$base_url/$archive.sigstore.json"
+          cosign verify-blob \
+            --bundle "$archive.sigstore.json" \
+            --certificate-identity "https://github.com/modelcontextprotocol/registry/.github/workflows/release.yml@refs/tags/${MCP_PUBLISHER_VERSION}" \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+            "$archive"
+          tar xzf "$archive" mcp-publisher
+          ./mcp-publisher validate server.json
+          ./mcp-publisher login github-oidc
+          ./mcp-publisher publish

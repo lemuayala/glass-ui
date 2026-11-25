@@ -92,6 +92,33 @@ describe("codegen real TSX compilation", () => {
     }
   }
 
+  for (const nativeBlur of ["expo-blur", "nativewind"] as const) {
+    for (const blur of ["none", "lg"] as const) {
+      for (const mode of modes) {
+        it.each(components)(
+          `transpiles native (${nativeBlur}, blur=${blur}, ${mode}) %s cleanly`,
+          (component) => {
+            const code = generateCode({
+              component,
+              mode,
+              platform: "native",
+              nativeBlur,
+              options: { ...baseOptions, blur },
+            })
+            assertValidTsx(code, `${component}-${nativeBlur}-${blur}-${mode}`)
+            if (nativeBlur === "expo-blur" && (mode === "reusable" || blur !== "none")) {
+              expect(code).toContain("expo-blur")
+              expect(code).toContain("<BlurView")
+            }
+            if (nativeBlur === "nativewind") {
+              expect(code).not.toContain("expo-blur")
+            }
+          },
+        )
+      }
+    }
+  }
+
   for (const text of hostileTexts) {
     it(`transpiles all 28 variants and 14 usage snippets safely for text=${JSON.stringify(text)}`, () => {
       for (const component of components) {

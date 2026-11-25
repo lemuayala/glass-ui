@@ -1,6 +1,6 @@
-import { getGlassCardClasses } from "../variants"
-import type { GlassOptions } from "../types"
-import { escapeJsxText } from "./_shared"
+import { getGlassCardClasses } from "../variants.js"
+import type { GlassOptions } from "../types.js"
+import { escapeJsxText } from "./_shared.js"
 
 /**
  * Inline export — a single <div> snippet with all Tailwind classes applied.

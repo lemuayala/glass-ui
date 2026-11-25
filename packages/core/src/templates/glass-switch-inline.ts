@@ -1,6 +1,6 @@
-import { getGlassSwitchClasses } from "../variants"
-import type { GlassOptions } from "../types"
-import { escapeJsxText } from "./_shared"
+import { getGlassSwitchClasses } from "../variants.js"
+import type { GlassOptions } from "../types.js"
+import { escapeJsxText } from "./_shared.js"
 
 export function renderGlassSwitchInline(options: GlassOptions): string {
   const trackClasses = getGlassSwitchClasses(options).trim().replace(/\s+/g, " ")

@@ -1,6 +1,6 @@
-import { getGlassModalClasses } from "../variants"
-import type { GlassOptions } from "../types"
-import { escapeJsxText } from "./_shared"
+import { getGlassModalClasses } from "../variants.js"
+import type { GlassOptions } from "../types.js"
+import { escapeJsxText } from "./_shared.js"
 
 export function renderGlassModalInline(options: GlassOptions): string {
   const classes = getGlassModalClasses(options).trim().replace(/\s+/g, " ")

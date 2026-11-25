@@ -8,7 +8,7 @@ import { Copy, Download, Code2, Layers, FileText, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useT } from "@/lib/i18n/provider"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import type { ComponentKind, ExportMode, Platform } from "@/lib/glass-core/types"
+import type { ComponentKind, ExportMode, NativeBlurMode, Platform } from "@/lib/glass-core/types"
 import { GlassMdLine } from "./glass-md-render"
 
 type ExportView = "code" | "glass"
@@ -23,6 +23,8 @@ export function CodePanel({
   onMode,
   platform,
   onPlatform,
+  nativeBlur,
+  onNativeBlur,
 }: {
   code: string
   usageSnippet: string
@@ -33,6 +35,8 @@ export function CodePanel({
   onMode: (m: ExportMode) => void
   platform: Platform
   onPlatform: (p: Platform) => void
+  nativeBlur: NativeBlurMode
+  onNativeBlur: (nb: NativeBlurMode) => void
 }) {
   const t = useT()
   const { resolvedTheme } = useTheme()
@@ -222,6 +226,25 @@ export function CodePanel({
                   Native
                 </ModeTab>
               </div>
+              {platform === "native" && (
+                <div
+                  aria-label={t("code.nativeBlur")}
+                  className="flex items-center gap-0.5 rounded-full border border-border bg-foreground/[0.03] p-0.5"
+                >
+                  <ModeTab
+                    active={nativeBlur === "expo-blur"}
+                    onClick={() => onNativeBlur("expo-blur")}
+                  >
+                    expo-blur
+                  </ModeTab>
+                  <ModeTab
+                    active={nativeBlur === "nativewind"}
+                    onClick={() => onNativeBlur("nativewind")}
+                  >
+                    NativeWind
+                  </ModeTab>
+                </div>
+              )}
               <div className="hidden h-4 w-px bg-border sm:block" />
               <div className="flex items-center gap-0.5 rounded-full border border-border bg-foreground/[0.03] p-0.5">
                 <ModeTab active={mode === "inline"} onClick={() => onMode("inline")}>
