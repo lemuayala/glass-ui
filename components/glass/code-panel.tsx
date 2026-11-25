@@ -102,6 +102,7 @@ export function CodePanel({
   }
 
   const displayCode = isGlass ? glassPrompt : code
+  const downloadLabel = isGlass ? t("actions.downloadGlass") : t("actions.download")
 
   const actionButtons = (
     <>
@@ -112,13 +113,13 @@ export function CodePanel({
               type="button"
               onClick={handleDownload}
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-foreground/[0.04] text-muted-foreground transition-all hover:bg-foreground/[0.08] hover:text-foreground"
-              aria-label={t("actions.download")}
+              aria-label={downloadLabel}
             >
               <Download className="h-3.5 w-3.5" />
             </button>
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={6}>
-            {t("actions.download")}
+            {downloadLabel}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

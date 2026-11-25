@@ -25,7 +25,7 @@ import {
   PLAYGROUND_PATH,
 } from "./use-url-state"
 import { useProjectProfile } from "@/hooks/use-project-profile"
-import { applyPreset, type GlassPreset } from "@/lib/glass-core/presets"
+import { applyPreset, findMatchingPreset, type GlassPreset } from "@/lib/glass-core/presets"
 import { useShortcuts } from "./use-shortcuts"
 import { useI18n, useT } from "@/lib/i18n/provider"
 import { SiteFooterCredit } from "./site-footer-credit"
@@ -46,6 +46,7 @@ const COMPONENTS_BY_INDEX: ComponentKind[] = [
 const FALLBACK_STATE: SerializedState = {
   component: "glass-card",
   mode: "reusable",
+  platform: "web",
   options: defaultsFor("glass-card"),
   wallpaper: "aurora",
   customWallpaper: null,
@@ -59,7 +60,7 @@ export function Generator() {
   const [hydrated, setHydrated] = useState(false)
   const [component, setComponent] = useState<ComponentKind>(FALLBACK_STATE.component)
   const [mode, setMode] = useState<ExportMode>(FALLBACK_STATE.mode)
-  const [platform, setPlatform] = useState<Platform>("web")
+  const [platform, setPlatform] = useState<Platform>(FALLBACK_STATE.platform)
   const [options, setOptions] = useState<GlassOptions>(FALLBACK_STATE.options)
   const [wallpaper, setWallpaper] = useState<WallpaperId>(FALLBACK_STATE.wallpaper)
   const [customWallpaper, setCustomWallpaper] = useState<string | null>(null)
@@ -73,6 +74,7 @@ export function Generator() {
     const initial = readInitialState(FALLBACK_STATE)
     setComponent(initial.component)
     setMode(initial.mode)
+    setPlatform(initial.platform)
     setOptions(initial.options)
     setWallpaper(initial.wallpaper)
     setCustomWallpaper(initial.customWallpaper)
@@ -80,8 +82,8 @@ export function Generator() {
   }, [])
 
   const state: SerializedState = useMemo(
-    () => ({ component, mode, options, wallpaper, customWallpaper }),
-    [component, mode, options, wallpaper, customWallpaper],
+    () => ({ component, mode, platform, options, wallpaper, customWallpaper }),
+    [component, mode, platform, options, wallpaper, customWallpaper],
   )
 
   useStateSync(hydrated ? state : FALLBACK_STATE)
@@ -111,7 +113,11 @@ export function Generator() {
   )
 
   const code = useMemo(() => generateCode(codegenInput), [codegenInput])
-  const usageSnippet = useMemo(() => generateUsageSnippet(codegenInput), [codegenInput])
+  const usageSnippet = useMemo(
+    () => generateUsageSnippet(codegenInput, profile.componentPath),
+    [codegenInput, profile.componentPath],
+  )
+  const activePreset = useMemo(() => findMatchingPreset(options), [options])
 
   const shareUrl = useMemo(() => {
     if (typeof window === "undefined") return ""
@@ -119,8 +125,14 @@ export function Generator() {
   }, [state])
 
   const glassPrompt = useMemo(
-    () => generateGlassPrompt({ codegen: codegenInput, profile, shareUrl: shareUrl || undefined }),
-    [codegenInput, profile, shareUrl],
+    () =>
+      generateGlassPrompt({
+        codegen: codegenInput,
+        profile,
+        shareUrl: shareUrl || undefined,
+        presetName: activePreset?.name,
+      }),
+    [codegenInput, profile, shareUrl, activePreset],
   )
 
   const shortGlassPrompt = useMemo(
