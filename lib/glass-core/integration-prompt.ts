@@ -1,1 +1,1 @@
-export * from "@glass-ui/core"
+export * from "@lemuayala/glass-ui-core"

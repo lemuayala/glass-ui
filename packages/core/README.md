@@ -1,4 +1,4 @@
-# @glass-ui/core
+# @lemuayala/glass-ui-core
 
 Core primitives, CVA variants, presets, TSX code generator (Web Tailwind + React Native `expo-blur` / NativeWind), `GLASS.md` prompt builder, and CLI component installer for [Glass UI](https://glass-ui-play.vercel.app).
 
@@ -8,11 +8,11 @@ Drop typed Glass UI components directly into any Next.js, Vite, or Expo project:
 
 ```bash
 # Web (Tailwind + CVA)
-npx @glass-ui/core add card
-npx @glass-ui/core add all --preset liquid --dir src/components/ui
+npx @lemuayala/glass-ui-core add card
+npx @lemuayala/glass-ui-core add all --preset liquid --dir src/components/ui
 
 # React Native (Expo BlurView + NativeWind)
-npx @glass-ui/core add button --native --preset frosted --glass-md
+npx @lemuayala/glass-ui-core add button --native --preset frosted --glass-md
 ```
 
 ## Programmatic API
@@ -24,7 +24,7 @@ import {
   generateGlassPrompt,
   getGlassCardClasses,
   DEFAULT_PROJECT_PROFILE,
-} from "@glass-ui/core"
+} from "@lemuayala/glass-ui-core"
 
 const classes = getGlassCardClasses(PRESETS[0].options)
 

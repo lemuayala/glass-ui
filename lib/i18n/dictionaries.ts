@@ -43,7 +43,7 @@ export const dictionaries = {
     "glass.howTo.step2": "GLASS.md updates as you change blur, tint, and export mode.",
     "glass.howTo.step3": "Copy it into your repo, or paste it into Cursor, Claude, or Copilot.",
 
-    "landing.badge": "Glass components · v0.5.0",
+    "landing.badge": "Glass components · v0.5.1",
     "landing.headlineLead": "Glassmorphism",
     "landing.headlineAccent": "that ships.",
     "landing.subhead":
@@ -251,7 +251,7 @@ export const dictionaries = {
     "glass.howTo.step2": "GLASS.md cambia cuando mueves blur, tinte o modo de exportación.",
     "glass.howTo.step3": "Cópialo al repo o pégalo en Cursor, Claude o Copilot.",
 
-    "landing.badge": "Componentes glass · v0.5.0",
+    "landing.badge": "Componentes glass · v0.5.1",
     "landing.headlineLead": "Glassmorphism",
     "landing.headlineAccent": "sin vueltas.",
     "landing.subhead":

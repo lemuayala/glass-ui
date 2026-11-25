@@ -45,7 +45,7 @@ jobs:
         run: pnpm build
 
       - name: Verify publishable npm tarballs
-        run: pnpm --filter @glass-ui/core pack --dry-run && pnpm --filter @glass-ui/mcp pack --dry-run
+        run: pnpm --filter @lemuayala/glass-ui-core pack --dry-run && pnpm --filter @lemuayala/glass-ui-mcp pack --dry-run
 
       - name: Install Playwright Chromium
         run: pnpm exec playwright install --with-deps chromium
