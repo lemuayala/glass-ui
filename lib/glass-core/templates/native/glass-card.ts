@@ -1,15 +1,47 @@
-import type { GlassOptions } from "../../types"
+import type { GlassOptions, NativeBlurMode } from "../../types"
 import { getGlassCardClasses } from "../../variants"
-import { escapeJsxText } from "../_shared"
+import {
+  BLUR_INTENSITY_MAP,
+  BLUR_INTENSITY_SNIPPET,
+  TINT_COMPOUNDS_SNIPPET,
+  escapeJsxText,
+  stripBackdropBlur,
+} from "../_shared"
 
-export function renderGlassCardNativeReusable(options: GlassOptions): string {
+export function renderGlassCardNativeReusable(
+  options: GlassOptions,
+  nativeBlur: NativeBlurMode = "expo-blur",
+): string {
   const { theme, blur, rounded, intensity, border, padding, shadow, tint } = options
+  const useExpoBlur = nativeBlur === "expo-blur"
+
+  const imports = useExpoBlur
+    ? `import * as React from "react"
+import { StyleSheet, View, type ViewProps } from "react-native"
+import { BlurView } from "expo-blur"`
+    : `import * as React from "react"
+import { View, type ViewProps } from "react-native"`
+
+  const blurVariantBlock = useExpoBlur
+    ? `blur: {
+      none: "",
+      sm: "",
+      md: "",
+      lg: "",
+      xl: "",
+    },`
+    : `blur: {
+      none: "",
+      sm: "backdrop-blur-sm",
+      md: "backdrop-blur-md",
+      lg: "backdrop-blur-lg",
+      xl: "backdrop-blur-xl",
+    },`
 
   return `// glass-card.tsx
 // Drop this file into your project (e.g. components/ui/glass-card.tsx).
-// Requires: react-native, nativewind, class-variance-authority, tailwind-merge, clsx.
-import * as React from "react"
-import { View, type ViewProps } from "react-native"
+// Requires: react-native, ${useExpoBlur ? "expo-blur, " : ""}nativewind, class-variance-authority, tailwind-merge, clsx.
+${imports}
 import { cva, type VariantProps } from "class-variance-authority"
 import { twMerge } from "tailwind-merge"
 import { clsx, type ClassValue } from "clsx"
@@ -17,20 +49,14 @@ import { clsx, type ClassValue } from "clsx"
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
-
-export const glassCardVariants = cva("overflow-hidden", {
+${useExpoBlur ? `\n${BLUR_INTENSITY_SNIPPET}\n` : ""}
+export const glassCardVariants = cva("relative overflow-hidden", {
   variants: {
     theme: {
       light: "",
       dark: "",
     },
-    blur: {
-      none: "",
-      sm: "backdrop-blur-sm",
-      md: "backdrop-blur-md",
-      lg: "backdrop-blur-lg",
-      xl: "backdrop-blur-xl",
-    },
+    ${blurVariantBlock}
     rounded: {
       none: "rounded-none",
       md: "rounded-md",
@@ -80,18 +106,7 @@ export const glassCardVariants = cva("overflow-hidden", {
     { theme: "light", border: "strong", className: "border-white/50" },
     { theme: "dark", border: "subtle", className: "border-white/10" },
     { theme: "dark", border: "strong", className: "border-white/20" },
-    { tint: "blue", intensity: "subtle", className: "bg-blue-500/15" },
-    { tint: "blue", intensity: "medium", className: "bg-blue-500/25" },
-    { tint: "blue", intensity: "strong", className: "bg-blue-500/40" },
-    { tint: "pink", intensity: "subtle", className: "bg-pink-500/15" },
-    { tint: "pink", intensity: "medium", className: "bg-pink-500/25" },
-    { tint: "pink", intensity: "strong", className: "bg-pink-500/40" },
-    { tint: "orange", intensity: "subtle", className: "bg-orange-500/20" },
-    { tint: "orange", intensity: "medium", className: "bg-orange-500/30" },
-    { tint: "orange", intensity: "strong", className: "bg-orange-500/45" },
-    { tint: "teal", intensity: "subtle", className: "bg-teal-500/15" },
-    { tint: "teal", intensity: "medium", className: "bg-teal-500/25" },
-    { tint: "teal", intensity: "strong", className: "bg-teal-500/40" },
+${TINT_COMPOUNDS_SNIPPET}
   ],
   defaultVariants: {
     theme: "${theme}",
@@ -112,7 +127,11 @@ export type GlassCardProps = ViewProps &
   }
 
 export const GlassCard = React.forwardRef<View, GlassCardProps>(
-  ({ theme, blur, rounded, intensity, border, padding, shadow, tint, className, children, ...props }, ref) => {
+  ({ theme = "${theme}", blur = "${blur}", rounded, intensity, border, padding, shadow, tint, className, children, ...props }, ref) => {${
+    useExpoBlur
+      ? `\n    const blurAmount = BLUR_INTENSITY[blur ?? "${blur}"]`
+      : ""
+  }
     return (
       <View
         ref={ref}
@@ -121,32 +140,62 @@ export const GlassCard = React.forwardRef<View, GlassCardProps>(
           className,
         )}
         {...props}
-      >
+      >${
+        useExpoBlur
+          ? `
+        {blurAmount > 0 ? (
+          <BlurView
+            intensity={blurAmount}
+            tint={theme === "light" ? "light" : "dark"}
+            style={StyleSheet.absoluteFill}
+            pointerEvents="none"
+          />
+        ) : null}`
+          : ""
+      }
         {children}
       </View>
     )
   },
 )
 GlassCard.displayName = "GlassCard"
-
-/* ---------- Usage ----------
-import { GlassCard } from "./components/ui/glass-card"
-import { Text } from "react-native"
-
-<GlassCard theme="${theme}" blur="${blur}" rounded="${rounded}" tint="${tint}">
-  <Text className="text-base font-semibold ${
-    theme === "dark" ? "text-white" : "text-neutral-900"
-  }">
-    Glass Card
-  </Text>
-</GlassCard>
----------------------------- */
 `
 }
 
-export function renderGlassCardNativeInline(options: GlassOptions): string {
-  const classes = getGlassCardClasses(options).trim().replace(/\s+/g, " ")
+export function renderGlassCardNativeInline(
+  options: GlassOptions,
+  nativeBlur: NativeBlurMode = "expo-blur",
+): string {
+  const rawClasses = getGlassCardClasses(options).trim().replace(/\s+/g, " ")
   const title = escapeJsxText(options.text || "Glass Card")
+  const textColor = options.theme === "dark" ? "text-white" : "text-neutral-900"
+  const textMuted = options.theme === "dark" ? "text-white/70" : "text-neutral-700"
+
+  if (nativeBlur === "expo-blur") {
+    const classes = `relative ${stripBackdropBlur(rawClasses)}`.trim()
+    const blurAmount = BLUR_INTENSITY_MAP[options.blur]
+    const blurLayer =
+      blurAmount > 0
+        ? `\n      <BlurView intensity={${blurAmount}} tint="${options.theme}" style={StyleSheet.absoluteFill} pointerEvents="none" />`
+        : ""
+    return `// 👇 Paste this anywhere inside your screen.
+// Requires: react-native + expo-blur + nativewind configured.
+import { StyleSheet, View, Text } from "react-native"
+${blurAmount > 0 ? 'import { BlurView } from "expo-blur"\n' : ""}
+export function Example() {
+  return (
+    <View className="${classes}">${blurLayer}
+      <Text className="text-base font-semibold ${textColor}">
+        ${title}
+      </Text>
+      <Text className="mt-1 text-sm ${textMuted}">
+        Frosted glass surface, Expo + NativeWind ready.
+      </Text>
+    </View>
+  )
+}
+`
+  }
 
   return `// 👇 Paste this anywhere inside your screen.
 // Requires: react-native + nativewind configured.
@@ -154,15 +203,11 @@ import { View, Text } from "react-native"
 
 export function Example() {
   return (
-    <View className="${classes}">
-      <Text className="text-base font-semibold ${
-        options.theme === "dark" ? "text-white" : "text-neutral-900"
-      }">
+    <View className="${rawClasses}">
+      <Text className="text-base font-semibold ${textColor}">
         ${title}
       </Text>
-      <Text className="mt-1 text-sm ${
-        options.theme === "dark" ? "text-white/70" : "text-neutral-700"
-      }">
+      <Text className="mt-1 text-sm ${textMuted}">
         Frosted glass surface, NativeWind ready.
       </Text>
     </View>

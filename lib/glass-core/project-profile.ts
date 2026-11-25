@@ -3,6 +3,8 @@
  * Persisted in localStorage — not encoded in share URLs.
  */
 
+import type { NativeBlurMode } from "./types"
+
 export type ProjectFramework = "next-app-router" | "vite-react" | "expo" | "other"
 export type TailwindVersion = "3" | "4"
 export type PackageManager = "npm" | "pnpm" | "yarn"
@@ -96,12 +98,16 @@ ${base}/
   }
 }
 
-export function getInstallCommand(profile: ProjectProfile, platform: "web" | "native"): string {
+export function getInstallCommand(
+  profile: ProjectProfile,
+  platform: "web" | "native",
+  nativeBlur: NativeBlurMode = "expo-blur",
+): string {
   const pm = profile.packageManager
   const run = pm === "npm" ? "npm install" : pm === "pnpm" ? "pnpm add" : "yarn add"
-  const deps =
-    platform === "native"
-      ? "class-variance-authority clsx tailwind-merge nativewind"
-      : "class-variance-authority clsx tailwind-merge"
-  return `${run} ${deps}`
+  if (platform === "native") {
+    const baseCmd = `${run} class-variance-authority clsx tailwind-merge nativewind`
+    return nativeBlur === "expo-blur" ? `npx expo install expo-blur\n${baseCmd}` : baseCmd
+  }
+  return `${run} class-variance-authority clsx tailwind-merge`
 }

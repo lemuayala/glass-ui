@@ -98,9 +98,24 @@ describe("generateGlassPrompt", () => {
       presetName: "Liquid Glass",
       shareUrl: "https://glass-ui-play.vercel.app/play?c=button",
     })
+    expect(md).toContain("| Native blur | expo-blur (`<BlurView>`) |")
+    expect(md).toContain("npx expo install expo-blur")
     expect(md).toContain("| Preset | Liquid Glass |")
     expect(md).toContain("| Design link | https://glass-ui-play.vercel.app/play?c=button |")
     expect(md).toContain('from "./src/ui/glass-button"')
+  })
+
+  it("documents NativeWind class mode when nativeBlur is nativewind", () => {
+    const codegen: CodegenInput = {
+      component: "glass-card",
+      mode: "reusable",
+      platform: "native",
+      nativeBlur: "nativewind",
+      options: baseOptions,
+    }
+    const md = generateGlassPrompt({ codegen, profile: DEFAULT_PROJECT_PROFILE })
+    expect(md).toContain("| Native blur | NativeWind classes |")
+    expect(md).not.toContain("npx expo install expo-blur")
   })
 })
 

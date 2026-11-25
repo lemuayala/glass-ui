@@ -7,6 +7,31 @@
  * the playground uses the typed versions in `../variants.ts`.
  */
 
+import type { GlassBlur } from "../types"
+
+export const BLUR_INTENSITY_MAP: Record<GlassBlur, number> = {
+  none: 0,
+  sm: 20,
+  md: 45,
+  lg: 70,
+  xl: 95,
+}
+
+export const BLUR_INTENSITY_SNIPPET = `const BLUR_INTENSITY = {
+  none: 0,
+  sm: 20,
+  md: 45,
+  lg: 70,
+  xl: 95,
+} as const`
+
+export function stripBackdropBlur(classes: string): string {
+  return classes
+    .split(/\s+/)
+    .filter((token) => token && !token.startsWith("backdrop-blur"))
+    .join(" ")
+}
+
 export const TINT_VARIANT_SNIPPET = `tint: {
         none: "",
         blue: "",

@@ -37,29 +37,50 @@ import {
  * Switch on (component, mode) and dispatch to the right template.
  */
 export function generateCode(input: CodegenInput): string {
-  const { component, mode, platform, options } = input
+  const { component, mode, platform, nativeBlur = "expo-blur", options } = input
 
   switch (component) {
     case "glass-card":
-      if (platform === "native") return mode === "inline" ? renderGlassCardNativeInline(options) : renderGlassCardNativeReusable(options)
+      if (platform === "native")
+        return mode === "inline"
+          ? renderGlassCardNativeInline(options, nativeBlur)
+          : renderGlassCardNativeReusable(options, nativeBlur)
       return mode === "inline" ? renderGlassCardInline(options) : renderGlassCardReusable(options)
     case "glass-button":
-      if (platform === "native") return mode === "inline" ? renderGlassButtonNativeInline(options) : renderGlassButtonNativeReusable(options)
+      if (platform === "native")
+        return mode === "inline"
+          ? renderGlassButtonNativeInline(options, nativeBlur)
+          : renderGlassButtonNativeReusable(options, nativeBlur)
       return mode === "inline" ? renderGlassButtonInline(options) : renderGlassButtonReusable(options)
     case "glass-input":
-      if (platform === "native") return mode === "inline" ? renderGlassInputNativeInline(options) : renderGlassInputNativeReusable(options)
+      if (platform === "native")
+        return mode === "inline"
+          ? renderGlassInputNativeInline(options, nativeBlur)
+          : renderGlassInputNativeReusable(options, nativeBlur)
       return mode === "inline" ? renderGlassInputInline(options) : renderGlassInputReusable(options)
     case "glass-modal":
-      if (platform === "native") return mode === "inline" ? renderGlassModalNativeInline(options) : renderGlassModalNativeReusable(options)
+      if (platform === "native")
+        return mode === "inline"
+          ? renderGlassModalNativeInline(options, nativeBlur)
+          : renderGlassModalNativeReusable(options, nativeBlur)
       return mode === "inline" ? renderGlassModalInline(options) : renderGlassModalReusable(options)
     case "glass-tabbar":
-      if (platform === "native") return mode === "inline" ? renderGlassTabBarNativeInline(options) : renderGlassTabBarNativeReusable(options)
+      if (platform === "native")
+        return mode === "inline"
+          ? renderGlassTabBarNativeInline(options, nativeBlur)
+          : renderGlassTabBarNativeReusable(options, nativeBlur)
       return mode === "inline" ? renderGlassTabBarInline(options) : renderGlassTabBarReusable(options)
     case "glass-switch":
-      if (platform === "native") return mode === "inline" ? renderGlassSwitchNativeInline(options) : renderGlassSwitchNativeReusable(options)
+      if (platform === "native")
+        return mode === "inline"
+          ? renderGlassSwitchNativeInline(options, nativeBlur)
+          : renderGlassSwitchNativeReusable(options, nativeBlur)
       return mode === "inline" ? renderGlassSwitchInline(options) : renderGlassSwitchReusable(options)
     case "glass-navbar":
-      if (platform === "native") return mode === "inline" ? renderGlassNavbarNativeInline(options) : renderGlassNavbarNativeReusable(options)
+      if (platform === "native")
+        return mode === "inline"
+          ? renderGlassNavbarNativeInline(options, nativeBlur)
+          : renderGlassNavbarNativeReusable(options, nativeBlur)
       return mode === "inline" ? renderGlassNavbarInline(options) : renderGlassNavbarReusable(options)
     default:
       return "// Unsupported component"

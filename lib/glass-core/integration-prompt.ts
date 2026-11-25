@@ -1,5 +1,5 @@
 import { generateCode, generateUsageSnippet } from "./codegen"
-import type { CodegenInput, ComponentKind, Platform } from "./types"
+import type { CodegenInput, ComponentKind, NativeBlurMode, Platform } from "./types"
 import {
   type ProjectProfile,
   frameworkLabel,
@@ -28,9 +28,18 @@ function componentFileName(kind: ComponentKind): string {
   return kind.replace("glass-", "glass-")
 }
 
-function getGlassRules(component: ComponentKind): string {
+function getGlassRules(
+  component: ComponentKind,
+  platform: Platform,
+  nativeBlur: NativeBlurMode,
+): string {
+  const blurBullet =
+    platform === "native" && nativeBlur === "expo-blur"
+      ? "- Render `<BlurView intensity={...} tint={theme} style={StyleSheet.absoluteFill} pointerEvents=\"none\" />` inside an `overflow-hidden` container so iOS `UIVisualEffectView` clips `borderRadius` cleanly."
+      : "- Use `backdrop-blur-*` on the glass surface; never rely on opacity alone."
+
   const base = `**Glassmorphism rules (all Glass UI primitives)**
-- Use \`backdrop-blur-*\` on the glass surface; never rely on opacity alone.
+${blurBullet}
 - \`intensity\` maps to background alpha (subtle / medium / strong compound variants).
 - \`border\` subtle = 1px hairline; strong = 2px — always semi-transparent white.
 - \`tint\` adds a colored wash (blue, pink, orange, teal) at low opacity.
@@ -52,10 +61,16 @@ function getGlassRules(component: ComponentKind): string {
   return `${base}\n\n${specific[component] ?? ""}`.trim()
 }
 
-function acceptanceCriteria(platform: Platform, profile: ProjectProfile): string {
+function acceptanceCriteria(
+  platform: Platform,
+  profile: ProjectProfile,
+  nativeBlur: NativeBlurMode,
+): string {
   const lines = [
     "- [ ] Project builds without TypeScript errors",
-    "- [ ] Glass surface shows blur over non-solid background (Safari + Chrome)",
+    platform === "native" && nativeBlur === "expo-blur"
+      ? "- [ ] `expo-blur` installed and `<BlurView>` clips to border radius on iOS & Android"
+      : "- [ ] Glass surface shows blur over non-solid background (Safari + Chrome)",
     "- [ ] Props from this spec match the playground preview",
     profile.hasCnHelper
       ? "- [ ] Reuse existing `cn()` from `@/lib/utils` — do NOT duplicate the helper"
@@ -65,7 +80,7 @@ function acceptanceCriteria(platform: Platform, profile: ProjectProfile): string
       : "- [ ] File path matches project convention",
   ]
   if (platform === "native") {
-    lines.push("- [ ] NativeWind configured; `className` works on View/Switch")
+    lines.push("- [ ] NativeWind configured; `className` works on View/Pressable/TextInput")
   } else if (profile.tailwindVersion === "4") {
     lines.push("- [ ] Tailwind v4: `@import 'tailwindcss'` in globals.css")
   }
@@ -74,13 +89,17 @@ function acceptanceCriteria(platform: Platform, profile: ProjectProfile): string
 
 export function generateGlassPrompt(input: GlassPromptInput): string {
   const { codegen, profile, shareUrl, presetName } = input
-  const { component, mode, platform, options } = codegen
+  const { component, mode, platform, nativeBlur = "expo-blur", options } = codegen
   const label = COMPONENT_LABELS[component]
   const file = componentFileName(component)
   const code = generateCode(codegen)
   const usage = generateUsageSnippet(codegen, profile.componentPath)
   const modeLabel = mode === "inline" ? "Inline snippet" : "Reusable CVA component"
   const platformLabel = platform === "web" ? "React Web (Tailwind CSS)" : "React Native (NativeWind)"
+  const nativeBlurRow =
+    platform === "native"
+      ? `| Native blur | ${nativeBlur === "expo-blur" ? "expo-blur (`<BlurView>`)" : "NativeWind classes"} |\n`
+      : ""
 
   const propsTable = `| Property | Value |
 |----------|-------|
@@ -108,7 +127,7 @@ export function generateGlassPrompt(input: GlassPromptInput): string {
 |-------|-------|
 | Component | **${label}** (\`${component}\`) |
 | Platform | ${platformLabel} |
-| Export mode | ${modeLabel} |
+${nativeBlurRow}| Export mode | ${modeLabel} |
 | Target stack | ${frameworkLabel(profile.framework)} |
 | Tailwind | v${profile.tailwindVersion} |
 | Component path | \`${profile.componentPath}/${file}.tsx\` |
@@ -124,7 +143,7 @@ ${options.text ? `\n**Sample text:** \`${options.text}\`\n` : ""}
 
 ## 3. Glass rules
 
-${getGlassRules(component)}
+${getGlassRules(component, platform, nativeBlur)}
 
 ---
 
@@ -149,7 +168,7 @@ ${usage.trim()}
 **Install dependencies** (skip packages already present):
 
 \`\`\`bash
-${getInstallCommand(profile, platform)}
+${getInstallCommand(profile, platform, nativeBlur)}
 \`\`\`
 
 **Suggested file structure:**
@@ -159,14 +178,14 @@ ${getFileStructure(profile, file)}
 **Integration steps:**
 1. Create \`${profile.componentPath}/${file}.tsx\` with the code in §4 (or paste inline snippet from §4 into your page).
 2. ${mode === "reusable" ? "Import and use as shown in §5." : "No separate import file — inline mode only."}
-3. Ensure parent has a non-flat background so \`backdrop-blur\` is visible.
+3. Ensure parent has a non-flat background so ${platform === "native" && nativeBlur === "expo-blur" ? "`<BlurView>`" : "`backdrop-blur`"} is visible.
 4. Match app theme: component theme is \`${options.theme}\`; wrap or override if your app theme differs.
 
 ---
 
 ## 7. Acceptance criteria
 
-${acceptanceCriteria(platform, profile)}
+${acceptanceCriteria(platform, profile, nativeBlur)}
 
 ---
 
@@ -180,11 +199,17 @@ ${acceptanceCriteria(platform, profile)}
 
 export function generateShortGlassPrompt(input: GlassPromptInput): string {
   const { codegen, profile } = input
-  const { component, mode, platform, options } = codegen
+  const { component, mode, platform, nativeBlur = "expo-blur", options } = codegen
   const label = COMPONENT_LABELS[component]
+  const blurTarget =
+    platform === "native" && nativeBlur === "expo-blur"
+      ? "expo-blur (<BlurView>) + NativeWind"
+      : platform === "native"
+        ? "NativeWind classes"
+        : `Tailwind v${profile.tailwindVersion}`
   const propsSummary = `Glass props: theme=${options.theme}, blur=${options.blur}, rounded=${options.rounded}, intensity=${options.intensity}, border=${options.border}, padding=${options.padding}, shadow=${options.shadow}, tint=${options.tint}.`
   if (mode === "inline") {
-    return `Integrate ${label} (inline, ${platform}) into my ${frameworkLabel(profile.framework)} project. ${propsSummary} Inline Tailwind v${profile.tailwindVersion} classes directly (no separate CVA wrapper file). Follow GLASS.md rules: backdrop-blur, intensity alpha, iOS-like borders. Deliver a ready-to-paste JSX snippet that compiles.`
+    return `Integrate ${label} (inline, ${platform}) into my ${frameworkLabel(profile.framework)} project using ${blurTarget}. ${propsSummary} Inline classes directly (no separate CVA wrapper file). Follow GLASS.md rules: real backdrop blur, intensity alpha, iOS-like borders. Deliver a ready-to-paste JSX snippet that compiles.`
   }
-  return `Integrate ${label} (reusable, ${platform}) into my ${frameworkLabel(profile.framework)} project at \`${profile.componentPath}\`. ${propsSummary} Use CVA + tailwind-merge${profile.hasCnHelper ? "; reuse existing cn()" : ""}. Tailwind v${profile.tailwindVersion}. Follow GLASS.md rules: backdrop-blur, compound intensity variants, iOS-like borders. Deliver the component file and one usage example that compiles.`
+  return `Integrate ${label} (reusable, ${platform}) into my ${frameworkLabel(profile.framework)} project at \`${profile.componentPath}\` using ${blurTarget}. ${propsSummary} Use CVA + tailwind-merge${profile.hasCnHelper ? "; reuse existing cn()" : ""}. Follow GLASS.md rules: real backdrop blur, compound intensity variants, iOS-like borders. Deliver the component file and one usage example that compiles.`
 }

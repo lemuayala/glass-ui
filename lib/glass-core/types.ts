@@ -40,10 +40,13 @@ export interface GlassOptions {
 }
 
 export type Platform = "web" | "native"
+export type NativeBlurMode = "expo-blur" | "nativewind"
 
 export interface CodegenInput {
   component: ComponentKind
   mode: ExportMode
   platform: Platform
+  /** Native backdrop strategy when platform === "native". Defaults to "expo-blur". */
+  nativeBlur?: NativeBlurMode
   options: GlassOptions
 }
