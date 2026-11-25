@@ -12,7 +12,7 @@
 
   <br/>
 
-  [![Live Demo](https://img.shields.io/badge/Live%20Demo-glass--ui.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://glass-ui-play.vercel.app)
+  [![Live Demo](https://img.shields.io/badge/Live%20Demo-glass--ui--play.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://glass-ui-play.vercel.app)
   [![Playground](https://img.shields.io/badge/Open-Playground-111827?style=for-the-badge)](https://glass-ui-play.vercel.app/play)
   [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs)](https://nextjs.org)
   [![React](https://img.shields.io/badge/React-19-149eca?style=for-the-badge&logo=react&logoColor=white)](https://react.dev)
@@ -37,11 +37,22 @@
 - **Playground** (`/play`) — Card, Button, Input, Modal, Tab Bar, Switch, Nav Bar; blur, tint, radius, intensity, borders, padding, shadow.
 - **Device preview** — iPhone, iPad, or full-width; upload a wallpaper to check transparency.
 - **Presets** — Frosted, Liquid Glass, Smoked, Crystal, Sunset, Aqua.
-- **Export** — web inline or CVA component; native inline or typed file; **GLASS.md** with tokens, TSX, paths, and a short checklist.
+- **Export** — web inline or CVA component; native (`expo-blur` `<BlurView>` or NativeWind) inline or typed file; **GLASS.md** with tokens, TSX, paths, and a short checklist.
+- **CLI & npm** — install components via `npx @glass-ui/core add card` or import `@glass-ui/core` directly.
+- **MCP Server** — connect `@glass-ui/mcp` to Claude Code, Cursor, or Antigravity (`claude mcp add glass-ui -- npx -y @glass-ui/mcp`).
 - **Share URL** — same design opens for anyone with the link.
 - **EN / ES** — UI translated; component names stay in English in the nav.
 
-Copy code into your project — no npm runtime package yet. Glass utilities live in `app/globals.css` (`gg-glass`).
+## CLI & MCP Quick Setup
+
+```bash
+# Drop a typed component directly into your Next.js, Vite, or Expo project
+npx @glass-ui/core add card
+npx @glass-ui/core add button --native --preset liquid --glass-md
+
+# Connect Glass UI MCP server to Claude Code
+claude mcp add glass-ui -- npx -y @glass-ui/mcp
+```
 
 <br/>
 
@@ -88,8 +99,8 @@ Open the code panel in the playground and copy **GLASS.md**. It includes your cu
 
 | Mode | Web | Native |
 | :--- | :--- | :--- |
-| Inline snippet | Tailwind classes in JSX | NativeWind on `View` / `Pressable` |
-| Reusable component | CVA + `forwardRef` | Typed component + variants |
+| Inline snippet | Tailwind classes in JSX | `expo-blur` `<BlurView>` or NativeWind on `View` / `Pressable` |
+| Reusable component | CVA + `forwardRef` | Typed CVA component + `<BlurView>` / NativeWind |
 
 <br/>
 
@@ -128,8 +139,11 @@ pnpm icons:export   # regenerate apple-icon PNGs from SVG
 | :--- | :--- |
 | `pnpm dev` | Dev server |
 | `pnpm build` | Production build |
-| `pnpm test` | Vitest |
 | `pnpm lint` | ESLint |
+| `pnpm typecheck` | TypeScript check |
+| `pnpm test` | Unit & integration tests (Vitest) |
+| `pnpm test:coverage` | Tests with V8 coverage thresholds |
+| `pnpm test:e2e` | Browser E2E suite (Playwright, desktop + mobile) |
 
 <br/>
 
@@ -170,7 +184,9 @@ Codegen: `lib/glass-core/` · Contributor notes: [AGENTS.md](AGENTS.md)
 - [x] Switch & Nav Bar
 - [x] GLASS.md + project profile
 - [x] Landing + `/play`, share URLs
-- [ ] `@glass-ui/core` npm package
+- [x] Real native blur (`expo-blur` `<BlurView>`) + NativeWind switch
+- [x] `@glass-ui/core` npm package + CLI installer
+- [x] `@glass-ui/mcp` server for coding agents
 - [ ] Figma plugin
 - [ ] Embedded native preview (Expo Snack)
 
@@ -187,7 +203,7 @@ Hosted on **[Vercel](https://vercel.com)** — preview on pull requests, product
   <p>Built with ❤️ by <a href="https://github.com/lemuayala">lemuayala</a></p>
 
   <a href="https://github.com/lemuayala/glass-ui">⭐ Star on GitHub</a> ·
-  <a href="https://glass-ui.vercel.app/play">▶ Open playground</a> ·
+  <a href="https://glass-ui-play.vercel.app/play">▶ Open playground</a> ·
   <a href="https://github.com/lemuayala/glass-ui/issues">Report an issue</a>
 
   <br/><br/>

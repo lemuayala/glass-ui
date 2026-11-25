@@ -8,7 +8,7 @@ import { Copy, Download, Code2, Layers, FileText, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useT } from "@/lib/i18n/provider"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import type { ComponentKind, ExportMode, Platform } from "@/lib/glass-core/types"
+import type { ComponentKind, ExportMode, NativeBlurMode, Platform } from "@/lib/glass-core/types"
 import { GlassMdLine } from "./glass-md-render"
 
 type ExportView = "code" | "glass"
@@ -23,6 +23,8 @@ export function CodePanel({
   onMode,
   platform,
   onPlatform,
+  nativeBlur,
+  onNativeBlur,
 }: {
   code: string
   usageSnippet: string
@@ -33,6 +35,8 @@ export function CodePanel({
   onMode: (m: ExportMode) => void
   platform: Platform
   onPlatform: (p: Platform) => void
+  nativeBlur: NativeBlurMode
+  onNativeBlur: (nb: NativeBlurMode) => void
 }) {
   const t = useT()
   const { resolvedTheme } = useTheme()
@@ -102,6 +106,7 @@ export function CodePanel({
   }
 
   const displayCode = isGlass ? glassPrompt : code
+  const downloadLabel = isGlass ? t("actions.downloadGlass") : t("actions.download")
 
   const actionButtons = (
     <>
@@ -112,13 +117,13 @@ export function CodePanel({
               type="button"
               onClick={handleDownload}
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-foreground/[0.04] text-muted-foreground transition-all hover:bg-foreground/[0.08] hover:text-foreground"
-              aria-label={t("actions.download")}
+              aria-label={downloadLabel}
             >
               <Download className="h-3.5 w-3.5" />
             </button>
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={6}>
-            {t("actions.download")}
+            {downloadLabel}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -221,6 +226,25 @@ export function CodePanel({
                   Native
                 </ModeTab>
               </div>
+              {platform === "native" && (
+                <div
+                  aria-label={t("code.nativeBlur")}
+                  className="flex items-center gap-0.5 rounded-full border border-border bg-foreground/[0.03] p-0.5"
+                >
+                  <ModeTab
+                    active={nativeBlur === "expo-blur"}
+                    onClick={() => onNativeBlur("expo-blur")}
+                  >
+                    expo-blur
+                  </ModeTab>
+                  <ModeTab
+                    active={nativeBlur === "nativewind"}
+                    onClick={() => onNativeBlur("nativewind")}
+                  >
+                    NativeWind
+                  </ModeTab>
+                </div>
+              )}
               <div className="hidden h-4 w-px bg-border sm:block" />
               <div className="flex items-center gap-0.5 rounded-full border border-border bg-foreground/[0.03] p-0.5">
                 <ModeTab active={mode === "inline"} onClick={() => onMode("inline")}>

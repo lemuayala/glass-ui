@@ -3,7 +3,18 @@ import nextVitals from "eslint-config-next/core-web-vitals"
 
 export default defineConfig([
   ...nextVitals,
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "coverage/**",
+    "packages/*/dist/**",
+    "playwright-report/**",
+    "test-results/**",
+    "next-env.d.ts",
+    "videos/**",
+    ".agents/**",
+  ]),
   {
     rules: {
       // Common in Next apps: hydration gate (mounted) and URL-driven initial state

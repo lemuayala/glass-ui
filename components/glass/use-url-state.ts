@@ -1,7 +1,14 @@
 "use client"
 
 import { useCallback, useEffect, useRef } from "react"
-import type { ComponentKind, ExportMode, GlassOptions, GlassTint } from "@/lib/glass-core/types"
+import type {
+  ComponentKind,
+  ExportMode,
+  GlassOptions,
+  GlassTint,
+  NativeBlurMode,
+  Platform,
+} from "@/lib/glass-core/types"
 import type { WallpaperId } from "./wallpaper"
 
 /**
@@ -19,6 +26,8 @@ import type { WallpaperId } from "./wallpaper"
 export interface SerializedState {
   component: ComponentKind
   mode: ExportMode
+  platform: Platform
+  nativeBlur: NativeBlurMode
   options: GlassOptions
   wallpaper: WallpaperId
   customWallpaper: string | null
@@ -49,10 +58,14 @@ const COMPONENT_FROM: Record<string, ComponentKind> = {
 }
 
 export function encodeState(state: SerializedState): string {
-  const { component, mode, options, wallpaper } = state
+  const { component, mode, platform, nativeBlur, options, wallpaper } = state
   const params = new URLSearchParams()
   params.set("c", COMPONENT_SHORT[component])
   params.set("m", mode)
+  params.set("pl", platform)
+  if (platform === "native" || nativeBlur !== "expo-blur") {
+    params.set("nb", nativeBlur)
+  }
   params.set("t", options.theme)
   params.set("b", options.blur)
   params.set("r", options.rounded)
@@ -66,28 +79,52 @@ export function encodeState(state: SerializedState): string {
   return params.toString()
 }
 
+const VALID_MODES: readonly ExportMode[] = ["inline", "reusable"]
+const VALID_PLATFORMS: readonly Platform[] = ["web", "native"]
+const VALID_NATIVE_BLURS: readonly NativeBlurMode[] = ["expo-blur", "nativewind"]
+const VALID_THEMES: readonly GlassOptions["theme"][] = ["light", "dark"]
+const VALID_BLURS: readonly GlassOptions["blur"][] = ["none", "sm", "md", "lg", "xl"]
+const VALID_ROUNDED: readonly GlassOptions["rounded"][] = ["none", "md", "lg", "xl", "2xl", "3xl", "full"]
+const VALID_INTENSITIES: readonly GlassOptions["intensity"][] = ["subtle", "medium", "strong"]
+const VALID_BORDERS: readonly GlassOptions["border"][] = ["none", "subtle", "strong"]
+const VALID_PADDINGS: readonly GlassOptions["padding"][] = ["sm", "md", "lg"]
+const VALID_SHADOWS: readonly GlassOptions["shadow"][] = ["none", "sm", "md", "lg"]
+const VALID_TINTS: readonly GlassTint[] = ["none", "blue", "pink", "orange", "teal"]
+const VALID_WALLPAPERS: readonly WallpaperId[] = ["sunset", "aurora", "ocean", "ember", "mono", "custom"]
+const MAX_TEXT_LENGTH = 120
+
+function pickValid<T extends string>(raw: string | null, allowed: readonly T[], fallback: T): T {
+  return raw !== null && (allowed as readonly string[]).includes(raw) ? (raw as T) : fallback
+}
+
 export function decodeState(search: string, fallback: SerializedState): SerializedState {
   const params = new URLSearchParams(search)
   if (!params.has("c")) return fallback
 
   const component = COMPONENT_FROM[params.get("c") ?? ""] ?? fallback.component
-  const mode = (params.get("m") as ExportMode) ?? fallback.mode
-  const wallpaper = (params.get("w") as WallpaperId) ?? fallback.wallpaper
+  const mode = pickValid(params.get("m"), VALID_MODES, fallback.mode)
+  const platform = pickValid(params.get("pl"), VALID_PLATFORMS, fallback.platform)
+  const nativeBlur = pickValid(params.get("nb"), VALID_NATIVE_BLURS, fallback.nativeBlur)
+  const wallpaper = pickValid(params.get("w"), VALID_WALLPAPERS, fallback.wallpaper)
+  const rawTxt = params.get("txt")
+  const text = rawTxt !== null ? rawTxt.slice(0, MAX_TEXT_LENGTH) : (fallback.options.text ?? "")
 
   const options: GlassOptions = {
-    theme: (params.get("t") as GlassOptions["theme"]) ?? fallback.options.theme,
-    blur: (params.get("b") as GlassOptions["blur"]) ?? fallback.options.blur,
-    rounded: (params.get("r") as GlassOptions["rounded"]) ?? fallback.options.rounded,
-    intensity: (params.get("i") as GlassOptions["intensity"]) ?? fallback.options.intensity,
-    border: (params.get("bd") as GlassOptions["border"]) ?? fallback.options.border,
-    padding: (params.get("p") as GlassOptions["padding"]) ?? fallback.options.padding,
-    shadow: (params.get("sh") as GlassOptions["shadow"]) ?? fallback.options.shadow,
-    tint: (params.get("tn") as GlassTint) ?? "none",
-    text: params.get("txt") ?? fallback.options.text ?? "",
+    theme: pickValid(params.get("t"), VALID_THEMES, fallback.options.theme),
+    blur: pickValid(params.get("b"), VALID_BLURS, fallback.options.blur),
+    rounded: pickValid(params.get("r"), VALID_ROUNDED, fallback.options.rounded),
+    intensity: pickValid(params.get("i"), VALID_INTENSITIES, fallback.options.intensity),
+    border: pickValid(params.get("bd"), VALID_BORDERS, fallback.options.border),
+    padding: pickValid(params.get("p"), VALID_PADDINGS, fallback.options.padding),
+    shadow: pickValid(params.get("sh"), VALID_SHADOWS, fallback.options.shadow),
+    tint: pickValid(params.get("tn"), VALID_TINTS, fallback.options.tint),
+    text,
   }
   return {
     component,
     mode,
+    platform,
+    nativeBlur,
     options,
     wallpaper,
     customWallpaper: fallback.customWallpaper,

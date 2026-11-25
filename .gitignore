@@ -13,4 +13,16 @@ next.user-config.*
 # Common ignores
 node_modules
 .next/
+packages/*/dist/
 .DS_Store
+
+# Local agent skills & promo video workspace
+.agents/
+skills-lock.json
+videos/
+tsconfig.tsbuildinfo
+
+# Test & coverage artifacts
+coverage/
+playwright-report/
+test-results/

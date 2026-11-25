@@ -16,7 +16,7 @@ import {
 import type { WallpaperId } from "./wallpaper"
 import { generateCode, generateUsageSnippet } from "@/lib/glass-core/codegen"
 import { generateGlassPrompt, generateShortGlassPrompt } from "@/lib/glass-core/integration-prompt"
-import type { ComponentKind, ExportMode, GlassOptions } from "@/lib/glass-core/types"
+import type { ComponentKind, ExportMode, GlassOptions, NativeBlurMode, Platform } from "@/lib/glass-core/types"
 import {
   type SerializedState,
   encodeState,
@@ -25,13 +25,12 @@ import {
   PLAYGROUND_PATH,
 } from "./use-url-state"
 import { useProjectProfile } from "@/hooks/use-project-profile"
-import { applyPreset, type GlassPreset } from "@/lib/glass-core/presets"
+import { applyPreset, findMatchingPreset, type GlassPreset } from "@/lib/glass-core/presets"
 import { useShortcuts } from "./use-shortcuts"
 import { useI18n, useT } from "@/lib/i18n/provider"
 import { SiteFooterCredit } from "./site-footer-credit"
 import { SITE } from "@/lib/config"
 import { cn } from "@/lib/utils"
-import type { Platform } from "@/lib/glass-core/types"
 
 const COMPONENTS_BY_INDEX: ComponentKind[] = [
   "glass-card",
@@ -46,6 +45,8 @@ const COMPONENTS_BY_INDEX: ComponentKind[] = [
 const FALLBACK_STATE: SerializedState = {
   component: "glass-card",
   mode: "reusable",
+  platform: "web",
+  nativeBlur: "expo-blur",
   options: defaultsFor("glass-card"),
   wallpaper: "aurora",
   customWallpaper: null,
@@ -59,7 +60,8 @@ export function Generator() {
   const [hydrated, setHydrated] = useState(false)
   const [component, setComponent] = useState<ComponentKind>(FALLBACK_STATE.component)
   const [mode, setMode] = useState<ExportMode>(FALLBACK_STATE.mode)
-  const [platform, setPlatform] = useState<Platform>("web")
+  const [platform, setPlatform] = useState<Platform>(FALLBACK_STATE.platform)
+  const [nativeBlur, setNativeBlur] = useState<NativeBlurMode>(FALLBACK_STATE.nativeBlur)
   const [options, setOptions] = useState<GlassOptions>(FALLBACK_STATE.options)
   const [wallpaper, setWallpaper] = useState<WallpaperId>(FALLBACK_STATE.wallpaper)
   const [customWallpaper, setCustomWallpaper] = useState<string | null>(null)
@@ -73,6 +75,8 @@ export function Generator() {
     const initial = readInitialState(FALLBACK_STATE)
     setComponent(initial.component)
     setMode(initial.mode)
+    setPlatform(initial.platform)
+    setNativeBlur(initial.nativeBlur)
     setOptions(initial.options)
     setWallpaper(initial.wallpaper)
     setCustomWallpaper(initial.customWallpaper)
@@ -80,8 +84,8 @@ export function Generator() {
   }, [])
 
   const state: SerializedState = useMemo(
-    () => ({ component, mode, options, wallpaper, customWallpaper }),
-    [component, mode, options, wallpaper, customWallpaper],
+    () => ({ component, mode, platform, nativeBlur, options, wallpaper, customWallpaper }),
+    [component, mode, platform, nativeBlur, options, wallpaper, customWallpaper],
   )
 
   useStateSync(hydrated ? state : FALLBACK_STATE)
@@ -106,12 +110,16 @@ export function Generator() {
   }, [])
 
   const codegenInput = useMemo(
-    () => ({ component, mode, platform, options }),
-    [component, mode, platform, options],
+    () => ({ component, mode, platform, nativeBlur, options }),
+    [component, mode, platform, nativeBlur, options],
   )
 
   const code = useMemo(() => generateCode(codegenInput), [codegenInput])
-  const usageSnippet = useMemo(() => generateUsageSnippet(codegenInput), [codegenInput])
+  const usageSnippet = useMemo(
+    () => generateUsageSnippet(codegenInput, profile.componentPath),
+    [codegenInput, profile.componentPath],
+  )
+  const activePreset = useMemo(() => findMatchingPreset(options), [options])
 
   const shareUrl = useMemo(() => {
     if (typeof window === "undefined") return ""
@@ -119,8 +127,14 @@ export function Generator() {
   }, [state])
 
   const glassPrompt = useMemo(
-    () => generateGlassPrompt({ codegen: codegenInput, profile, shareUrl: shareUrl || undefined }),
-    [codegenInput, profile, shareUrl],
+    () =>
+      generateGlassPrompt({
+        codegen: codegenInput,
+        profile,
+        shareUrl: shareUrl || undefined,
+        presetName: activePreset?.name,
+      }),
+    [codegenInput, profile, shareUrl, activePreset],
   )
 
   const shortGlassPrompt = useMemo(
@@ -231,6 +245,8 @@ export function Generator() {
               onMode={setMode}
               platform={platform}
               onPlatform={setPlatform}
+              nativeBlur={nativeBlur}
+              onNativeBlur={setNativeBlur}
             />
           </section>
 

@@ -1,0 +1,60 @@
+{
+  "name": "@glass-ui/core",
+  "version": "0.5.0",
+  "description": "Glassmorphism primitives, CVA variants, TSX codegen (Tailwind & React Native expo-blur / NativeWind), GLASS.md prompt generator, and CLI installer.",
+  "license": "MIT",
+  "author": "lemuayala",
+  "homepage": "https://glass-ui-play.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lemuayala/glass-ui.git",
+    "directory": "packages/core"
+  },
+  "keywords": [
+    "glassmorphism",
+    "tailwind",
+    "nativewind",
+    "expo-blur",
+    "react-native",
+    "cva",
+    "glass-ui",
+    "ios"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "glass-ui": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./cli": {
+      "types": "./dist/cli-runner.d.ts",
+      "import": "./dist/cli-runner.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepack": "pnpm run build"
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "typescript": "^5.7.3"
+  }
+}
