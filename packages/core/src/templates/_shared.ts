@@ -7,7 +7,7 @@
  * the playground uses the typed versions in `../variants.ts`.
  */
 
-import type { GlassBlur } from "../types"
+import type { GlassBlur } from "../types.js"
 
 export const BLUR_INTENSITY_MAP: Record<GlassBlur, number> = {
   none: 0,

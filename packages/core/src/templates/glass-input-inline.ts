@@ -1,6 +1,6 @@
-import { getGlassInputClasses } from "../variants"
-import type { GlassOptions } from "../types"
-import { escapeJsxAttr } from "./_shared"
+import { getGlassInputClasses } from "../variants.js"
+import type { GlassOptions } from "../types.js"
+import { escapeJsxAttr } from "./_shared.js"
 
 /**
  * Inline export — <input> snippet with all Tailwind classes applied.

@@ -1,5 +1,5 @@
-import type { GlassOptions } from "../types"
-import { TINT_COMPOUNDS_SNIPPET, TINT_VARIANT_SNIPPET } from "./_shared"
+import type { GlassOptions } from "../types.js"
+import { TINT_COMPOUNDS_SNIPPET, TINT_VARIANT_SNIPPET } from "./_shared.js"
 
 /**
  * Reusable export — full GlassCard component using CVA + tailwind-merge.
@@ -108,7 +108,7 @@ export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
 GlassCard.displayName = "GlassCard"
 
 /* ---------- Usage ----------
-import { GlassCard } from "./components/ui/glass-card"
+import { GlassCard } from "./components/ui/glass-card.js"
 
 <GlassCard theme="${options.theme}" blur="${options.blur}" rounded="${options.rounded}" tint="${options.tint}">
   <h3 className="text-base font-semibold ${

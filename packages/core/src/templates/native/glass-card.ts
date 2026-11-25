@@ -1,12 +1,12 @@
-import type { GlassOptions, NativeBlurMode } from "../../types"
-import { getGlassCardClasses } from "../../variants"
+import type { GlassOptions, NativeBlurMode } from "../../types.js"
+import { getGlassCardClasses } from "../../variants.js"
 import {
   BLUR_INTENSITY_MAP,
   BLUR_INTENSITY_SNIPPET,
   TINT_COMPOUNDS_SNIPPET,
   escapeJsxText,
   stripBackdropBlur,
-} from "../_shared"
+} from "../_shared.js"
 
 export function renderGlassCardNativeReusable(
   options: GlassOptions,

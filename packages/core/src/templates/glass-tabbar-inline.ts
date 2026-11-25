@@ -1,5 +1,5 @@
-import { getGlassTabBarClasses } from "../variants"
-import type { GlassOptions } from "../types"
+import { getGlassTabBarClasses } from "../variants.js"
+import type { GlassOptions } from "../types.js"
 
 export function renderGlassTabBarInline(options: GlassOptions): string {
   const classes = getGlassTabBarClasses(options).trim().replace(/\s+/g, " ")

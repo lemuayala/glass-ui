@@ -1,5 +1,5 @@
-import type { GlassOptions } from "../types"
-import { TINT_COMPOUNDS_SNIPPET, TINT_VARIANT_SNIPPET } from "./_shared"
+import type { GlassOptions } from "../types.js"
+import { TINT_COMPOUNDS_SNIPPET, TINT_VARIANT_SNIPPET } from "./_shared.js"
 
 export function renderGlassModalReusable(options: GlassOptions): string {
   const { theme, blur, rounded, intensity, border, padding, shadow, tint } = options

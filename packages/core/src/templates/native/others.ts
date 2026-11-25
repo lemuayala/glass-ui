@@ -1,10 +1,10 @@
-import type { GlassOptions, NativeBlurMode } from "../../types"
+import type { GlassOptions, NativeBlurMode } from "../../types.js"
 import {
   getGlassButtonClasses,
   getGlassInputClasses,
   getGlassModalClasses,
   getGlassTabBarClasses,
-} from "../../variants"
+} from "../../variants.js"
 import {
   BLUR_INTENSITY_MAP,
   BLUR_INTENSITY_SNIPPET,
@@ -12,7 +12,7 @@ import {
   escapeJsxAttr,
   escapeJsxText,
   stripBackdropBlur,
-} from "../_shared"
+} from "../_shared.js"
 
 function blurVariantBlock(useExpoBlur: boolean): string {
   return useExpoBlur

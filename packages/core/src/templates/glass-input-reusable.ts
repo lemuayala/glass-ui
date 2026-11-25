@@ -1,5 +1,5 @@
-import type { GlassOptions } from "../types"
-import { TINT_COMPOUNDS_SNIPPET, TINT_VARIANT_SNIPPET } from "./_shared"
+import type { GlassOptions } from "../types.js"
+import { TINT_COMPOUNDS_SNIPPET, TINT_VARIANT_SNIPPET } from "./_shared.js"
 
 /**
  * Reusable export — full GlassInput component using CVA + tailwind-merge.

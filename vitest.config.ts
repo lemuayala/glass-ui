@@ -6,8 +6,9 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
     exclude: [
-      "node_modules/**",
-      ".next/**",
+      "**/node_modules/**",
+      "**/.next/**",
+      "**/dist/**",
       "e2e/**",
       "videos/**",
       ".agents/**",
@@ -18,6 +19,8 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "lcov"],
       include: [
+        "packages/core/src/**/*.ts",
+        "packages/mcp/src/**/*.ts",
         "lib/**/*.ts",
         "lib/**/*.tsx",
         "hooks/**/*.ts",
@@ -27,7 +30,12 @@ export default defineConfig({
       exclude: [
         "**/*.test.ts",
         "**/*.test.tsx",
-        "lib/glass-core/types.ts",
+        "packages/core/src/types.ts",
+        "packages/core/src/index.ts",
+        "packages/core/src/cli.ts",
+        "packages/mcp/src/index.ts",
+        "packages/mcp/src/cli.ts",
+        "lib/glass-core/*.ts",
         "lib/landing-motion.ts",
       ],
       thresholds: {
@@ -40,6 +48,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      "@glass-ui/core": path.resolve(__dirname, "packages/core/src/index.ts"),
       "@": path.resolve(__dirname, "."),
     },
   },
