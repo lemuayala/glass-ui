@@ -57,11 +57,12 @@ function assertValidTsx(source: string, label: string) {
 }
 
 function wrapUsageSnippetAsModule(snippet: string): string {
+  // Stateful examples (e.g. GlassSwitch) are already complete components.
+  if (/^export function /m.test(snippet)) return snippet
   const lines = snippet.split("\n")
   const imports = lines.filter((line) => line.startsWith("import "))
   const body = lines.filter((line) => !line.startsWith("import ")).join("\n")
   return `${imports.join("\n")}
-const setOn = (_v: boolean) => {}
 export function UsageWrapper() {
   return (
     <>
