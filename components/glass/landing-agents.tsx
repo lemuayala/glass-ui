@@ -14,6 +14,7 @@ import {
   revealVisible,
   setRevealPending,
 } from "@/lib/landing-motion"
+import { isLandingLiteViewport } from "@/lib/mobile-landing"
 import { CopyButton } from "./copy-button"
 import { NpmIcon } from "./npm-icon"
 
@@ -56,7 +57,9 @@ export function LandingAgents() {
     }
 
     setRevealPending([head], 20)
-    utils.set(cards, { opacity: 0, translateY: 24 })
+    // Apple-style entrance: rise, grow from 96% and come into focus (focus only on desktop, see PERF-MOBILE.md).
+    const focus = !isLandingLiteViewport()
+    utils.set(cards, { opacity: 0, translateY: 32, scale: 0.96, ...(focus ? { filter: "blur(8px)" } : {}) })
 
     const scene = createEnterScene(section, {
       anchor: () => headRef.current,
@@ -64,7 +67,19 @@ export function LandingAgents() {
     })
     scene
       .add(head, { opacity: [0, 1], translateY: [18, 0], duration: 480 }, 0)
-      .add(cards, { opacity: [0, 1], translateY: [24, 0], delay: stagger(70), duration: 520 }, 120)
+      .add(
+        cards,
+        {
+          opacity: [0, 1],
+          translateY: [32, 0],
+          scale: [0.96, 1],
+          ...(focus ? { filter: ["blur(8px)", "blur(0px)"] } : {}),
+          delay: stagger(90),
+          duration: 900,
+          ease: "out(4)",
+        },
+        120,
+      )
     scene.armReveal()
 
     return () => {

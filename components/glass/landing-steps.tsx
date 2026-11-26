@@ -12,6 +12,10 @@ import {
   setRevealPending,
 } from "@/lib/landing-motion"
 import { isLandingLiteViewport } from "@/lib/mobile-landing"
+import { ALL_COMPONENTS, PRESETS, listRegistryItemNames } from "@/lib/glass-core/registry"
+
+/** Every primitive × inline/reusable × web/native — the codegen matrix. */
+const CODE_VARIANTS = ALL_COMPONENTS.length * 2 * 2
 
 export function LandingSteps() {
   const t = useT()
@@ -157,10 +161,10 @@ export function LandingSteps() {
   ]
 
   const stats = [
-    { value: 7, suffix: "", label: t("landing.stat.components") },
-    { value: 28, suffix: "", label: t("landing.stat.templates") },
-    { value: 4, suffix: "", label: t("landing.stat.exports") },
-        { value: 8, suffix: "", label: t("landing.stat.controls") },
+    { value: ALL_COMPONENTS.length, suffix: "", label: t("landing.stat.components") },
+    { value: PRESETS.length, suffix: "", label: t("landing.stat.presets") },
+    { value: CODE_VARIANTS, suffix: "", label: t("landing.stat.templates") },
+    { value: listRegistryItemNames().length, suffix: "", label: t("landing.stat.registry") },
   ]
 
   return (
