@@ -15,8 +15,17 @@ release workflow publishes the section as the GitHub Release notes.
 
 ### Changed
 
+- Landing animations rebuilt on the Iron Fit pattern: a shared `<Reveal>` (one IntersectionObserver + CSS
+  transitions) on every section, words rising in headings, and CSS keyframes for the hero. The anime.js scene
+  engine (`lib/landing-motion.ts`) is gone from the landing; the playground keeps anime.js.
 - Landing counters come from `@lemuayala/glass-ui-core` (primitives, presets, code variants, registry items).
-- Agent cards enter Apple-style: rise, grow from 96% and come into focus.
+
+### Fixed
+
+- Landing sections could stay blank after a fast scroll or an anchor jump (up to 15 s), and counters could stay at 0.
+- Poor scrolling on phones: hero particles no longer run on mobile or off-screen, scroll work is batched into one
+  listener per frame, entrances skip `filter` on phones, large decorative blurs are desktop-only, and the zoom card
+  only applies its backdrop blur once the window stops scaling.
 
 ## [0.6.1] - 2026-11-25
 
