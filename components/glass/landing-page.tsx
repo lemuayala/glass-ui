@@ -15,6 +15,7 @@ import { LandingStatement } from "./landing-statement"
 import { LandingShowcase, LandingMarquee } from "./landing-showcase"
 import { LandingCode } from "./landing-code"
 import { LandingAgents } from "./landing-agents"
+import { LandingWordBand } from "./landing-word-band"
 import { LandingNativeStrip } from "./landing-native-strip"
 import { LandingSteps } from "./landing-steps"
 import { LandingCta } from "./landing-cta"
@@ -82,6 +83,8 @@ export function LandingPage() {
         <LandingCode />
 
         <LandingAgents />
+
+        <LandingWordBand />
 
         <LandingNativeStrip />
 

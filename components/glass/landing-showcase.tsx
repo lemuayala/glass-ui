@@ -32,6 +32,7 @@ import { Wallpaper } from "@/components/glass/wallpaper"
 import { IosBattery, IosCellular, IosWifi } from "@/components/glass/ios-icons"
 import { LandingShowcaseMobile } from "@/components/glass/landing-showcase-mobile"
 import { Reveal } from "@/components/glass/reveal"
+import { ScrollScene } from "@/components/glass/scroll-scene"
 
 const DARK: GlassOptions = {
   theme: "dark",
@@ -92,6 +93,8 @@ export function LandingShowcase() {
       </Reveal>
       <div className="hidden md:block">
       <TooltipProvider delayDuration={280}>
+        <ScrollScene mode="through">
+        <div className="gg-parallax-rise">
         <Reveal delay={1} className="gg-showcase-assemble relative mx-auto mt-12 flex flex-col items-center md:mt-16">
             <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground/80">
               {t("landing.showcase.deviceLabel")}
@@ -304,6 +307,8 @@ export function LandingShowcase() {
               </div>
             </div>
           </Reveal>
+        </div>
+        </ScrollScene>
       </TooltipProvider>
       </div>
     </section>
