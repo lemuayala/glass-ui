@@ -147,6 +147,7 @@ export function LandingCode() {
             GLASS.md
           </span>
           <h2
+            key={t("landing.code.title")}
             ref={titleRef}
             className="mt-5 max-w-md text-balance text-3xl font-bold leading-[1.05] tracking-[-0.02em] text-foreground sm:text-4xl md:text-5xl"
           >

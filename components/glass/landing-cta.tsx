@@ -123,6 +123,7 @@ export function LandingCta() {
             {t("landing.cta.eyebrow")}
           </span>
           <h2
+            key={t("landing.cta.title")}
             ref={titleRef}
             className="mx-auto mt-6 max-w-2xl text-balance text-4xl font-bold leading-[1.05] tracking-[-0.025em] text-foreground sm:text-5xl md:text-6xl"
           >

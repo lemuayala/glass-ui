@@ -174,6 +174,7 @@ export function LandingSteps() {
           {t("landing.steps.eyebrow")}
         </span>
         <h2
+          key={t("landing.steps.title")}
           ref={titleRef}
           className="mt-5 text-balance text-3xl font-bold leading-[1.05] tracking-[-0.02em] text-foreground sm:text-4xl md:text-5xl"
         >

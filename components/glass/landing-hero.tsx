@@ -165,7 +165,7 @@ export function LandingHero() {
         </span>
 
         <h1 className="mt-7 max-w-[20ch] text-balance text-5xl font-bold leading-[1.02] tracking-[-0.03em] text-foreground sm:text-6xl md:max-w-[16ch] md:text-7xl md:leading-[0.95] lg:text-[88px]">
-          <span ref={leadRef}>{t("landing.headlineLead")}</span>{" "}
+          <span key={t("landing.headlineLead")} ref={leadRef}>{t("landing.headlineLead")}</span>{" "}
           <span ref={accentRef} data-headline-accent className="gg-text-accent">
             {t("landing.headlineAccent")}
           </span>
