@@ -5,6 +5,7 @@ import { useT, useI18n } from "@/lib/i18n/provider"
 import { SITE } from "@/lib/config"
 import { BrandLockup } from "./brand-lockup"
 import { GitHubStarLink } from "./github-star-link"
+import { NpmLink } from "./npm-link"
 import { Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useLandingLiteDocument } from "@/hooks/use-landing-lite-document"
@@ -59,6 +60,7 @@ export function LandingPage() {
           >
             {locale === "en" ? "ES" : "EN"}
           </button>
+          <NpmLink compact />
           <GitHubStarLink compact />
         </div>
       </header>

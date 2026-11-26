@@ -2,9 +2,10 @@
 
 import { useEffect, useRef } from "react"
 import { stagger, utils } from "animejs"
-import { Bot, Terminal, Workflow } from "lucide-react"
+import { ArrowUpRight, Bot, Terminal, Workflow } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
-import { NPM_PACKAGES } from "@/lib/config"
+import { NPM_PACKAGES, npmPackageUrl } from "@/lib/config"
+import type { NpmPackageName } from "@/lib/config"
 import { useT } from "@/lib/i18n/provider"
 import {
   createEnterScene,
@@ -13,6 +14,7 @@ import {
   setRevealPending,
 } from "@/lib/landing-motion"
 import { CopyButton } from "./copy-button"
+import { NpmIcon } from "./npm-icon"
 
 const MCP_SERVER_KEY = "glass-ui"
 
@@ -26,7 +28,7 @@ const EDITOR_CONFIG = JSON.stringify(
 
 const CLI_COMMAND = `npx ${NPM_PACKAGES.core} add card`
 
-type AgentCard = { Icon: LucideIcon; title: string; hint: string; snippet: string }
+type AgentCard = { Icon: LucideIcon; title: string; hint: string; snippet: string; pkg: NpmPackageName }
 
 export function LandingAgents() {
   const t = useT()
@@ -64,9 +66,9 @@ export function LandingAgents() {
   }, [t])
 
   const cards: AgentCard[] = [
-    { Icon: Bot, title: t("landing.agents.claude"), hint: t("landing.agents.claudeHint"), snippet: CLAUDE_COMMAND },
-    { Icon: Workflow, title: t("landing.agents.editors"), hint: t("landing.agents.editorsHint"), snippet: EDITOR_CONFIG },
-    { Icon: Terminal, title: t("landing.agents.cli"), hint: t("landing.agents.cliHint"), snippet: CLI_COMMAND },
+    { Icon: Bot, title: t("landing.agents.claude"), hint: t("landing.agents.claudeHint"), snippet: CLAUDE_COMMAND, pkg: NPM_PACKAGES.mcp },
+    { Icon: Workflow, title: t("landing.agents.editors"), hint: t("landing.agents.editorsHint"), snippet: EDITOR_CONFIG, pkg: NPM_PACKAGES.mcp },
+    { Icon: Terminal, title: t("landing.agents.cli"), hint: t("landing.agents.cliHint"), snippet: CLI_COMMAND, pkg: NPM_PACKAGES.core },
   ]
 
   return (
@@ -88,7 +90,7 @@ export function LandingAgents() {
       </div>
 
       <div ref={cardsRef} className="mt-14 grid gap-5 md:grid-cols-3">
-        {cards.map(({ Icon, title, hint, snippet }) => (
+        {cards.map(({ Icon, title, hint, snippet, pkg }) => (
           <div
             key={title}
             data-agent-card
@@ -111,6 +113,16 @@ export function LandingAgents() {
                 <code>{snippet}</code>
               </pre>
             </div>
+            <a
+              href={npmPackageUrl(pkg)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-1.5 self-start text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <NpmIcon className="h-3 w-3" />
+              <span className="font-mono">{pkg}</span>
+              <ArrowUpRight className="h-3 w-3" strokeWidth={2.2} />
+            </a>
           </div>
         ))}
       </div>
