@@ -57,11 +57,16 @@ export function LandingHero() {
         </span>
 
         <h1 className="mt-7 max-w-[20ch] text-balance text-5xl font-bold leading-[1.02] tracking-[-0.03em] text-foreground sm:text-6xl md:max-w-[16ch] md:text-7xl md:leading-[0.95] lg:text-[88px]">
-          <span style={delay(90)} className="gg-hero-in inline-block">
-            {t("landing.headlineLead")}
+          {/* Each line slides up from behind its baseline (mask), like the section headings. */}
+          <span className="gg-word-mask">
+            <span style={delay(90)} className="gg-hero-word inline-block">
+              {t("landing.headlineLead")}
+            </span>
           </span>{" "}
-          <span style={delay(220)} data-headline-accent className="gg-hero-in gg-text-accent inline-block">
-            {t("landing.headlineAccent")}
+          <span className="gg-word-mask">
+            <span style={delay(240)} data-headline-accent className="gg-hero-word gg-text-accent inline-block">
+              {t("landing.headlineAccent")}
+            </span>
           </span>
         </h1>
 

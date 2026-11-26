@@ -110,7 +110,7 @@ export function LandingGlassZoom() {
               <div className="mt-5 h-1 overflow-hidden rounded-full bg-white/20">
                 <div className="h-full w-2/5 rounded-full bg-white/90" />
               </div>
-              <div className="mt-5 flex items-center justify-between gap-3 whitespace-nowrap font-mono text-[11px] text-white/80">
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 font-mono text-[11px] text-white/80">
                 <span>backdrop-blur</span>
                 <span className="tabular-nums">
                   <span ref={tokenRef}>xl</span> · <span ref={readoutRef}>{MAX_BLUR_PX}px</span>

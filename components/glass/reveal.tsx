@@ -52,8 +52,11 @@ export function RevealWords({ text, className, as: Tag = "h2", id }: RevealWords
     <Tag ref={ref} id={id} className={cn("gg-reveal-words", className)}>
       {words.map((word, i) => (
         <Fragment key={`${word}-${i}`}>
-          <span className="gg-word" style={{ "--i": i } as CSSProperties}>
-            {word}
+          {/* The mask clips the word while it slides up from below its own baseline. */}
+          <span className="gg-word-mask">
+            <span className="gg-word" style={{ "--i": i } as CSSProperties}>
+              {word}
+            </span>
           </span>
           {i < words.length - 1 ? " " : null}
         </Fragment>

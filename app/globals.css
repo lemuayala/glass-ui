@@ -723,7 +723,7 @@ html[data-scroll-top="1"] .gg-scroll-top {
 
 /* Glass zoom scene */
 .gg-zoom-scene {
-  height: 320vh;
+  height: 250vh;
 }
 .gg-zoom-pin {
   position: sticky;
@@ -855,7 +855,7 @@ html[data-scroll-top="1"] .gg-scroll-top {
 
 /* Statement: words light up one by one. */
 .gg-statement-scene {
-  height: 220vh;
+  height: 170vh;
 }
 .gg-statement-pin {
   position: sticky;
@@ -865,23 +865,33 @@ html[data-scroll-top="1"] .gg-scroll-top {
   place-items: center;
 }
 .gg-statement-word {
-  opacity: calc(0.14 + 0.86 * clamp(0, calc((var(--p) - var(--t)) * var(--n) * 0.9), 1));
+  --lit: clamp(0, calc((var(--p) - var(--t)) * var(--n) * 0.9), 1);
+  opacity: calc(0.14 + 0.86 * var(--lit));
+}
+.gg-statement-key {
+  background: linear-gradient(115deg, oklch(0.78 0.16 250), oklch(0.72 0.2 300) 55%, oklch(0.8 0.15 340));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Unlit key words stay neutral; the gradient fades in as they light up. */
+  -webkit-text-fill-color: color-mix(in oklch, var(--foreground) calc((1 - var(--lit)) * 100%), transparent);
 }
 
 /* Lite (mobile): shorter scenes, the blur rests at its final value (no scroll-driven filter). */
 html.gg-landing-lite .gg-zoom-scene {
-  height: 230vh;
+  height: 190vh;
 }
 html.gg-landing-lite .gg-zoom-card {
   --b: 1;
-  width: 78%;
+  width: 86%;
+  padding: 1rem;
 }
 html.gg-landing-lite .gg-zoom-stage {
   --ratio: 0.8;
-  --w: min(84vw, calc((100svh - 17rem) * var(--ratio)));
+  --w: clamp(min(84vw, 280px), calc((100svh - 15rem) * var(--ratio)), 84vw);
 }
 html.gg-landing-lite .gg-statement-scene {
-  height: 170vh;
+  height: 140vh;
 }
 
 /* Reduced motion: final states, no pinning, no tall scroll runways. */
@@ -925,16 +935,27 @@ html.gg-landing-lite .gg-statement-scene {
   filter: blur(8px);
 }
 
+.gg-word-mask {
+  display: inline-block;
+  overflow: clip;
+  /* Room for descenders and accents inside the clip. */
+  padding-block: 0.08em 0.14em;
+  margin-block: -0.08em -0.14em;
+  vertical-align: top;
+}
 .gg-reveal-words .gg-word {
   display: inline-block;
+  transform-origin: 0% 100%;
   transition:
-    opacity 800ms var(--gg-ease-out-expo),
-    translate 800ms var(--gg-ease-out-expo);
-  transition-delay: calc(var(--i, 0) * 45ms);
+    opacity 700ms var(--gg-ease-out-expo),
+    translate 900ms var(--gg-ease-out-expo),
+    rotate 900ms var(--gg-ease-out-expo);
+  transition-delay: calc(var(--i, 0) * 55ms);
 }
 .gg-reveal-words:not([data-shown]) .gg-word {
   opacity: 0;
-  translate: 0 0.45em;
+  translate: 0 105%;
+  rotate: 6deg;
 }
 
 /* Hero entrance on load: pure CSS keyframes, no JS, staggered with --d. */
@@ -969,6 +990,7 @@ html.gg-landing-lite .gg-reveal:not([data-shown]) {
   .gg-reveal-words:not([data-shown]) .gg-word {
     opacity: 1;
     translate: none;
+    rotate: none;
     scale: none;
     filter: none;
   }
@@ -1012,4 +1034,67 @@ html.gg-landing-lite .gg-zoom-card:not([data-settled]) {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   background: oklch(1 0 0 / 0.24);
+}
+
+/* Word band (Iron Fit pattern): two rows of huge words sliding opposite ways with the scroll (`--p`, through). */
+.gg-band {
+  padding-block: clamp(3rem, 10svh, 6rem);
+  font-size: clamp(3.25rem, min(10vw, 16svh), 9.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  overflow-x: clip;
+}
+.gg-band-row-a {
+  transform: translateX(calc(-8% - var(--p, 0.5) * 25%));
+  color: var(--foreground);
+}
+.gg-band-row-b {
+  transform: translateX(calc(-30% + var(--p, 0.5) * 25%));
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in oklch, oklch(0.72 0.19 265) 75%, transparent);
+}
+.gg-band-dot {
+  display: inline-block;
+  width: 0.16em;
+  height: 0.16em;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, oklch(0.75 0.17 250), oklch(0.72 0.2 320));
+}
+
+/* Showcase phone drifts up slightly faster than the page as it passes (desktop parallax). */
+.gg-parallax-rise {
+  transform: translateY(calc((0.5 - var(--p, 0.5)) * 90px));
+}
+html.gg-landing-lite .gg-parallax-rise {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gg-band-row-a,
+  .gg-band-row-b {
+    transform: translateX(-12%);
+  }
+  .gg-parallax-rise {
+    transform: none;
+  }
+}
+
+/* Hero headline: lines slide up from behind their baseline on load (CSS only). */
+@keyframes gg-word-up {
+  from {
+    opacity: 0;
+    translate: 0 105%;
+    rotate: 6deg;
+  }
+}
+.gg-hero-word {
+  transform-origin: 0% 100%;
+  animation: gg-word-up 1100ms var(--gg-ease-out-expo) both;
+  animation-delay: var(--d, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .gg-hero-word {
+    animation: none;
+  }
 }
