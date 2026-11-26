@@ -98,6 +98,8 @@ export function LandingGlassZoom() {
             </div>
 
             <div ref={cardRef} className="gg-zoom-card" role="img" aria-label={t("landing.zoom.cardLabel")}>
+              {/* The card's content arrives with the blur: over the sharp "GLASS" word it would be unreadable. */}
+              <div className="gg-zoom-card-body">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/20">
                   <Music2 className="h-5 w-5 text-white" strokeWidth={2.2} />
@@ -115,6 +117,7 @@ export function LandingGlassZoom() {
                 <span className="tabular-nums">
                   <span ref={tokenRef}>xl</span> · <span ref={readoutRef}>{MAX_BLUR_PX}px</span>
                 </span>
+              </div>
               </div>
             </div>
           </div>

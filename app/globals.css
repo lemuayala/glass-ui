@@ -723,7 +723,7 @@ html[data-scroll-top="1"] .gg-scroll-top {
 
 /* Glass zoom scene */
 .gg-zoom-scene {
-  height: 250vh;
+  height: 200vh;
 }
 .gg-zoom-pin {
   position: sticky;
@@ -826,6 +826,12 @@ html[data-scroll-top="1"] .gg-scroll-top {
   -webkit-backdrop-filter: blur(calc(var(--b) * var(--blur-max))) saturate(calc(1 + 0.6 * var(--b)));
   backdrop-filter: blur(calc(var(--b) * var(--blur-max))) saturate(calc(1 + 0.6 * var(--b)));
 }
+/* Readable only once frosted: the content fades in as the blur builds (it reaches full opacity mid-blur). */
+.gg-zoom-card-body {
+  --c: clamp(0, calc((var(--b) - 0.2) / 0.45), 1);
+  opacity: var(--c);
+  transform: translateY(calc((1 - var(--c)) * 10px));
+}
 .gg-zoom-chip {
   --o: clamp(0, calc((var(--p) - var(--t)) * 12), 1);
   position: absolute;
@@ -855,7 +861,7 @@ html[data-scroll-top="1"] .gg-scroll-top {
 
 /* Statement: words light up one by one. */
 .gg-statement-scene {
-  height: 170vh;
+  height: 140vh;
 }
 .gg-statement-pin {
   position: sticky;
@@ -879,7 +885,7 @@ html[data-scroll-top="1"] .gg-scroll-top {
 
 /* Lite (mobile): shorter scenes, the blur rests at its final value (no scroll-driven filter). */
 html.gg-landing-lite .gg-zoom-scene {
-  height: 190vh;
+  height: 160vh;
 }
 html.gg-landing-lite .gg-zoom-card {
   --b: 1;
@@ -891,7 +897,7 @@ html.gg-landing-lite .gg-zoom-stage {
   --w: clamp(min(84vw, 280px), calc((100svh - 15rem) * var(--ratio)), 84vw);
 }
 html.gg-landing-lite .gg-statement-scene {
-  height: 140vh;
+  height: 120vh;
 }
 
 /* Reduced motion: final states, no pinning, no tall scroll runways. */
