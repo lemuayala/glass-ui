@@ -61,7 +61,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 import { useT } from "@/lib/i18n/provider"
-import { prefersReducedMotion } from "@/lib/landing-motion"
+import { prefersReducedMotion } from "@/lib/reduced-motion"
 import { PREVIEW_DEVICE_FRAMES, type PreviewDeviceFrame } from "@/lib/device-frame"
 import { useIsMobile } from "@/hooks/use-mobile"
 

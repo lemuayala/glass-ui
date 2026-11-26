@@ -1,4 +1,4 @@
-import { prefersReducedMotion } from "@/lib/landing-motion"
+import { prefersReducedMotion } from "@/lib/reduced-motion"
 
 /** Matches Tailwind `md:` — landing lite mode below this width. */
 export const LANDING_LITE_MAX_WIDTH = 767
