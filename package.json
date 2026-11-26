@@ -15,7 +15,8 @@
     "test:e2e": "playwright test",
     "release:pack": "pnpm run build:packages && pnpm --filter './packages/*' pack --dry-run",
     "release:publish": "pnpm run build:packages && pnpm --filter @lemuayala/glass-ui-core publish --access public --no-git-checks && pnpm --filter @lemuayala/glass-ui-mcp publish --access public --no-git-checks",
-    "icons:export": "node scripts/export-app-icons.mjs"
+    "icons:export": "node scripts/export-app-icons.mjs",
+    "smoke:published": "node scripts/smoke-published.mjs"
   },
   "dependencies": {
     "@lemuayala/glass-ui-core": "workspace:*",

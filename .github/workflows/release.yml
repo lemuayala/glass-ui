@@ -95,6 +95,12 @@ jobs:
             echo "published=true" >> "$GITHUB_OUTPUT"
           fi
 
+      # Installs the just-published versions from npm like a user would (MCP over stdio + CLI in an
+      # empty project). Fails with a clear message if npm staged publishing is holding the version;
+      # approve it in npmjs.com → Staged Packages and re-run this job (npm steps then skip).
+      - name: Smoke test published packages from npm
+        run: pnpm smoke:published
+
       # MCP Registry validates the npm package (mcpName) live, so it must run after the npm publish.
       # It runs on every release (not only when npm published) so a failed registry step can be
       # retried without bumping the version; an already-registered version is treated as success.
