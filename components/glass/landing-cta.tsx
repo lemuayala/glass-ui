@@ -6,7 +6,9 @@ import { ArrowRight, Sparkles } from "lucide-react"
 import { useT } from "@/lib/i18n/provider"
 import { createEnterScene, prefersReducedMotion, revealVisible, setRevealPending } from "@/lib/landing-motion"
 import { isLandingLiteViewport } from "@/lib/mobile-landing"
+import { NPM_PACKAGES, npmPackageUrl } from "@/lib/config"
 import { SiriCtaLink } from "./siri-cta-link"
+import { NpmIcon } from "./npm-icon"
 
 export function LandingCta() {
   const t = useT()
@@ -121,6 +123,7 @@ export function LandingCta() {
             {t("landing.cta.eyebrow")}
           </span>
           <h2
+            key={t("landing.cta.title")}
             ref={titleRef}
             className="mx-auto mt-6 max-w-2xl text-balance text-4xl font-bold leading-[1.05] tracking-[-0.025em] text-foreground sm:text-5xl md:text-6xl"
           >
@@ -132,7 +135,7 @@ export function LandingCta() {
           >
             {t("landing.cta.desc")}
           </p>
-          <div ref={ctaRef} className="mt-10">
+          <div ref={ctaRef} className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <SiriCtaLink href="/play">
               <Sparkles
                 className="h-4 w-4 transition-transform duration-500 group-hover:rotate-12"
@@ -141,6 +144,15 @@ export function LandingCta() {
               <span>{t("landing.cta.play")}</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
             </SiriCtaLink>
+            <a
+              href={npmPackageUrl(NPM_PACKAGES.core)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-foreground/[0.04] px-6 py-4 text-base font-semibold text-foreground transition-colors hover:bg-foreground/[0.08]"
+            >
+              <NpmIcon className="h-4 w-4" />
+              <span>{t("actions.npm")}</span>
+            </a>
           </div>
         </div>
       </div>

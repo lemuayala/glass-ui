@@ -89,11 +89,31 @@ export function printMcpClientConfig(): string {
   )
 }
 
+/**
+ * Sent to the client on `initialize`. Agents read it before choosing tools, so it is the
+ * contract that makes them generate glass UI from this server instead of hand-writing it.
+ */
+export const GLASS_SERVER_INSTRUCTIONS = `Glass UI generates iOS-style glassmorphism components from a single source of truth (the @lemuayala/glass-ui-core design system).
+
+When to use it: any request for a glass, frosted, blurred, translucent or "liquid glass" UI element (card, button, input, modal, tab bar, switch, navbar) for Web (React + Tailwind CSS) or React Native (Expo).
+
+How to use it:
+1. Do not hand-write glass styles. Call \`generate_component\` and write the returned \`code\` to \`filePath\` unchanged; adapt only imports or paths to the project.
+2. Pick the closest primitive and preset. Call \`list_primitives\` / \`list_presets\` when unsure; use \`options\` only for overrides the user asked for.
+3. Detect the platform from the project: Expo / React Native -> platform "native" (expo-blur by default), otherwise "web". Match the project's component folder and package manager.
+4. Run the returned \`installCommand\` (or tell the user to) and show the \`usage\` snippet.
+5. For a full integration brief to share or keep in the repo, call \`generate_glass_md\`.
+
+Read \`glass://spec/rules\` before editing generated glass code by hand.`
+
 export function createGlassMcpServer(): McpServer {
-  const server = new McpServer({
-    name: "glass-ui",
-    version: "0.5.1",
-  })
+  const server = new McpServer(
+    {
+      name: "glass-ui",
+      version: "0.5.2",
+    },
+    { instructions: GLASS_SERVER_INSTRUCTIONS },
+  )
 
   server.registerResource(
     "primitives-catalog",
@@ -324,6 +344,44 @@ export function createGlassMcpServer(): McpServer {
         ],
       }
     },
+  )
+
+  server.registerPrompt(
+    "glass_component",
+    {
+      title: "Add a Glass UI component",
+      description:
+        "Add an iOS-style glass component to this project using the Glass UI design system (web or React Native).",
+      argsSchema: {
+        request: z
+          .string()
+          .describe('What to build, e.g. "a frosted login card" or "liquid glass tab bar"'),
+        platform: z
+          .string()
+          .optional()
+          .describe('"web" or "native"; leave empty to detect it from the project'),
+      },
+    },
+    ({ request, platform }) => ({
+      messages: [
+        {
+          role: "user",
+          content: {
+            type: "text",
+            text: [
+              `Add this to the project with Glass UI: ${request}`,
+              "",
+              platform
+                ? `Platform: ${platform}.`
+                : "Detect the platform from the project (Expo / React Native -> native, otherwise web).",
+              "Steps: pick the closest primitive and preset (list_primitives / list_presets),",
+              "call generate_component, write `code` to `filePath` unchanged, run `installCommand`,",
+              "then wire it in using the `usage` snippet. Do not hand-write glass styles.",
+            ].join("\n"),
+          },
+        },
+      ],
+    }),
   )
 
   return server

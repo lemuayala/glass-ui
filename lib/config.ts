@@ -12,8 +12,21 @@
 export const SITE = {
   name: "Glass UI",
   tagline: "Glassmorphism Generator",
-  version: "0.5.1",
+  version: "0.5.2",
 } as const
+
+/** Published npm packages — single source for install commands shown in the UI. */
+export const NPM_PACKAGES = {
+  core: "@lemuayala/glass-ui-core",
+  mcp: "@lemuayala/glass-ui-mcp",
+} as const
+
+export type NpmPackageName = (typeof NPM_PACKAGES)[keyof typeof NPM_PACKAGES]
+
+/** Public npm page for one of our packages. */
+export function npmPackageUrl(name: NpmPackageName): string {
+  return `https://www.npmjs.com/package/${name}`
+}
 
 /** Canonical site URL for SEO, Open Graph, and sitemap. Set NEXT_PUBLIC_SITE_URL in production. */
 export const SITE_URL = (

@@ -64,6 +64,8 @@ jobs:
             if (server.version !== pkg.version) errors.push(`server.json version ${server.version} != package version ${pkg.version}`);
             if (!npmPkg || npmPkg.identifier !== pkg.name) errors.push("server.json npm identifier does not match package name");
             if (npmPkg && npmPkg.version !== pkg.version) errors.push("server.json npm package version mismatch");
+            // MCP Registry rejects descriptions over 100 chars (HTTP 422) only at publish time.
+            if (!server.description || server.description.length > 100) errors.push(`server.json description must be 1-100 chars (got ${server.description?.length ?? 0})`);
             if (errors.length) { console.error(errors.join("\n")); process.exit(1); }
           '
 
@@ -94,12 +96,12 @@ jobs:
           fi
 
       # MCP Registry validates the npm package (mcpName) live, so it must run after the npm publish.
+      # It runs on every release (not only when npm published) so a failed registry step can be
+      # retried without bumping the version; an already-registered version is treated as success.
       - name: Install Cosign
-        if: steps.mcp.outputs.published == 'true'
         uses: sigstore/cosign-installer@v3
 
-      - name: Publish to MCP Registry
-        if: steps.mcp.outputs.published == 'true'
+      - name: Publish to MCP Registry (skip if version already registered)
         working-directory: packages/mcp
         env:
           MCP_PUBLISHER_VERSION: v1.8.1
@@ -117,4 +119,10 @@ jobs:
           tar xzf "$archive" mcp-publisher
           ./mcp-publisher validate server.json
           ./mcp-publisher login github-oidc
-          ./mcp-publisher publish
+          if ./mcp-publisher publish 2>&1 | tee publish.log; then
+            exit 0
+          elif grep -qiE "already exists|duplicate|already published" publish.log; then
+            echo "This server version is already in the MCP Registry — skipping"
+          else
+            exit 1
+          fi
