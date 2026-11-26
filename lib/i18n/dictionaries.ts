@@ -83,6 +83,19 @@ export const dictionaries = {
     "landing.code.b2": "TSX — inline snippet or reusable CVA component",
     "landing.code.b3": "Works with Cursor, Claude, Copilot, or copy by hand",
 
+    "landing.agents.eyebrow": "For AI agents",
+    "landing.agents.title": "Your AI already knows the glass.",
+    "landing.agents.desc":
+      "Connect the Glass UI MCP server and your agent builds components from the same design system as this playground — same presets, same code. Just ask for “a frosted login card”.",
+    "landing.agents.claude": "Claude Code",
+    "landing.agents.claudeHint": "One command, then ask in plain words.",
+    "landing.agents.editors": "Cursor · Windsurf · Antigravity",
+    "landing.agents.editorsHint": "Add it to your mcp.json.",
+    "landing.agents.cli": "No agent? Use the CLI",
+    "landing.agents.cliHint": "Drops the component file into your project.",
+    "landing.agents.copy": "Copy",
+    "landing.agents.copied": "Copied",
+
     "landing.steps.eyebrow": "How it works",
     "landing.steps.title": "Three steps.",
     "landing.step1.title": "Design in the playground",
@@ -290,6 +303,19 @@ export const dictionaries = {
     "landing.code.b1": "Tokens — tema, blur, radio, intensidad y bordes",
     "landing.code.b2": "TSX — snippet inline o componente CVA reutilizable",
     "landing.code.b3": "Sirve en Cursor, Claude, Copilot o a mano",
+
+    "landing.agents.eyebrow": "Para agentes de IA",
+    "landing.agents.title": "Tu IA ya conoce el glass.",
+    "landing.agents.desc":
+      "Conecta el servidor MCP de Glass UI y tu agente arma los componentes con el mismo sistema de diseño de este playground: mismos presets, mismo código. Solo pídele “una card de login frosted”.",
+    "landing.agents.claude": "Claude Code",
+    "landing.agents.claudeHint": "Un comando y después pides en lenguaje natural.",
+    "landing.agents.editors": "Cursor · Windsurf · Antigravity",
+    "landing.agents.editorsHint": "Agrégalo a tu mcp.json.",
+    "landing.agents.cli": "¿Sin agente? Usa la CLI",
+    "landing.agents.cliHint": "Deja el archivo del componente en tu proyecto.",
+    "landing.agents.copy": "Copiar",
+    "landing.agents.copied": "Copiado",
 
     "landing.steps.eyebrow": "Cómo funciona",
     "landing.steps.title": "Tres pasos.",

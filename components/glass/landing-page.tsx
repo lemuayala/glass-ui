@@ -11,6 +11,7 @@ import { useLandingLiteDocument } from "@/hooks/use-landing-lite-document"
 import { LandingHero } from "./landing-hero"
 import { LandingShowcase, LandingMarquee } from "./landing-showcase"
 import { LandingCode } from "./landing-code"
+import { LandingAgents } from "./landing-agents"
 import { LandingNativeStrip } from "./landing-native-strip"
 import { LandingSteps } from "./landing-steps"
 import { LandingCta } from "./landing-cta"
@@ -71,6 +72,8 @@ export function LandingPage() {
         <LandingMarquee />
 
         <LandingCode />
+
+        <LandingAgents />
 
         <LandingNativeStrip />
 
