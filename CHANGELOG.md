@@ -7,6 +7,19 @@ release workflow publishes the section as the GitHub Release notes.
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-26
+
+### Security
+
+- Site: Next.js 16.2.4 → 16.4.6. The older version is affected by several unauthenticated remote code execution
+  advisories (image optimization, `next/og`, `use cache`). This affected the website only, not the npm packages.
+- MCP: `componentPath` is now validated (a relative folder with path-safe characters, no `..`). Before, a crafted
+  value could inject code into the usage snippet's `import` and GLASS.md, or point `filePath` outside the project.
+- MCP: moved to zod 4 and the latest MCP SDK (zod <4.6.6 could exhaust memory on oversized inputs).
+- Site: baseline security headers on every route (`nosniff`, referrer policy, no framing, `Permissions-Policy`).
+- Tooling: vitest 5, sharp, postcss and patched transitive packages; `pnpm audit` goes from 54 advisories to 3,
+  all dev-only inside `eslint-config-next`. CI's token is declared read-only.
+
 ### Added
 
 - Landing: Apple-style scroll scenes. A pinned "glass zoom" (a full-screen window pulls back and its card turns
@@ -36,6 +49,7 @@ release workflow publishes the section as the GitHub Release notes.
 - The zoom card's text showed before the glass frosted, over the sharp "GLASS" word; it now arrives with the blur.
   Scroll scenes are shorter, so they move faster.
 - Spanish copy said "vidrio" for glass in three landing lines; it now uses "glass", like the rest of the app.
+- CLI: `--glass-md` overwrote an existing `GLASS-<primitive>.md` without `--force`; it now keeps it.
 
 ## [0.6.1] - 2026-11-25
 
@@ -115,7 +129,8 @@ release workflow publishes the section as the GitHub Release notes.
 - Landing at `/`, playground at `/play`, shareable URLs.
 - `GlassSwitch` and `GlassNavigationBar` (7 primitives), EN / ES.
 
-[Unreleased]: https://github.com/lemuayala/glass-ui/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/lemuayala/glass-ui/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/lemuayala/glass-ui/releases/tag/v0.7.0
 [0.6.1]: https://github.com/lemuayala/glass-ui/releases/tag/v0.6.1
 [0.6.0]: https://github.com/lemuayala/glass-ui/releases/tag/v0.6.0
 [0.5.2]: https://github.com/lemuayala/glass-ui/releases/tag/v0.5.2
