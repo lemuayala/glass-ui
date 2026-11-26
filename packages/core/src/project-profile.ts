@@ -29,6 +29,22 @@ export const DEFAULT_PROJECT_PROFILE: ProjectProfile = {
 
 export const STORAGE_KEY_PROFILE = "glass-ui-profile-v1"
 
+/** Longest component folder accepted from untrusted callers (MCP tool arguments). */
+export const MAX_COMPONENT_PATH_LENGTH = 200
+
+/**
+ * A component folder that is safe to put into generated code and file paths: relative to the project, made of
+ * path-safe characters only (letters, digits, `_ - . @ ~ /`), and never climbing out with `..`. It goes into an
+ * `import` string, the returned `filePath` and GLASS.md, so quotes, newlines or `../` could change what an agent
+ * writes or where. Callers that accept a path from outside (the MCP server) must check it with this.
+ */
+export function isSafeComponentPath(path: string): boolean {
+  if (path.length === 0 || path.length > MAX_COMPONENT_PATH_LENGTH) return false
+  if (!/^[A-Za-z0-9_.@~/-]+$/.test(path)) return false
+  if (path.startsWith("/")) return false
+  return !path.split("/").some((segment) => segment === "..")
+}
+
 const FRAMEWORK_LABELS: Record<ProjectFramework, string> = {
   "next-app-router": "Next.js App Router",
   "vite-react": "Vite + React",

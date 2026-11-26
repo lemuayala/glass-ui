@@ -12,6 +12,7 @@ import {
   generateUsageSnippet,
   getInstallCommand,
   getRegistryItem,
+  isSafeComponentPath,
   registryItemName,
   registryItemUrl,
   shadcnAddCommand,
@@ -51,11 +52,18 @@ const optionsSchema = z
   })
   .optional()
 
+/** Folder for the generated file, relative to the project. Rejects anything that could inject code or escape it. */
+const componentPathSchema = z
+  .string()
+  .refine(isSafeComponentPath, {
+    message: "componentPath must be a relative folder (letters, digits, _ - . @ ~ /) without '..', e.g. components/ui",
+  })
+
 const profileSchema = z
   .object({
     framework: z.enum(["next-app-router", "vite-react", "expo", "other"]).optional(),
     tailwindVersion: z.enum(["3", "4"]).optional(),
-    componentPath: z.string().optional(),
+    componentPath: componentPathSchema.optional(),
     packageManager: z.enum(["npm", "pnpm", "yarn"]).optional(),
     hasCnHelper: z.boolean().optional(),
     usesShadcn: z.boolean().optional(),
@@ -261,7 +269,7 @@ export function createGlassMcpServer(): McpServer {
         nativeBlur: nativeBlurEnum.default("expo-blur"),
         preset: presetEnum.optional(),
         options: optionsSchema,
-        componentPath: z.string().default("components/ui"),
+        componentPath: componentPathSchema.default("components/ui"),
         packageManager: z.enum(["npm", "pnpm", "yarn"]).default("pnpm"),
       },
     },

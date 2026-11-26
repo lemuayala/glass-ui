@@ -17,6 +17,21 @@ describe("@lemuayala/glass-ui-mcp server end-to-end over MCP protocol", () => {
     await client.close()
   })
 
+  it("rejects a componentPath that could inject code or leave the project", async () => {
+    for (const componentPath of ['ui"; import x from "evil', "../../outside", "/etc"]) {
+      const res = await client.callTool({ name: "generate_component", arguments: { component: "glass-card", componentPath } })
+      expect(res.isError).toBe(true)
+      const text = (res.content as Array<{ type: string; text: string }>)[0]?.text ?? ""
+      expect(text).toContain("componentPath")
+      expect(text).not.toContain("import x from")
+    }
+    const md = await client.callTool({
+      name: "generate_glass_md",
+      arguments: { component: "glass-card", profile: { componentPath: "../x" } },
+    })
+    expect(md.isError).toBe(true)
+  })
+
   it("exposes client config JSON helper", () => {
     const cfg = JSON.parse(printMcpClientConfig())
     expect(cfg.mcpServers["glass-ui"].command).toBe("npx")
