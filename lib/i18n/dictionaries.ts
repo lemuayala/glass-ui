@@ -43,7 +43,7 @@ export const dictionaries = {
     "glass.howTo.step2": "GLASS.md updates as you change blur, tint, and export mode.",
     "glass.howTo.step3": "Copy it into your repo, or paste it into Cursor, Claude, or Copilot.",
 
-    "landing.badge": "npm package + MCP server · v0.5.2",
+    "landing.badge": "npm package + MCP server · v0.6.0",
     "landing.headlineLead": "Glassmorphism",
     "landing.headlineAccent": "that ships.",
     "landing.subhead":
@@ -94,6 +94,8 @@ export const dictionaries = {
     "landing.agents.editorsHint": "Add it to your mcp.json.",
     "landing.agents.cli": "No agent? Use the CLI",
     "landing.agents.cliHint": "Drops the component file into your project.",
+    "landing.agents.shadcn": "Using shadcn/ui?",
+    "landing.agents.shadcnHint": "Every primitive and preset is in our registry.",
     "landing.agents.copy": "Copy",
     "landing.agents.copied": "Copied",
 
@@ -267,7 +269,7 @@ export const dictionaries = {
     "glass.howTo.step2": "GLASS.md cambia cuando mueves blur, tinte o modo de exportación.",
     "glass.howTo.step3": "Cópialo al repo o pégalo en Cursor, Claude o Copilot.",
 
-    "landing.badge": "Paquete npm + servidor MCP · v0.5.2",
+    "landing.badge": "Paquete npm + servidor MCP · v0.6.0",
     "landing.headlineLead": "Glassmorphism",
     "landing.headlineAccent": "sin vueltas.",
     "landing.subhead":
@@ -318,6 +320,8 @@ export const dictionaries = {
     "landing.agents.editorsHint": "Agrégalo a tu mcp.json.",
     "landing.agents.cli": "¿Sin agente? Usa la CLI",
     "landing.agents.cliHint": "Deja el archivo del componente en tu proyecto.",
+    "landing.agents.shadcn": "¿Usas shadcn/ui?",
+    "landing.agents.shadcnHint": "Cada primitivo y preset está en nuestro registry.",
     "landing.agents.copy": "Copiar",
     "landing.agents.copied": "Copiado",
 

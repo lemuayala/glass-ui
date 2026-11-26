@@ -39,6 +39,7 @@
 - **Presets** — Frosted, Liquid Glass, Smoked, Crystal, Sunset, Aqua.
 - **Export** — web inline or CVA component; native (`expo-blur` `<BlurView>` or NativeWind) inline or typed file; **GLASS.md** with tokens, TSX, paths, and a short checklist.
 - **CLI & npm** — install components via `npx @lemuayala/glass-ui-core add card` or import `@lemuayala/glass-ui-core` directly.
+- **shadcn registry** — every primitive, preset and platform as a shadcn item: `npx shadcn@latest add https://glass-ui-play.vercel.app/r/glass-card.json` (index at `/r/registry.json`, everything at `/r/glass-ui.json`).
 - **MCP Server** — connect `@lemuayala/glass-ui-mcp` to Claude Code, Cursor, or Antigravity (`claude mcp add glass-ui -- npx -y @lemuayala/glass-ui-mcp`).
 - **Share URL** — same design opens for anyone with the link.
 - **EN / ES** — UI translated; component names stay in English in the nav.
@@ -49,6 +50,10 @@
 # Drop a typed component directly into your Next.js, Vite, or Expo project
 npx @lemuayala/glass-ui-core add card
 npx @lemuayala/glass-ui-core add button --native --preset liquid --glass-md
+
+# Or with the shadcn CLI (items: <component>[-<preset>][-native])
+npx shadcn@latest add https://glass-ui-play.vercel.app/r/glass-card.json
+npx shadcn@latest add https://glass-ui-play.vercel.app/r/glass-button-liquid.json
 
 # Connect Glass UI MCP server to Claude Code
 claude mcp add glass-ui -- npx -y @lemuayala/glass-ui-mcp
@@ -187,6 +192,8 @@ Codegen: `lib/glass-core/` · Contributor notes: [AGENTS.md](AGENTS.md)
 - [x] Real native blur (`expo-blur` `<BlurView>`) + NativeWind switch
 - [x] `@lemuayala/glass-ui-core` npm package + CLI installer
 - [x] `@lemuayala/glass-ui-mcp` server for coding agents
+- [x] Post-publish smoke test against npm
+- [x] shadcn-compatible registry (`/r/*.json`)
 - [ ] Figma plugin
 - [ ] Embedded native preview (Expo Snack)
 

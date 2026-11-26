@@ -12,7 +12,7 @@
 export const SITE = {
   name: "Glass UI",
   tagline: "Glassmorphism Generator",
-  version: "0.5.2",
+  version: "0.6.0",
 } as const
 
 /** Published npm packages — single source for install commands shown in the UI. */
