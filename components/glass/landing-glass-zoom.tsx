@@ -37,6 +37,7 @@ export function LandingGlassZoom() {
   const t = useT()
   const readoutRef = useRef<HTMLSpanElement | null>(null)
   const tokenRef = useRef<HTMLSpanElement | null>(null)
+  const cardRef = useRef<HTMLDivElement | null>(null)
 
   const onProgress = useCallback((p: number) => {
     // Lite (mobile) rests the blur at its final value, so the readout does too.
@@ -44,6 +45,8 @@ export function LandingGlassZoom() {
     const px = lite ? MAX_BLUR_PX : Math.round(segment(p, BLUR_START, BLUR_END) * MAX_BLUR_PX)
     if (readoutRef.current) readoutRef.current.textContent = `${px}px`
     if (tokenRef.current) tokenRef.current.textContent = blurToken(px)
+    // Once the window stops scaling, phones can afford the real backdrop blur (it is static from here on).
+    cardRef.current?.toggleAttribute("data-settled", p >= ZOOM_END)
   }, [])
 
   const chips = [
@@ -94,7 +97,7 @@ export function LandingGlassZoom() {
               <span className="gg-zoom-word">GLASS</span>
             </div>
 
-            <div className="gg-zoom-card" role="img" aria-label={t("landing.zoom.cardLabel")}>
+            <div ref={cardRef} className="gg-zoom-card" role="img" aria-label={t("landing.zoom.cardLabel")}>
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/20">
                   <Music2 className="h-5 w-5 text-white" strokeWidth={2.2} />

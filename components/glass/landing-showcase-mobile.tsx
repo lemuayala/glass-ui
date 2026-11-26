@@ -1,6 +1,6 @@
 "use client"
 
-import type { Ref } from "react"
+import type { CSSProperties } from "react"
 import Link from "next/link"
 import { ArrowRight, Music, Search, Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -29,16 +29,15 @@ const input: GlassOptions = { ...DARK, rounded: "xl" }
 
 const SAMPLE_KEYS = ["nav.card", "nav.input", "nav.button"] as const
 
-export function LandingShowcaseMobile({ deviceRef }: { deviceRef?: Ref<HTMLDivElement> }) {
+export function LandingShowcaseMobile() {
   const t = useT()
 
   return (
     <div className="mx-auto mt-10 w-full max-w-md">
       <div
-        ref={deviceRef}
         data-showcase-device
         className={cn(
-          "gg-showcase-device relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-neutral-950 p-5 shadow-xl",
+          "gg-showcase-device gg-showcase-live relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-neutral-950 p-5 shadow-xl",
           "bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,oklch(0.55_0.18_265_/_0.35),transparent_55%)]",
         )}
       >
@@ -53,7 +52,7 @@ export function LandingShowcaseMobile({ deviceRef }: { deviceRef?: Ref<HTMLDivEl
         </p>
 
         <div className="relative space-y-3">
-          <div data-showcase-tile>
+          <div data-showcase-tile style={{ "--i": 0 } as CSSProperties}>
             <p className="mb-1.5 text-[9px] font-semibold uppercase tracking-wider text-white/40">
               {t(SAMPLE_KEYS[0])}
             </p>
@@ -77,7 +76,7 @@ export function LandingShowcaseMobile({ deviceRef }: { deviceRef?: Ref<HTMLDivEl
             </div>
           </div>
 
-          <div data-showcase-tile>
+          <div data-showcase-tile style={{ "--i": 1 } as CSSProperties}>
             <p className="mb-1.5 text-[9px] font-semibold uppercase tracking-wider text-white/40">
               {t(SAMPLE_KEYS[1])}
             </p>
@@ -87,7 +86,7 @@ export function LandingShowcaseMobile({ deviceRef }: { deviceRef?: Ref<HTMLDivEl
             </div>
           </div>
 
-          <div data-showcase-tile>
+          <div data-showcase-tile style={{ "--i": 2 } as CSSProperties}>
             <p className="mb-1.5 text-[9px] font-semibold uppercase tracking-wider text-white/40">
               {t(SAMPLE_KEYS[2])}
             </p>

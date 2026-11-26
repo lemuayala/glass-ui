@@ -1,7 +1,5 @@
 "use client"
 
-import { useLayoutEffect, useRef } from "react"
-import { stagger, utils } from "animejs"
 import {
   Bell,
   ChevronLeft,
@@ -28,18 +26,12 @@ import {
   getGlassTabBarClasses,
 } from "@/lib/glass-core/variants"
 import type { GlassOptions } from "@/lib/glass-core/types"
-import {
-  createEnterScene,
-  prefersReducedMotion,
-  revealVisible,
-  setRevealPending,
-} from "@/lib/landing-motion"
 import { useT } from "@/lib/i18n/provider"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Wallpaper } from "@/components/glass/wallpaper"
 import { IosBattery, IosCellular, IosWifi } from "@/components/glass/ios-icons"
 import { LandingShowcaseMobile } from "@/components/glass/landing-showcase-mobile"
-import { LANDING_LITE_MEDIA } from "@/lib/mobile-landing"
+import { Reveal } from "@/components/glass/reveal"
 
 const DARK: GlassOptions = {
   theme: "dark",
@@ -75,165 +67,17 @@ const TILE_KEYS = [
  */
 export function LandingShowcase() {
   const t = useT()
-  const sectionRef = useRef<HTMLElement | null>(null)
-  const copyRef = useRef<HTMLDivElement | null>(null)
-  const titleRef = useRef<HTMLHeadingElement | null>(null)
-  const mobileStageRef = useRef<HTMLDivElement | null>(null)
-  const mobileDeviceRef = useRef<HTMLDivElement | null>(null)
-  const phoneRef = useRef<HTMLDivElement | null>(null)
-  const deviceRef = useRef<HTMLDivElement | null>(null)
-  const stageRef = useRef<HTMLDivElement | null>(null)
-
-  useLayoutEffect(() => {
-    let disposed = false
-    let cleanup: (() => void) | undefined
-    let retry = 0
-
-    const setup = () => {
-      if (disposed) return
-
-      const section = sectionRef.current
-      const copy = copyRef.current
-      if (!section || !copy) {
-        if (retry++ < 24) requestAnimationFrame(setup)
-        return
-      }
-
-      const lite = window.matchMedia(LANDING_LITE_MEDIA).matches
-      const stage = lite ? mobileStageRef.current : stageRef.current
-      const device = lite ? mobileDeviceRef.current : deviceRef.current
-      const phone = lite ? device : phoneRef.current
-
-      if (!phone || !stage) {
-        if (retry++ < 24) requestAnimationFrame(setup)
-        return
-      }
-
-      const env = stage.querySelector<HTMLElement>("[data-showcase-env]")
-      const tiles = Array.from(stage.querySelectorAll<HTMLElement>("[data-showcase-tile]"))
-      if (!tiles.length) {
-        if (retry++ < 24) requestAnimationFrame(setup)
-        return
-      }
-
-      retry = 0
-      cleanup?.()
-      section.classList.remove("gg-showcase-ready")
-      device?.classList.remove("gg-showcase-live")
-
-      const lockAll = () => {
-        revealVisible([copy, phone, env, ...tiles].filter(Boolean))
-      }
-
-      const onBuilt = () => {
-        lockAll()
-        section.classList.add("gg-showcase-ready")
-        device?.classList.add("gg-showcase-live")
-      }
-
-      if (prefersReducedMotion()) {
-        onBuilt()
-        return
-      }
-
-      setRevealPending(copy, 20)
-      utils.set(phone, { opacity: 0, scale: 0.96, translateY: 28 })
-      if (env) utils.set(env, { opacity: 0, scale: 1.01 })
-      utils.set(tiles, { opacity: 0, translateY: 18, scale: 0.96 })
-
-      const scene = createEnterScene(section, {
-        anchor: () =>
-          lite ? mobileDeviceRef.current ?? titleRef.current : titleRef.current,
-        lockTargets: lockAll,
-        onComplete: onBuilt,
-      })
-
-      scene
-        .add(
-          copy,
-          {
-            opacity: [0, 1],
-            translateY: [20, 0],
-            duration: 650,
-            ease: "out(3)",
-          },
-          0,
-        )
-        .add(
-          phone,
-          {
-            opacity: [0, 1],
-            scale: [0.96, 1.03, 1],
-            translateY: [28, -4, 0],
-            duration: 860,
-            ease: "out(3)",
-          },
-          100,
-        )
-
-      if (env) {
-        scene.add(
-          env,
-          {
-            opacity: [0, 1],
-            scale: [1.01, 1],
-            duration: 500,
-            ease: "out(3)",
-          },
-          180,
-        )
-      }
-
-      scene.add(
-        tiles,
-        {
-          opacity: [0, 1],
-          translateY: [18, -3, 0],
-          scale: [0.96, 1.02, 1],
-          delay: stagger(70, { start: 0 }),
-          duration: 620,
-          ease: "out(3)",
-        },
-        260,
-      )
-
-      scene.armReveal()
-
-      cleanup = () => {
-        section.classList.remove("gg-showcase-ready")
-        device?.classList.remove("gg-showcase-live")
-        scene.revert?.()
-      }
-    }
-
-    requestAnimationFrame(() => requestAnimationFrame(setup))
-
-    const mql = window.matchMedia(LANDING_LITE_MEDIA)
-    const onBreakpoint = () => {
-      retry = 0
-      requestAnimationFrame(setup)
-    }
-    mql.addEventListener("change", onBreakpoint)
-
-    return () => {
-      disposed = true
-      mql.removeEventListener("change", onBreakpoint)
-      cleanup?.()
-    }
-  }, [t])
 
   return (
     <section
       id="primitives"
-      ref={sectionRef}
       className="relative mx-auto w-full max-w-6xl scroll-mt-24 px-6 py-16 md:py-24"
     >
-      <div ref={copyRef} className="mx-auto max-w-2xl text-center">
+      <Reveal className="mx-auto max-w-2xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-foreground/[0.04] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
             {t("landing.showcase.eyebrow")}
           </span>
           <h2
-            ref={titleRef}
             className="mt-5 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl"
           >
             {t("landing.showcase.title")}
@@ -241,14 +85,14 @@ export function LandingShowcase() {
           <p className="mt-4 text-balance text-sm leading-relaxed text-muted-foreground md:text-base">
             {t("landing.showcase.desc")}
           </p>
-        </div>
+        </Reveal>
 
-      <div ref={mobileStageRef} className="md:hidden">
-        <LandingShowcaseMobile deviceRef={mobileDeviceRef} />
-      </div>
+      <Reveal delay={1} className="gg-showcase-assemble md:hidden">
+        <LandingShowcaseMobile />
+      </Reveal>
       <div className="hidden md:block">
       <TooltipProvider delayDuration={280}>
-        <div ref={phoneRef} className="relative mx-auto mt-12 flex flex-col items-center md:mt-16">
+        <Reveal delay={1} className="gg-showcase-assemble relative mx-auto mt-12 flex flex-col items-center md:mt-16">
             <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground/80">
               {t("landing.showcase.deviceLabel")}
             </p>
@@ -260,9 +104,8 @@ export function LandingShowcase() {
 
             <div className="gg-device-scale-wrap">
               <div
-                ref={deviceRef}
                 className={cn(
-                  "gg-device-iphone-pro-max gg-showcase-device relative overflow-hidden",
+                  "gg-device-iphone-pro-max gg-showcase-device gg-showcase-live relative overflow-hidden",
                   "rounded-[3rem] border-[4px] border-neutral-950 bg-black",
                   "shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06),0_32px_64px_-20px_rgba(0,0,0,0.8)]",
                 )}
@@ -283,7 +126,6 @@ export function LandingShowcase() {
                 </div>
 
                 <div
-                  ref={stageRef}
                   className="relative flex h-full flex-col pt-12"
                   style={{ paddingBottom: IPHONE_17_PRO_MAX.height * 0.034 }}
                 >
@@ -461,7 +303,7 @@ export function LandingShowcase() {
                 <div className="pointer-events-none absolute bottom-2 left-1/2 z-40 h-1 w-[108px] -translate-x-1/2 rounded-full bg-white/30" />
               </div>
             </div>
-          </div>
+          </Reveal>
       </TooltipProvider>
       </div>
     </section>
@@ -515,8 +357,9 @@ function Tile({
       <TooltipTrigger asChild>
         <div
           data-showcase-tile
+          style={{ "--i": TILE_KEYS.indexOf(labelKey) } as React.CSSProperties}
           className={cn(
-            "relative w-full will-change-transform outline-none transition-shadow duration-300",
+            "relative w-full outline-none transition-shadow duration-300",
             "hover:z-40 hover:ring-1 hover:ring-white/25",
             className,
           )}

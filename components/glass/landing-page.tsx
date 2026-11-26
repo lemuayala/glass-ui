@@ -27,7 +27,7 @@ export function LandingPage() {
   useLandingLiteDocument()
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col overflow-x-clip">
+    <div className="gg-landing relative flex min-h-screen w-full flex-col overflow-x-clip">
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0 md:hidden"

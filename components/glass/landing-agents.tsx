@@ -1,22 +1,14 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { stagger, utils } from "animejs"
 import { ArrowUpRight, Bot, Braces, Layers, Terminal, Workflow } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { NPM_PACKAGES, npmPackageUrl } from "@/lib/config"
 import type { NpmPackageName } from "@/lib/config"
 import { GLASS_UI_REGISTRY_URL, shadcnAddCommand } from "@/lib/glass-core/registry"
 import { useT } from "@/lib/i18n/provider"
-import {
-  createEnterScene,
-  prefersReducedMotion,
-  revealVisible,
-  setRevealPending,
-} from "@/lib/landing-motion"
-import { isLandingLiteViewport } from "@/lib/mobile-landing"
 import { CopyButton } from "./copy-button"
 import { NpmIcon } from "./npm-icon"
+import { Reveal, RevealWords } from "./reveal"
 
 const MCP_SERVER_KEY = "glass-ui"
 
@@ -40,53 +32,6 @@ const npmLink = (name: NpmPackageName): AgentCardLink => ({ href: npmPackageUrl(
 
 export function LandingAgents() {
   const t = useT()
-  const sectionRef = useRef<HTMLElement | null>(null)
-  const headRef = useRef<HTMLDivElement | null>(null)
-  const cardsRef = useRef<HTMLDivElement | null>(null)
-
-  useEffect(() => {
-    const section = sectionRef.current
-    const head = headRef.current
-    const cardsEl = cardsRef.current
-    if (!section || !head || !cardsEl) return
-    const cards = cardsEl.querySelectorAll<HTMLElement>("[data-agent-card]")
-
-    if (prefersReducedMotion()) {
-      revealVisible([head, cards])
-      return
-    }
-
-    setRevealPending([head], 20)
-    // Apple-style entrance: rise, grow from 96% and come into focus (focus only on desktop, see PERF-MOBILE.md).
-    const focus = !isLandingLiteViewport()
-    utils.set(cards, { opacity: 0, translateY: 32, scale: 0.96, ...(focus ? { filter: "blur(8px)" } : {}) })
-
-    const scene = createEnterScene(section, {
-      anchor: () => headRef.current,
-      lockTargets: () => [head, cards],
-    })
-    scene
-      .add(head, { opacity: [0, 1], translateY: [18, 0], duration: 480 }, 0)
-      .add(
-        cards,
-        {
-          opacity: [0, 1],
-          translateY: [32, 0],
-          scale: [0.96, 1],
-          ...(focus ? { filter: ["blur(8px)", "blur(0px)"] } : {}),
-          delay: stagger(90),
-          duration: 900,
-          ease: "out(4)",
-        },
-        120,
-      )
-    scene.armReveal()
-
-    return () => {
-      scene.revert?.()
-    }
-  }, [t])
-
   const cards: AgentCard[] = [
     { Icon: Bot, title: t("landing.agents.claude"), hint: t("landing.agents.claudeHint"), snippet: CLAUDE_COMMAND, link: npmLink(NPM_PACKAGES.mcp) },
     { Icon: Workflow, title: t("landing.agents.editors"), hint: t("landing.agents.editorsHint"), snippet: EDITOR_CONFIG, link: npmLink(NPM_PACKAGES.mcp) },
@@ -103,25 +48,26 @@ export function LandingAgents() {
   return (
     <section
       id="agents"
-      ref={sectionRef}
       className="relative mx-auto mt-32 w-full max-w-6xl scroll-mt-24 px-6 md:mt-48"
     >
-      <div ref={headRef} className="mx-auto max-w-3xl text-center">
-        <span className="inline-flex items-center gap-2 rounded-full border border-border bg-foreground/[0.04] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+      <div className="mx-auto max-w-3xl text-center">
+        <Reveal as="span" className="inline-flex items-center gap-2 rounded-full border border-border bg-foreground/[0.04] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
           {t("landing.agents.eyebrow")}
-        </span>
-        <h2 className="mt-5 text-balance text-3xl font-bold leading-[1.05] tracking-[-0.02em] text-foreground sm:text-4xl md:text-5xl">
-          {t("landing.agents.title")}
-        </h2>
-        <p className="mx-auto mt-5 max-w-2xl text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
+        </Reveal>
+        <RevealWords
+          text={t("landing.agents.title")}
+          className="mt-5 text-balance text-3xl font-bold leading-[1.05] tracking-[-0.02em] text-foreground sm:text-4xl md:text-5xl"
+        />
+        <Reveal as="p" delay={2} className="mx-auto mt-5 max-w-2xl text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
           {t("landing.agents.desc")}
-        </p>
+        </Reveal>
       </div>
 
-      <div ref={cardsRef} className="mt-14 grid gap-5 md:grid-cols-2">
-        {cards.map(({ Icon, title, hint, snippet, link }) => (
-          <div
+      <div className="mt-14 grid gap-5 md:grid-cols-2">
+        {cards.map(({ Icon, title, hint, snippet, link }, i) => (
+          <Reveal
             key={title}
+            delay={2 + i}
             data-agent-card
             className="gg-glass gg-glass-inset flex min-w-0 flex-col rounded-3xl p-6"
           >
@@ -152,7 +98,7 @@ export function LandingAgents() {
               <span className="font-mono">{link.label}</span>
               <ArrowUpRight className="h-3 w-3" strokeWidth={2.2} />
             </a>
-          </div>
+          </Reveal>
         ))}
       </div>
     </section>
