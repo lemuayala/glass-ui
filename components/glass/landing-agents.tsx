@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { stagger, utils } from "animejs"
-import { Bot, Check, Copy, Terminal, Workflow } from "lucide-react"
+import { Bot, Terminal, Workflow } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { NPM_PACKAGES } from "@/lib/config"
 import { useT } from "@/lib/i18n/provider"
@@ -12,6 +12,7 @@ import {
   revealVisible,
   setRevealPending,
 } from "@/lib/landing-motion"
+import { CopyButton } from "./copy-button"
 
 const MCP_SERVER_KEY = "glass-ui"
 
@@ -24,37 +25,6 @@ const EDITOR_CONFIG = JSON.stringify(
 )
 
 const CLI_COMMAND = `npx ${NPM_PACKAGES.core} add card`
-
-function CopyButton({ text, copyLabel, copiedLabel }: { text: string; copyLabel: string; copiedLabel: string }) {
-  const [copied, setCopied] = useState(false)
-
-  useEffect(() => {
-    if (!copied) return
-    const id = window.setTimeout(() => setCopied(false), 1600)
-    return () => window.clearTimeout(id)
-  }, [copied])
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(text)
-      setCopied(true)
-    } catch {
-      /* clipboard unavailable (insecure context) — the text stays selectable */
-    }
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={handleCopy}
-      aria-label={copied ? copiedLabel : copyLabel}
-      className="flex h-7 shrink-0 items-center gap-1.5 rounded-full border border-border bg-foreground/[0.04] px-2.5 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.08] hover:text-foreground"
-    >
-      {copied ? <Check className="h-3 w-3" strokeWidth={2.4} /> : <Copy className="h-3 w-3" strokeWidth={2.2} />}
-      <span>{copied ? copiedLabel : copyLabel}</span>
-    </button>
-  )
-}
 
 type AgentCard = { Icon: LucideIcon; title: string; hint: string; snippet: string }
 

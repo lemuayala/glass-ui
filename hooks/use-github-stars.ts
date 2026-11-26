@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { GITHUB_REPO_URL, parseGitHubRepo } from "@/lib/config"
+import { formatCompactCount } from "@/lib/format-count"
 
 export function formatGitHubStars(n: number): string {
-  return n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, "")}k` : String(n)
+  return formatCompactCount(n)
 }
 
 /** Live stargazers count from the public GitHub REST API. */
