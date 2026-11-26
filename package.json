@@ -26,7 +26,7 @@
     "animejs": "^4.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.564.0",
+    "lucide-react": "^1.78.0",
     "next": "16.4.6",
     "next-themes": "^0.4.6",
     "prism-react-renderer": "^2.4.1",
