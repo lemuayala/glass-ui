@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+dist/
+packages/*/dist/
+coverage/
+playwright-report/
+test-results/
+public/
+videos/
+.agents/
+pnpm-lock.yaml
+*.png
+*.jpg
+*.mp4

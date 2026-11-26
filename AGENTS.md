@@ -19,6 +19,13 @@
 7. i18n keys in `lib/i18n/dictionaries.ts` (EN + ES)
 8. Keyboard shortcut index if applicable
 
+## Releases
+
+- Branch from `dev`, PR into `dev`. Merging `dev` → `main` publishes npm, MCP Registry and a GitHub Release.
+- Version lives in `package.json` (root + both packages), `packages/mcp/server.json` (2×), `packages/mcp/src/server.ts`,
+  `lib/config.ts` and the `landing.badge` keys (EN + ES).
+- Every version needs a `CHANGELOG.md` section (CI enforces it). Note user-facing changes under `[Unreleased]`.
+
 ## UI conventions
 
 - Panels use `gg-glass gg-glass-inset rounded-2xl`
@@ -37,3 +44,10 @@
 - Social preview: `public/og-image.png` (1200×630)
 - SEO: `lib/seo.ts`, `app/sitemap.ts`, `app/robots.ts`, JSON-LD in layout
 - Re-export: `pnpm icons:export`
+
+## Knowledge graph (graphify)
+
+- Local only: `graphify-out/` is git-ignored and rebuilt by the git hook (`graphify hook install`). Not committed —
+  single-maintainer repo, no cloud agents depend on it.
+- Before reading code: `graphify query "<question>" --budget 800`, `graphify explain "<symbol>"`, then read only the
+  lines it points to. After changes, `graphify update .` if the hook didn't run.

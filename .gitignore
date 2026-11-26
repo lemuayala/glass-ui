@@ -26,3 +26,5 @@ tsconfig.tsbuildinfo
 coverage/
 playwright-report/
 test-results/
+# Knowledge graph (graphify) — local only, rebuilt by its git hook
+graphify-out/

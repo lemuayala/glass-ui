@@ -1,21 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Glass UI mark: a color orb seen through a frosted pane. -->
   <defs>
-    <linearGradient id="bg" x1="72" y1="48" x2="440" y2="464" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#0B0D14"/>
-      <stop offset="0.55" stop-color="#101525"/>
-      <stop offset="1" stop-color="#0A0C12"/>
+    <linearGradient id="orb" x1="112" y1="112" x2="320" y2="320" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5B8CFF"/>
+      <stop offset="1" stop-color="#A06BFF"/>
     </linearGradient>
-    <linearGradient id="aurora" x1="96" y1="80" x2="416" y2="432" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#4F7CFF"/>
-      <stop offset="0.42" stop-color="#3CD9F5"/>
-      <stop offset="1" stop-color="#9B5CFF"/>
+    <linearGradient id="edge" x1="184" y1="184" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.75"/>
+      <stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.35"/>
     </linearGradient>
-    <clipPath id="c"><rect width="512" height="512" rx="112"/></clipPath>
+    <clipPath id="pane">
+      <rect x="184" y="184" width="216" height="216" rx="56"/>
+    </clipPath>
+    <filter id="frost" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="24"/>
+    </filter>
   </defs>
-  <g clip-path="url(#c)">
-    <rect width="512" height="512" fill="url(#bg)"/>
-    <rect x="118" y="138" width="276" height="236" rx="62" fill="#fff" fill-opacity="0.1" stroke="#fff" stroke-opacity="0.2"/>
-    <circle cx="256" cy="248" r="86" fill="#fff" fill-opacity="0.07" stroke="url(#aurora)" stroke-width="2.2"/>
-    <path d="M256 178 L312 248 L256 318 L200 248Z" stroke="#fff" stroke-opacity="0.32" fill="#fff" fill-opacity="0.04"/>
+  <rect width="512" height="512" rx="112" fill="#0B0D14"/>
+  <g transform="translate(256 256) scale(1.22) translate(-256 -256)">
+  <circle cx="216" cy="216" r="104" fill="url(#orb)"/>
+  <g clip-path="url(#pane)">
+    <rect x="184" y="184" width="216" height="216" fill="#0B0D14"/>
+    <circle cx="216" cy="216" r="104" fill="url(#orb)" filter="url(#frost)"/>
+    <rect x="184" y="184" width="216" height="216" fill="#FFFFFF" fill-opacity="0.12"/>
+  </g>
+  <rect x="186" y="186" width="212" height="212" rx="54" stroke="url(#edge)" stroke-width="4"/>
   </g>
 </svg>
