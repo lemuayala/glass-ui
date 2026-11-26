@@ -44,3 +44,10 @@
 - Social preview: `public/og-image.png` (1200×630)
 - SEO: `lib/seo.ts`, `app/sitemap.ts`, `app/robots.ts`, JSON-LD in layout
 - Re-export: `pnpm icons:export`
+
+## Knowledge graph (graphify)
+
+- Local only: `graphify-out/` is git-ignored and rebuilt by the git hook (`graphify hook install`). Not committed —
+  single-maintainer repo, no cloud agents depend on it.
+- Before reading code: `graphify query "<question>" --budget 800`, `graphify explain "<symbol>"`, then read only the
+  lines it points to. After changes, `graphify update .` if the hook didn't run.
