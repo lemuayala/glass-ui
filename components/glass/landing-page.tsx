@@ -80,9 +80,10 @@ export function LandingPage() {
         <LandingShowcase />
         <LandingMarquee />
 
-        <LandingCode />
-
+        {/* Agents first: the MCP is how most people will use Glass UI; GLASS.md is the manual path. */}
         <LandingAgents />
+
+        <LandingCode />
 
         <LandingWordBand />
 

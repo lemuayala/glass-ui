@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useRef, type CSSProperties, type ElementType, type ReactNode } from "react"
 import { cn } from "@/lib/utils"
+import { parseMarkedWords } from "@/lib/marked-words"
 import { markShown, observeReveal } from "@/lib/reveal-observer"
 
 type RevealProps = {
@@ -43,18 +44,19 @@ type RevealWordsProps = {
 /**
  * Heading whose words rise in one after another. The words are plain spans rendered on the server (no DOM
  * rewriting after hydration), so React keeps owning the text and screen readers read the full sentence.
+ * Words marked `*like this*` in the copy take the accent gradient.
  */
 export function RevealWords({ text, className, as: Tag = "h2", id }: RevealWordsProps) {
   const ref = useRef<HTMLElement | null>(null)
   useEffect(() => (ref.current ? observeReveal(ref.current, markShown) : undefined), [text])
-  const words = text.split(" ")
+  const words = parseMarkedWords(text)
   return (
     <Tag ref={ref} id={id} className={cn("gg-reveal-words", className)}>
-      {words.map((word, i) => (
+      {words.map(({ text: word, key }, i) => (
         <Fragment key={`${word}-${i}`}>
           {/* The mask clips the word while it slides up from below its own baseline. */}
           <span className="gg-word-mask">
-            <span className="gg-word" style={{ "--i": i } as CSSProperties}>
+            <span className={cn("gg-word", key && "gg-text-accent")} style={{ "--i": i } as CSSProperties}>
               {word}
             </span>
           </span>

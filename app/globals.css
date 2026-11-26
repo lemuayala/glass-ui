@@ -1104,3 +1104,33 @@ html.gg-landing-lite .gg-parallax-rise {
     animation: none;
   }
 }
+
+/* Agents section (MCP): accent "New" tag, a blinking prompt caret and a highlighted first install card. */
+.gg-agents-new {
+  background: linear-gradient(115deg, oklch(0.66 0.2 255), oklch(0.62 0.24 300) 60%, oklch(0.7 0.2 345));
+}
+.gg-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 3px;
+  vertical-align: -0.18em;
+  border-radius: 1px;
+  background: currentColor;
+  animation: gg-caret 1.1s steps(1) infinite;
+}
+@keyframes gg-caret {
+  50% {
+    opacity: 0;
+  }
+}
+.gg-agents-featured {
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--primary) 45%, transparent),
+    0 30px 80px -40px color-mix(in oklch, var(--primary) 70%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .gg-caret {
+    animation: none;
+  }
+}
