@@ -98,6 +98,16 @@ ${base}/
   }
 }
 
+/** npm dependencies a generated reusable component needs (single source for install hints and the registry). */
+export function getComponentDependencies(
+  platform: "web" | "native",
+  nativeBlur: NativeBlurMode = "expo-blur",
+): string[] {
+  const base = ["class-variance-authority", "clsx", "tailwind-merge"]
+  if (platform === "web") return base
+  return nativeBlur === "expo-blur" ? [...base, "nativewind", "expo-blur"] : [...base, "nativewind"]
+}
+
 export function getInstallCommand(
   profile: ProjectProfile,
   platform: "web" | "native",
@@ -105,9 +115,8 @@ export function getInstallCommand(
 ): string {
   const pm = profile.packageManager
   const run = pm === "npm" ? "npm install" : pm === "pnpm" ? "pnpm add" : "yarn add"
-  if (platform === "native") {
-    const baseCmd = `${run} class-variance-authority clsx tailwind-merge nativewind`
-    return nativeBlur === "expo-blur" ? `npx expo install expo-blur\n${baseCmd}` : baseCmd
-  }
-  return `${run} class-variance-authority clsx tailwind-merge`
+  // expo-blur must match the Expo SDK, so it goes through `expo install` instead of the package manager.
+  const deps = getComponentDependencies(platform, nativeBlur).filter((d) => d !== "expo-blur")
+  const baseCmd = `${run} ${deps.join(" ")}`
+  return platform === "native" && nativeBlur === "expo-blur" ? `npx expo install expo-blur\n${baseCmd}` : baseCmd
 }
