@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <!-- Social preview: Glass UI mark + name. Exported to og-image.png by `pnpm icons:export`. -->
+  <defs>
+    <linearGradient id="orb" x1="112" y1="112" x2="320" y2="320" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5B8CFF"/>
+      <stop offset="1" stop-color="#A06BFF"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="184" y1="184" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.75"/>
+      <stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.35"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(300 315) scale(420)">
+      <stop stop-color="#5B8CFF" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#5B8CFF" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="pane">
+      <rect x="184" y="184" width="216" height="216" rx="56"/>
+    </clipPath>
+    <filter id="frost" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="24"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="#0B0D14"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g transform="translate(44 59)">
+    <circle cx="216" cy="216" r="104" fill="url(#orb)"/>
+    <g clip-path="url(#pane)">
+      <rect x="184" y="184" width="216" height="216" fill="#0B0D14"/>
+      <circle cx="216" cy="216" r="104" fill="url(#orb)" filter="url(#frost)"/>
+      <rect x="184" y="184" width="216" height="216" fill="#FFFFFF" fill-opacity="0.12"/>
+    </g>
+    <rect x="186" y="186" width="212" height="212" rx="54" stroke="url(#edge)" stroke-width="4"/>
+  </g>
+  <g font-family="Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" fill="#FFFFFF">
+    <text x="560" y="300" font-size="96" font-weight="700" letter-spacing="-3">Glass UI</text>
+    <text x="562" y="362" font-size="32" fill-opacity="0.62">iOS-style glass components for</text>
+    <text x="562" y="406" font-size="32" fill-opacity="0.62">React, Tailwind and React Native.</text>
+    <text x="562" y="478" font-size="24" fill-opacity="0.42" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace">npm · MCP · shadcn registry</text>
+  </g>
+</svg>

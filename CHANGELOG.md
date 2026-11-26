@@ -14,6 +14,12 @@ release workflow publishes the section as the GitHub Release notes.
 - `GlassInput` failed strict type-checking (TS2320): its `size` variant clashed with the native `<input size>`
   attribute. Affected the CLI, the MCP server and the shadcn registry, which share the template.
 - The `GlassSwitch` usage example referenced an undeclared `setOn`; it is now a complete component.
+- Console errors on the landing (GitHub 403 rate limit, npm downloads 404): stars and npm stats now come from a
+  server-cached `/api/stats` instead of the browser calling GitHub and npm.
+
+### Changed
+
+- New minimalist logo (a color orb behind a frosted pane) for the app icon, favicon and social preview image.
 
 ### Added
 
