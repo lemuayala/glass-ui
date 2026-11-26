@@ -7,6 +7,17 @@ release workflow publishes the section as the GitHub Release notes.
 
 ## [Unreleased]
 
+### Added
+
+- Landing: Apple-style scroll scenes. A pinned "glass zoom" (a full-screen window pulls back and its card turns
+  into frosted glass with a live blur readout and token chips), a statement whose words light up as you scroll,
+  and a hero that recedes. Built on a new `ScrollScene` primitive (scroll progress as `--p`, CSS does the motion).
+
+### Changed
+
+- Landing counters come from `@lemuayala/glass-ui-core` (primitives, presets, code variants, registry items).
+- Agent cards enter Apple-style: rise, grow from 96% and come into focus.
+
 ## [0.6.1] - 2026-11-25
 
 ### Fixed
