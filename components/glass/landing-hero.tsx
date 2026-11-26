@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react"
 import { createTimeline, splitText, stagger, utils } from "animejs"
-import { ArrowRight, ChevronDown, Sparkles } from "lucide-react"
+import { ArrowRight, Bot, ChevronDown, Sparkles } from "lucide-react"
+import { NPM_PACKAGES, npmPackageUrl } from "@/lib/config"
 import { useT } from "@/lib/i18n/provider"
 import {
   prefersReducedMotion,
@@ -13,6 +14,13 @@ import {
 import { isLandingLiteViewport } from "@/lib/mobile-landing"
 import { SiriCtaLink } from "./siri-cta-link"
 import { LandingParticles } from "./landing-particles"
+import { CopyButton } from "./copy-button"
+import { NpmIcon } from "./npm-icon"
+
+const HERO_INSTALL_COMMAND = `npx ${NPM_PACKAGES.core} add card`
+
+const HERO_SECONDARY_LINK =
+  "inline-flex h-9 items-center gap-1.5 rounded-full border border-border bg-foreground/[0.03] px-4 text-xs font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
 
 export function LandingHero() {
   const t = useT()
@@ -170,7 +178,7 @@ export function LandingHero() {
           {t("landing.subhead")}
         </p>
 
-        <div ref={ctaRef} className="mt-12">
+        <div ref={ctaRef} className="mt-12 flex w-full flex-col items-center gap-5">
           <SiriCtaLink href="/play">
             <Sparkles
               className="h-4 w-4 transition-transform duration-500 group-hover:rotate-12"
@@ -179,6 +187,25 @@ export function LandingHero() {
             <span>{t("landing.cta.play")}</span>
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
           </SiriCtaLink>
+
+          <div className="gg-glass gg-glass-inset flex max-w-full items-center gap-3 rounded-full py-1 pl-4 pr-1">
+            <code className="min-w-0 truncate font-mono text-xs text-foreground/90">
+              <span className="select-none text-muted-foreground">$ </span>
+              {HERO_INSTALL_COMMAND}
+            </code>
+            <CopyButton text={HERO_INSTALL_COMMAND} copyLabel={t("actions.copy")} copiedLabel={t("actions.copied")} />
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <a href={npmPackageUrl(NPM_PACKAGES.core)} target="_blank" rel="noopener noreferrer" className={HERO_SECONDARY_LINK}>
+              <NpmIcon />
+              <span>{t("actions.npm")}</span>
+            </a>
+            <a href="#agents" className={HERO_SECONDARY_LINK}>
+              <Bot className="h-3.5 w-3.5 shrink-0" strokeWidth={2.2} />
+              <span>{t("landing.hero.mcp")}</span>
+            </a>
+          </div>
         </div>
 
         <div
