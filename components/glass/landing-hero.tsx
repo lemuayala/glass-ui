@@ -14,6 +14,7 @@ import {
 import { isLandingLiteViewport } from "@/lib/mobile-landing"
 import { SiriCtaLink } from "./siri-cta-link"
 import { LandingParticles } from "./landing-particles"
+import { ScrollScene } from "./scroll-scene"
 import { CopyButton } from "./copy-button"
 import { NpmIcon } from "./npm-icon"
 
@@ -152,7 +153,7 @@ export function LandingHero() {
         </div>
       </div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center">
+      <ScrollScene mode="hero" className="gg-hero-recede relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center">
         <span
           ref={badgeRef}
           className="inline-flex items-center gap-2 rounded-full border border-border bg-foreground/[0.04] px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground max-md:backdrop-blur-none md:backdrop-blur-md"
@@ -229,7 +230,7 @@ export function LandingHero() {
           <ChevronDown className="h-4 w-4 max-md:animate-none md:animate-bounce" strokeWidth={2.2} />
           <span className="font-mono text-[10px] uppercase tracking-[0.2em]">{t("landing.scrollHint")}</span>
         </button>
-      </div>
+      </ScrollScene>
     </section>
   )
 }

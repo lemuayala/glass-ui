@@ -54,6 +54,15 @@ export const dictionaries = {
     "landing.scrollHint": "Primitives",
     "landing.nav.playground": "Playground",
 
+    "landing.zoom.eyebrow": "Real glass",
+    "landing.zoom.title": "Scroll, and watch it turn to glass.",
+    "landing.zoom.cardLabel": "A Now Playing card turning into frosted glass",
+    "landing.zoom.chip.blur": "Blur",
+    "landing.zoom.chip.tint": "Tint",
+    "landing.zoom.chip.radius": "Radius",
+    "landing.zoom.chip.border": "Border",
+    "landing.statement": "Seven primitives. One glass system. Web and native, from a single source.",
+
     "landing.showcase.eyebrow": "Primitives",
     "landing.showcase.title": "Seven components. One glass system.",
     "landing.showcase.desc":
@@ -113,8 +122,8 @@ export const dictionaries = {
 
     "landing.stat.components": "Primitives",
     "landing.stat.templates": "Code variants",
-    "landing.stat.exports": "Export modes",
-    "landing.stat.controls": "Glass controls",
+    "landing.stat.presets": "Presets",
+    "landing.stat.registry": "shadcn registry items",
 
     "landing.cta.eyebrow": "Try it",
     "landing.cta.title": "Open the playground.",
@@ -280,6 +289,15 @@ export const dictionaries = {
     "landing.scrollHint": "Primitivos",
     "landing.nav.playground": "Playground",
 
+    "landing.zoom.eyebrow": "Glass de verdad",
+    "landing.zoom.title": "Baja, y mira cómo se vuelve vidrio.",
+    "landing.zoom.cardLabel": "Una tarjeta de reproducción que se vuelve vidrio esmerilado",
+    "landing.zoom.chip.blur": "Blur",
+    "landing.zoom.chip.tint": "Tinte",
+    "landing.zoom.chip.radius": "Radio",
+    "landing.zoom.chip.border": "Borde",
+    "landing.statement": "Siete primitivos. Un solo sistema de vidrio. Web y nativo, desde una sola fuente.",
+
     "landing.showcase.eyebrow": "Primitivos",
     "landing.showcase.title": "Siete componentes, mismo glass.",
     "landing.showcase.desc":
@@ -339,8 +357,8 @@ export const dictionaries = {
 
     "landing.stat.components": "Primitivos",
     "landing.stat.templates": "Variantes de código",
-    "landing.stat.exports": "Modos de exportación",
-    "landing.stat.controls": "Controles glass",
+    "landing.stat.presets": "Presets",
+    "landing.stat.registry": "Items en el registry de shadcn",
 
     "landing.cta.eyebrow": "Pruébalo",
     "landing.cta.title": "Abre el playground.",

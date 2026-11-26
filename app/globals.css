@@ -736,3 +736,196 @@ html[data-scroll-top="1"] .gg-scroll-top {
   background-size: 200% 100%;
   animation: gg-shimmer 3s linear infinite;
 }
+/* ────────────────────────────────────────────────────────────
+ *  SCROLL SCENES — Apple product-page style, driven by `--p` (0 → 1)
+ *  written by <ScrollScene>. Transforms/opacity only, plus one backdrop-filter on the zoom card.
+ *  Lite (mobile) keeps transforms but rests the blur; reduced motion shows final states, unpinned.
+ * ─────────────────────────────────────────────────────────── */
+
+/* Hero recedes (zoom out) as you start scrolling. */
+.gg-hero-recede {
+  opacity: calc(1 - var(--p, 0) * 0.8);
+  transform: translateY(calc(var(--p, 0) * -48px)) scale(calc(1 - var(--p, 0) * 0.08));
+  transform-origin: 50% 30%;
+}
+
+/* Glass zoom scene */
+.gg-zoom-scene {
+  height: 320vh;
+}
+.gg-zoom-pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  align-items: center;
+  overflow: clip;
+  padding-top: clamp(4.5rem, 10svh, 6.5rem);
+  padding-bottom: 2rem;
+}
+.gg-zoom-title {
+  --o: clamp(0, calc((var(--p) - 0.18) / 0.16), 1);
+  opacity: var(--o);
+  transform: translateY(calc((1 - var(--o)) * 24px));
+}
+.gg-zoom-stage {
+  /* Window aspect ratio (width ÷ height): 16:10 on desktop, 4:5 on phones (see lite below). */
+  --ratio: 1.6;
+  --w: min(860px, 84vw, calc((100svh - 19rem) * var(--ratio)));
+  position: relative;
+  justify-self: center;
+  width: var(--w);
+}
+.gg-zoom-window {
+  /* Zoom phase, eased out: x(2 - x). */
+  --z: clamp(0, calc(var(--p) / var(--zoom-end)), 1);
+  --e: calc(var(--z) * (2 - var(--z)));
+  /* Start scale covers the viewport (tan(atan2(a, b)) = a ÷ b across units), with headroom for the title row. */
+  --s0: max(1.25, tan(atan2(100vw, var(--w))), tan(atan2(calc(100svh + 18rem), calc(var(--w) / var(--ratio)))));
+  position: relative;
+  z-index: 2;
+  aspect-ratio: var(--ratio);
+  overflow: hidden;
+  border-radius: 2rem;
+  transform: scale(calc(var(--s0) - (var(--s0) - 1) * var(--e)));
+  box-shadow:
+    0 0 0 1px oklch(1 0 0 / calc(0.08 * var(--e))),
+    0 50px 120px -40px oklch(0 0 0 / calc(0.75 * var(--e)));
+}
+.gg-zoom-shapes {
+  position: absolute;
+  inset: 0;
+  transform: translateY(calc(var(--p) * -28px));
+}
+.gg-zoom-shape {
+  position: absolute;
+  display: block;
+}
+.gg-zoom-shape-1 {
+  left: 18%;
+  top: 18%;
+  width: 30%;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #ff7ac6, #ff9f5a);
+}
+.gg-zoom-shape-2 {
+  right: 16%;
+  bottom: 14%;
+  width: 26%;
+  aspect-ratio: 1;
+  border-radius: 28%;
+  background: linear-gradient(135deg, #3cd9f5, #5b8cff);
+  transform: rotate(calc(12deg + var(--p) * 18deg));
+}
+.gg-zoom-shape-3 {
+  left: 54%;
+  top: 10%;
+  width: 12%;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: #ffe66d;
+}
+.gg-zoom-word {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: clamp(4rem, 14vw, 11rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: oklch(1 0 0 / 0.85);
+}
+.gg-zoom-card {
+  --b: clamp(0, calc((var(--p) - var(--blur-start)) / (var(--blur-end) - var(--blur-start))), 1);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(60%, 420px);
+  padding: 1.25rem;
+  border-radius: 1.75rem;
+  translate: -50% -50%;
+  background: oklch(1 0 0 / calc(0.04 + 0.12 * var(--b)));
+  border: 1px solid oklch(1 0 0 / calc(0.14 + 0.3 * var(--b)));
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / calc(0.12 + 0.28 * var(--b))),
+    0 24px 60px -24px oklch(0 0 0 / 0.5);
+  -webkit-backdrop-filter: blur(calc(var(--b) * var(--blur-max))) saturate(calc(1 + 0.6 * var(--b)));
+  backdrop-filter: blur(calc(var(--b) * var(--blur-max))) saturate(calc(1 + 0.6 * var(--b)));
+}
+.gg-zoom-chip {
+  --o: clamp(0, calc((var(--p) - var(--t)) * 12), 1);
+  position: absolute;
+  z-index: 3;
+  display: none;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.65rem 0.95rem;
+  border-radius: 1rem;
+  border: 1px solid var(--gg-glass-border);
+  background: var(--gg-glass-tint);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: 0 16px 40px -16px oklch(0 0 0 / 0.5);
+  opacity: var(--o);
+  transform: translateY(calc((1 - var(--o)) * 16px)) scale(calc(0.94 + 0.06 * var(--o)));
+}
+@media (min-width: 1024px) {
+  .gg-zoom-chip {
+    display: flex;
+  }
+}
+.gg-zoom-chip-a { top: 10%; left: -7%; }
+.gg-zoom-chip-b { top: 22%; right: -7%; }
+.gg-zoom-chip-c { bottom: 20%; left: -6%; }
+.gg-zoom-chip-d { bottom: 6%; right: -6%; }
+
+/* Statement: words light up one by one. */
+.gg-statement-scene {
+  height: 220vh;
+}
+.gg-statement-pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+}
+.gg-statement-word {
+  opacity: calc(0.14 + 0.86 * clamp(0, calc((var(--p) - var(--t)) * var(--n) * 0.9), 1));
+}
+
+/* Lite (mobile): shorter scenes, the blur rests at its final value (no scroll-driven filter). */
+html.gg-landing-lite .gg-zoom-scene {
+  height: 230vh;
+}
+html.gg-landing-lite .gg-zoom-card {
+  --b: 1;
+  width: 78%;
+}
+html.gg-landing-lite .gg-zoom-stage {
+  --ratio: 0.8;
+  --w: min(84vw, calc((100svh - 17rem) * var(--ratio)));
+}
+html.gg-landing-lite .gg-statement-scene {
+  height: 170vh;
+}
+
+/* Reduced motion: final states, no pinning, no tall scroll runways. */
+@media (prefers-reduced-motion: reduce) {
+  .gg-zoom-scene,
+  .gg-statement-scene {
+    height: auto;
+  }
+  .gg-zoom-pin,
+  .gg-statement-pin {
+    position: relative;
+    height: auto;
+    padding-block: 6rem;
+  }
+  .gg-hero-recede {
+    opacity: 1;
+    transform: none;
+  }
+}
