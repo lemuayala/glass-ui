@@ -2,10 +2,11 @@
 
 import { useEffect, useRef } from "react"
 import { stagger, utils } from "animejs"
-import { ArrowUpRight, Bot, Terminal, Workflow } from "lucide-react"
+import { ArrowUpRight, Bot, Braces, Layers, Terminal, Workflow } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { NPM_PACKAGES, npmPackageUrl } from "@/lib/config"
 import type { NpmPackageName } from "@/lib/config"
+import { GLASS_UI_REGISTRY_URL, shadcnAddCommand } from "@/lib/glass-core/registry"
 import { useT } from "@/lib/i18n/provider"
 import {
   createEnterScene,
@@ -28,7 +29,13 @@ const EDITOR_CONFIG = JSON.stringify(
 
 const CLI_COMMAND = `npx ${NPM_PACKAGES.core} add card`
 
-type AgentCard = { Icon: LucideIcon; title: string; hint: string; snippet: string; pkg: NpmPackageName }
+const SHADCN_COMMAND = shadcnAddCommand("glass-card")
+const REGISTRY_INDEX_URL = `${GLASS_UI_REGISTRY_URL}/registry.json`
+
+type AgentCardLink = { href: string; label: string; kind: "npm" | "registry" }
+type AgentCard = { Icon: LucideIcon; title: string; hint: string; snippet: string; link: AgentCardLink }
+
+const npmLink = (name: NpmPackageName): AgentCardLink => ({ href: npmPackageUrl(name), label: name, kind: "npm" })
 
 export function LandingAgents() {
   const t = useT()
@@ -66,9 +73,16 @@ export function LandingAgents() {
   }, [t])
 
   const cards: AgentCard[] = [
-    { Icon: Bot, title: t("landing.agents.claude"), hint: t("landing.agents.claudeHint"), snippet: CLAUDE_COMMAND, pkg: NPM_PACKAGES.mcp },
-    { Icon: Workflow, title: t("landing.agents.editors"), hint: t("landing.agents.editorsHint"), snippet: EDITOR_CONFIG, pkg: NPM_PACKAGES.mcp },
-    { Icon: Terminal, title: t("landing.agents.cli"), hint: t("landing.agents.cliHint"), snippet: CLI_COMMAND, pkg: NPM_PACKAGES.core },
+    { Icon: Bot, title: t("landing.agents.claude"), hint: t("landing.agents.claudeHint"), snippet: CLAUDE_COMMAND, link: npmLink(NPM_PACKAGES.mcp) },
+    { Icon: Workflow, title: t("landing.agents.editors"), hint: t("landing.agents.editorsHint"), snippet: EDITOR_CONFIG, link: npmLink(NPM_PACKAGES.mcp) },
+    { Icon: Terminal, title: t("landing.agents.cli"), hint: t("landing.agents.cliHint"), snippet: CLI_COMMAND, link: npmLink(NPM_PACKAGES.core) },
+    {
+      Icon: Layers,
+      title: t("landing.agents.shadcn"),
+      hint: t("landing.agents.shadcnHint"),
+      snippet: SHADCN_COMMAND,
+      link: { href: REGISTRY_INDEX_URL, label: "registry.json", kind: "registry" },
+    },
   ]
 
   return (
@@ -89,8 +103,8 @@ export function LandingAgents() {
         </p>
       </div>
 
-      <div ref={cardsRef} className="mt-14 grid gap-5 md:grid-cols-3">
-        {cards.map(({ Icon, title, hint, snippet, pkg }) => (
+      <div ref={cardsRef} className="mt-14 grid gap-5 md:grid-cols-2">
+        {cards.map(({ Icon, title, hint, snippet, link }) => (
           <div
             key={title}
             data-agent-card
@@ -114,13 +128,13 @@ export function LandingAgents() {
               </pre>
             </div>
             <a
-              href={npmPackageUrl(pkg)}
+              href={link.href}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 inline-flex items-center gap-1.5 self-start text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
-              <NpmIcon className="h-3 w-3" />
-              <span className="font-mono">{pkg}</span>
+              {link.kind === "npm" ? <NpmIcon className="h-3 w-3" /> : <Braces className="h-3 w-3" strokeWidth={2.2} />}
+              <span className="font-mono">{link.label}</span>
               <ArrowUpRight className="h-3 w-3" strokeWidth={2.2} />
             </a>
           </div>
