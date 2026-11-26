@@ -19,6 +19,13 @@
 7. i18n keys in `lib/i18n/dictionaries.ts` (EN + ES)
 8. Keyboard shortcut index if applicable
 
+## Releases
+
+- Branch from `dev`, PR into `dev`. Merging `dev` → `main` publishes npm, MCP Registry and a GitHub Release.
+- Version lives in `package.json` (root + both packages), `packages/mcp/server.json` (2×), `packages/mcp/src/server.ts`,
+  `lib/config.ts` and the `landing.badge` keys (EN + ES).
+- Every version needs a `CHANGELOG.md` section (CI enforces it). Note user-facing changes under `[Unreleased]`.
+
 ## UI conventions
 
 - Panels use `gg-glass gg-glass-inset rounded-2xl`
