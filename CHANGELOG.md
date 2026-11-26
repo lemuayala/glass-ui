@@ -12,8 +12,10 @@ release workflow publishes the section as the GitHub Release notes.
 - Landing: Apple-style scroll scenes. A pinned "glass zoom" (a full-screen window pulls back and its card turns
   into frosted glass with a live blur readout and token chips), a statement whose words light up as you scroll,
   and a hero that recedes. Built on a new `ScrollScene` primitive (scroll progress as `--p`, CSS does the motion).
-- Landing: a word band whose two rows slide opposite ways with the scroll, statement key words that light up in
+- Landing: a word band whose two rows slide opposite ways with the scroll, one key word per statement sentence that light up in
   the accent gradient, masked word entrances in headings and the hero, and a parallax on the showcase phone.
+- Landing: the AI agents (MCP) section now leads, before GLASS.md, with a demo of the round trip: what you ask,
+  the `generate_component` call the agent makes and the glass card you get.
 - Playground: on mid-width screens (1024–1279 px) the preview sits next to one side panel with a Properties /
   Code switch, instead of three squeezed columns.
 
@@ -31,6 +33,8 @@ release workflow publishes the section as the GitHub Release notes.
   listener per frame, entrances skip `filter` on phones, large decorative blurs are desktop-only, and the zoom card
   only applies its backdrop blur once the window stops scaling.
 - The glass zoom looked cramped on small or short screens (truncated card text).
+- The zoom card's text showed before the glass frosted, over the sharp "GLASS" word; it now arrives with the blur.
+  Scroll scenes are shorter, so they move faster.
 - Spanish copy said "vidrio" for glass in three landing lines; it now uses "glass", like the rest of the app.
 
 ## [0.6.1] - 2026-11-25
