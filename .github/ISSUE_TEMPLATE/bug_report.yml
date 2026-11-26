@@ -1,0 +1,41 @@
+name: Bug report
+description: Something in the playground, the CLI, the MCP server or the generated code is wrong.
+labels: [bug]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where
+      options:
+        - Playground / landing (glass-ui-play.vercel.app)
+        - CLI (@lemuayala/glass-ui-core)
+        - MCP server (@lemuayala/glass-ui-mcp)
+        - shadcn registry (/r)
+        - Generated component code
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Package version (e.g. 0.6.1) or the site version in the footer.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Commands, component, preset and platform (web / native), or a share URL from the playground.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs. actual
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Framework (Next.js, Vite, Expo), Tailwind version, browser or device, Node version.

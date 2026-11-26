@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/lemuayala/glass-ui/security/advisories/new
+    about: Report security issues privately, not as a public issue.
+  - name: Try the playground
+    url: https://glass-ui-play.vercel.app/play
+    about: Reproduce styling questions there and share the URL in your issue.
