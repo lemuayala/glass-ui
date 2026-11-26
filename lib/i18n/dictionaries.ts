@@ -61,7 +61,7 @@ export const dictionaries = {
     "landing.zoom.chip.tint": "Tint",
     "landing.zoom.chip.radius": "Radius",
     "landing.zoom.chip.border": "Border",
-    "landing.statement": "Seven primitives. One *glass system*. *Web and native*, from a *single source*.",
+    "landing.statement": "Seven *primitives*. One *glass* system. Web and native, from a single *source*.",
 
     "landing.showcase.eyebrow": "Primitives",
     "landing.showcase.title": "Seven components. One glass system.",
@@ -296,7 +296,7 @@ export const dictionaries = {
     "landing.zoom.chip.tint": "Tinte",
     "landing.zoom.chip.radius": "Radio",
     "landing.zoom.chip.border": "Borde",
-    "landing.statement": "Siete primitivos. Un solo *sistema glass*. *Web y nativo*, desde *una sola fuente*.",
+    "landing.statement": "Siete *primitivos*. Un solo sistema *glass*. Web y nativo, desde una sola *fuente*.",
 
     "landing.showcase.eyebrow": "Primitivos",
     "landing.showcase.title": "Siete componentes, mismo glass.",
