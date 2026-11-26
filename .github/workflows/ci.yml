@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main, dev]
 
+# CI only reads the repo; set explicitly so it stays read-only even if the repo default changes.
+permissions:
+  contents: read
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
