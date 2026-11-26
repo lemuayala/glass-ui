@@ -10,8 +10,10 @@ import { CodePanel } from "./code-panel"
 import { ShortcutsDialog } from "./shortcuts-dialog"
 import {
   PlaygroundMobileTabs,
+  PlaygroundSideTabs,
   playgroundPanelClass,
   type PlaygroundMobilePanel,
+  type PlaygroundSidePanel,
 } from "./playground-mobile-tabs"
 import type { WallpaperId } from "./wallpaper"
 import { generateCode, generateUsageSnippet } from "@/lib/glass-core/codegen"
@@ -68,6 +70,7 @@ export function Generator() {
   const [presetsOpen, setPresetsOpen] = useState(false)
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
   const [mobilePanel, setMobilePanel] = useState<PlaygroundMobilePanel>("preview")
+  const [sidePanel, setSidePanel] = useState<PlaygroundSidePanel>("controls")
   const { profile, updateProfile } = useProjectProfile()
 
   // Hydrate once on client from URL > localStorage > fallback.
@@ -186,19 +189,22 @@ export function Generator() {
         onShowShortcuts={() => setShortcutsOpen(true)}
       />
 
-      {/* Main grid — 3 columns on desktop, stack on mobile */}
+      {/* Main grid — tabs on mobile, preview + one side panel on mid widths (lg), 3 columns from xl */}
       <main className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-6 lg:gap-4">
-        <div className="mx-auto grid min-h-0 w-full max-w-[1600px] flex-1 grid-cols-1 gap-3 max-lg:flex max-lg:flex-col max-lg:gap-2 lg:grid-cols-[280px_1fr_minmax(400px,500px)] lg:gap-4 xl:grid-cols-[280px_1fr_480px] 2xl:grid-cols-[300px_1.1fr_560px]">
+        <div className="mx-auto grid min-h-0 w-full max-w-[1600px] flex-1 grid-cols-1 gap-3 max-lg:flex max-lg:flex-col max-lg:gap-2 lg:grid-cols-[340px_minmax(0,1fr)] lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-4 xl:grid-cols-[280px_minmax(0,1fr)_480px] xl:grid-rows-[minmax(0,1fr)] 2xl:grid-cols-[300px_minmax(0,1.1fr)_560px]">
           <div className="order-1 shrink-0 lg:hidden">
             <PlaygroundMobileTabs active={mobilePanel} onChange={setMobilePanel} />
+          </div>
+          <div className="hidden lg:col-start-1 lg:row-start-1 lg:block xl:hidden">
+            <PlaygroundSideTabs active={sidePanel} onChange={setSidePanel} />
           </div>
 
           <section
             id="playground-preview"
             aria-label={t("panel.preview")}
             className={cn(
-              "gg-glass gg-glass-inset gg-playground-panel order-2 rounded-2xl max-lg:min-h-[min(52dvh,100%)] max-lg:flex-1 lg:order-2",
-              playgroundPanelClass("preview", mobilePanel),
+              "gg-glass gg-glass-inset gg-playground-panel order-2 rounded-2xl max-lg:min-h-[min(52dvh,100%)] max-lg:flex-1 lg:col-start-2 lg:row-span-2 lg:row-start-1 xl:row-span-1",
+              playgroundPanelClass("preview", mobilePanel, sidePanel),
             )}
           >
             <Preview
@@ -215,8 +221,8 @@ export function Generator() {
           <section
             aria-label={t("panel.properties")}
             className={cn(
-              "gg-glass gg-glass-inset gg-playground-panel order-2 rounded-2xl lg:order-1",
-              playgroundPanelClass("controls", mobilePanel),
+              "gg-glass gg-glass-inset gg-playground-panel order-2 rounded-2xl lg:col-start-1 lg:row-start-2 xl:row-start-1",
+              playgroundPanelClass("controls", mobilePanel, sidePanel),
             )}
           >
             <Controls
@@ -231,8 +237,8 @@ export function Generator() {
           <section
             aria-label={t("panel.code")}
             className={cn(
-              "gg-glass gg-glass-inset gg-playground-panel order-2 rounded-2xl lg:order-3",
-              playgroundPanelClass("code", mobilePanel),
+              "gg-glass gg-glass-inset gg-playground-panel order-2 rounded-2xl lg:col-start-1 lg:row-start-2 xl:col-start-3 xl:row-start-1",
+              playgroundPanelClass("code", mobilePanel, sidePanel),
             )}
           >
             <CodePanel

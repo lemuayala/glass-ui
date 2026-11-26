@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { ArrowRight, Smartphone, Sparkles } from "lucide-react"
 import { useT } from "@/lib/i18n/provider"
+import { Reveal, RevealWords } from "./reveal"
 
 const FEATS = [
   { title: "native.feat1.title", desc: "native.feat1.desc" },
@@ -18,16 +19,17 @@ export function LandingNativeStrip() {
       id="native"
       className="relative mx-auto mt-24 w-full max-w-6xl scroll-mt-24 px-6 md:mt-32"
     >
-      <div className="gg-glass gg-glass-inset rounded-3xl border border-border p-6 md:p-10">
+      <Reveal className="gg-glass gg-glass-inset rounded-3xl border border-border p-6 md:p-10">
         <div className="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-foreground/[0.04] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               <Smartphone className="h-3 w-3" strokeWidth={2.2} />
               {t("native.eyebrow")}
             </span>
-            <h2 className="mt-4 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              {t("native.title")}
-            </h2>
+            <RevealWords
+              text={t("native.title")}
+              className="mt-4 text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+            />
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">{t("native.desc")}</p>
             <Link
               href="/play"
@@ -40,18 +42,20 @@ export function LandingNativeStrip() {
           </div>
 
           <ul className="grid gap-3 sm:grid-cols-3 lg:max-w-[52%] lg:gap-4">
-            {FEATS.map((feat) => (
-              <li
+            {FEATS.map((feat, i) => (
+              <Reveal
+                as="li"
                 key={feat.title}
+                delay={2 + i}
                 className="rounded-2xl border border-white/[0.08] bg-foreground/[0.03] px-4 py-3.5 max-md:backdrop-blur-none md:backdrop-blur-sm"
               >
                 <p className="text-sm font-semibold text-foreground">{t(feat.title)}</p>
                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t(feat.desc)}</p>
-              </li>
+              </Reveal>
             ))}
           </ul>
         </div>
-      </div>
+      </Reveal>
     </section>
   )
 }

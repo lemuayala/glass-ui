@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { prefersReducedMotion } from "@/lib/landing-motion"
+import { isLandingLiteViewport } from "@/lib/mobile-landing"
+import { prefersReducedMotion } from "@/lib/reduced-motion"
 
 type Dust = {
   kind: "dust" | "star"
@@ -56,7 +57,8 @@ export function LandingParticles() {
 
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    // Phones never run the canvas loop (docs/PERF-MOBILE.md); the parent is display:none there anyway.
+    if (!canvas || isLandingLiteViewport()) return
 
     const reduced = prefersReducedMotion()
     const ctx = canvas.getContext("2d")
@@ -139,13 +141,27 @@ export function LandingParticles() {
       return () => ro.disconnect()
     }
 
+    // Animate only while the hero is on screen; scrolling past it stops the loop entirely.
+    let running = false
     const tick = (time: number) => {
       paint(time, true)
-      rafRef.current = requestAnimationFrame(tick)
+      if (running) rafRef.current = requestAnimationFrame(tick)
     }
-    rafRef.current = requestAnimationFrame(tick)
+    const io = new IntersectionObserver(([entry]) => {
+      const visible = Boolean(entry?.isIntersecting)
+      if (visible && !running) {
+        running = true
+        rafRef.current = requestAnimationFrame(tick)
+      } else if (!visible && running) {
+        running = false
+        cancelAnimationFrame(rafRef.current)
+      }
+    })
+    io.observe(parent)
 
     return () => {
+      running = false
+      io.disconnect()
       ro.disconnect()
       cancelAnimationFrame(rafRef.current)
     }

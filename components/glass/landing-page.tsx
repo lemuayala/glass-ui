@@ -10,9 +10,12 @@ import { Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useLandingLiteDocument } from "@/hooks/use-landing-lite-document"
 import { LandingHero } from "./landing-hero"
+import { LandingGlassZoom } from "./landing-glass-zoom"
+import { LandingStatement } from "./landing-statement"
 import { LandingShowcase, LandingMarquee } from "./landing-showcase"
 import { LandingCode } from "./landing-code"
 import { LandingAgents } from "./landing-agents"
+import { LandingWordBand } from "./landing-word-band"
 import { LandingNativeStrip } from "./landing-native-strip"
 import { LandingSteps } from "./landing-steps"
 import { LandingCta } from "./landing-cta"
@@ -25,7 +28,7 @@ export function LandingPage() {
   useLandingLiteDocument()
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col overflow-x-clip">
+    <div className="gg-landing relative flex min-h-screen w-full flex-col overflow-x-clip">
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0 md:hidden"
@@ -69,13 +72,20 @@ export function LandingPage() {
         {/* 1 — Inicio (hero hasta “en vivo — prueba cada componente”) */}
         <LandingHero />
 
+        {/* Escenas con scroll (estilo páginas de producto de Apple) */}
+        <LandingGlassZoom />
+        <LandingStatement />
+
         {/* 2 — Primitivos (al hacer scroll, como secciones del portfolio) */}
         <LandingShowcase />
         <LandingMarquee />
 
+        {/* Agents first: the MCP is how most people will use Glass UI; GLASS.md is the manual path. */}
+        <LandingAgents />
+
         <LandingCode />
 
-        <LandingAgents />
+        <LandingWordBand />
 
         <LandingNativeStrip />
 

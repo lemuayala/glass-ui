@@ -80,7 +80,7 @@ export function PresetsMenu({
         )}
       >
         <Wand2 className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">{t("actions.presets")}</span>
+        <span className="hidden sm:inline lg:hidden xl:inline">{t("actions.presets")}</span>
         <ChevronDown className={cn("h-3 w-3 transition-transform", open && "rotate-180")} />
       </button>
 

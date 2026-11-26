@@ -54,6 +54,15 @@ export const dictionaries = {
     "landing.scrollHint": "Primitives",
     "landing.nav.playground": "Playground",
 
+    "landing.zoom.eyebrow": "Real glass",
+    "landing.zoom.title": "Scroll, and watch it turn to glass.",
+    "landing.zoom.cardLabel": "A Now Playing card turning into frosted glass",
+    "landing.zoom.chip.blur": "Blur",
+    "landing.zoom.chip.tint": "Tint",
+    "landing.zoom.chip.radius": "Radius",
+    "landing.zoom.chip.border": "Border",
+    "landing.statement": "Seven *primitives*. One *glass* system. Web and native, from a single *source*.",
+
     "landing.showcase.eyebrow": "Primitives",
     "landing.showcase.title": "Seven components. One glass system.",
     "landing.showcase.desc":
@@ -85,7 +94,16 @@ export const dictionaries = {
     "landing.code.b3": "Works with Cursor, Claude, Copilot, or copy by hand",
 
     "landing.agents.eyebrow": "For AI agents",
-    "landing.agents.title": "Your AI already knows the glass.",
+    "landing.agents.title": "Your AI already knows the *glass*.",
+    "landing.agents.new": "New",
+    "landing.agents.demo.label": "Ask in plain words",
+    "landing.agents.demo.prompt": "Make me a frosted login card",
+    "landing.agents.demo.result": "GlassCard.tsx ready — frosted preset, same code as the playground.",
+    "landing.agents.demo.cardTitle": "Welcome back",
+    "landing.agents.demo.email": "you@email.com",
+    "landing.agents.demo.password": "Password",
+    "landing.agents.demo.submit": "Sign in",
+    "landing.agents.install": "Connect it in one step",
     "landing.agents.desc":
       "Connect the Glass UI MCP server and your agent builds components from the same design system as this playground — same presets, same code. Just ask for “a frosted login card”.",
     "landing.agents.claude": "Claude Code",
@@ -113,8 +131,8 @@ export const dictionaries = {
 
     "landing.stat.components": "Primitives",
     "landing.stat.templates": "Code variants",
-    "landing.stat.exports": "Export modes",
-    "landing.stat.controls": "Glass controls",
+    "landing.stat.presets": "Presets",
+    "landing.stat.registry": "shadcn registry items",
 
     "landing.cta.eyebrow": "Try it",
     "landing.cta.title": "Open the playground.",
@@ -280,6 +298,15 @@ export const dictionaries = {
     "landing.scrollHint": "Primitivos",
     "landing.nav.playground": "Playground",
 
+    "landing.zoom.eyebrow": "Glass de verdad",
+    "landing.zoom.title": "Baja, y mira cómo se vuelve glass.",
+    "landing.zoom.cardLabel": "Una tarjeta de reproducción que se vuelve frosted glass",
+    "landing.zoom.chip.blur": "Blur",
+    "landing.zoom.chip.tint": "Tinte",
+    "landing.zoom.chip.radius": "Radio",
+    "landing.zoom.chip.border": "Borde",
+    "landing.statement": "Siete *primitivos*. Un solo sistema *glass*. Web y nativo, desde una sola *fuente*.",
+
     "landing.showcase.eyebrow": "Primitivos",
     "landing.showcase.title": "Siete componentes, mismo glass.",
     "landing.showcase.desc":
@@ -311,7 +338,16 @@ export const dictionaries = {
     "landing.code.b3": "Sirve en Cursor, Claude, Copilot o a mano",
 
     "landing.agents.eyebrow": "Para agentes de IA",
-    "landing.agents.title": "Tu IA ya conoce el glass.",
+    "landing.agents.title": "Tu IA ya conoce el *glass*.",
+    "landing.agents.new": "Nuevo",
+    "landing.agents.demo.label": "Pídelo con tus palabras",
+    "landing.agents.demo.prompt": "Hazme una card de login frosted",
+    "landing.agents.demo.result": "GlassCard.tsx listo — preset frosted, el mismo código del playground.",
+    "landing.agents.demo.cardTitle": "Bienvenido de nuevo",
+    "landing.agents.demo.email": "tu@email.com",
+    "landing.agents.demo.password": "Contraseña",
+    "landing.agents.demo.submit": "Entrar",
+    "landing.agents.install": "Conéctalo en un paso",
     "landing.agents.desc":
       "Conecta el servidor MCP de Glass UI y tu agente arma los componentes con el mismo sistema de diseño de este playground: mismos presets, mismo código. Solo pídele “una card de login frosted”.",
     "landing.agents.claude": "Claude Code",
@@ -339,8 +375,8 @@ export const dictionaries = {
 
     "landing.stat.components": "Primitivos",
     "landing.stat.templates": "Variantes de código",
-    "landing.stat.exports": "Modos de exportación",
-    "landing.stat.controls": "Controles glass",
+    "landing.stat.presets": "Presets",
+    "landing.stat.registry": "Items en el registry de shadcn",
 
     "landing.cta.eyebrow": "Pruébalo",
     "landing.cta.title": "Abre el playground.",
