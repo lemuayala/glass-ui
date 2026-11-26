@@ -94,6 +94,21 @@ describe("@lemuayala/glass-ui-mcp server end-to-end over MCP protocol", () => {
     expect(compJson.preset).toBe("Liquid Glass")
     expect(compJson.code).toContain("BlurView")
     expect(compJson.installCommand).toContain("npx expo install expo-blur")
+    expect(compJson.registry).toEqual({
+      name: "glass-card-liquid-native",
+      url: "https://glass-ui-play.vercel.app/r/glass-card-liquid-native.json",
+      shadcnCommand: "npx shadcn@latest add https://glass-ui-play.vercel.app/r/glass-card-liquid-native.json",
+    })
+
+    const customRes = await client.callTool({
+      name: "generate_component",
+      arguments: { component: "glass-button", options: { tint: "pink" } },
+    })
+    const customJson = JSON.parse(
+      (customRes.content as Array<{ type: string; text: string }>)[0]?.text ?? "{}",
+    )
+    // Custom overrides are not a published registry item, so there is no shadcn shortcut.
+    expect(customJson.registry).toBeNull()
 
     const mdRes = await client.callTool({
       name: "generate_glass_md",

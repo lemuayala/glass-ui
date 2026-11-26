@@ -11,6 +11,10 @@ import {
   generateShortGlassPrompt,
   generateUsageSnippet,
   getInstallCommand,
+  getRegistryItem,
+  registryItemName,
+  registryItemUrl,
+  shadcnAddCommand,
   type ComponentKind,
   type GlassOptions,
   type ProjectProfile,
@@ -74,6 +78,21 @@ function resolveOptions(
   return { options: merged, presetName: matched?.name }
 }
 
+/**
+ * Matching shadcn registry item when the generated file is exactly a published registry item
+ * (default or preset styling, reusable mode, expo-blur on native). Custom overrides return null.
+ */
+function findRegistryItem(
+  component: ComponentKind,
+  platform: "web" | "native",
+  presetId: string | undefined,
+  code: string,
+): { name: string; url: string; shadcnCommand: string } | null {
+  const name = registryItemName(component, { platform, presetId })
+  if (getRegistryItem(name)?.files?.[0]?.content !== code) return null
+  return { name, url: registryItemUrl(name), shadcnCommand: shadcnAddCommand(name) }
+}
+
 export function printMcpClientConfig(): string {
   return JSON.stringify(
     {
@@ -101,7 +120,7 @@ How to use it:
 1. Do not hand-write glass styles. Call \`generate_component\` and write the returned \`code\` to \`filePath\` unchanged; adapt only imports or paths to the project.
 2. Pick the closest primitive and preset. Call \`list_primitives\` / \`list_presets\` when unsure; use \`options\` only for overrides the user asked for.
 3. Detect the platform from the project: Expo / React Native -> platform "native" (expo-blur by default), otherwise "web". Match the project's component folder and package manager.
-4. Run the returned \`installCommand\` (or tell the user to) and show the \`usage\` snippet.
+4. Run the returned \`installCommand\` (or tell the user to) and show the \`usage\` snippet. If the project uses shadcn (has components.json) and \`registry\` is not null, \`registry.shadcnCommand\` installs the same file and its dependencies in one step.
 5. For a full integration brief to share or keep in the repo, call \`generate_glass_md\`.
 
 Read \`glass://spec/rules\` before editing generated glass code by hand.`
@@ -260,6 +279,7 @@ export function createGlassMcpServer(): McpServer {
       const codegen = { component, mode, platform, nativeBlur, options }
       const code = generateCode(codegen)
       const usage = generateUsageSnippet(codegen, componentPath)
+      const registry = mode === "reusable" ? findRegistryItem(component, platform, preset, code) : null
       const install = getInstallCommand(
         { ...DEFAULT_PROJECT_PROFILE, packageManager, componentPath },
         platform,
@@ -280,6 +300,7 @@ export function createGlassMcpServer(): McpServer {
                 mode,
                 preset: presetName ?? null,
                 installCommand: install,
+                registry,
                 code,
                 usage,
               },
