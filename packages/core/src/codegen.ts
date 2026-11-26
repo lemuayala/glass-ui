@@ -146,9 +146,13 @@ import { Text } from "react-native"
 </GlassTabBar>`
       case "glass-switch": {
         const label = escapeJsxAttr(text || "Notifications")
-        return `import { GlassSwitch } from "${importBase}/glass-switch"
+        return `import { useState } from "react"
+import { GlassSwitch } from "${importBase}/glass-switch"
 
-<GlassSwitch ${sharedProps} size="${padding}" checked label=${label} onCheckedChange={setOn} />`
+export function GlassSwitchExample() {
+  const [on, setOn] = useState(true)
+  return <GlassSwitch ${sharedProps} size="${padding}" checked={on} label=${label} onCheckedChange={setOn} />
+}`
       }
       case "glass-navbar": {
         const title = escapeJsxAttr(text || "Glass UI")
@@ -201,9 +205,13 @@ import { Text } from "react-native"
 </GlassTabBar>`
     case "glass-switch": {
       const label = escapeJsxAttr(text || "Notifications")
-      return `import { GlassSwitch } from "${importBase}/glass-switch"
+      return `import { useState } from "react"
+import { GlassSwitch } from "${importBase}/glass-switch"
 
-<GlassSwitch ${sharedProps} size="${padding}" checked label=${label} onCheckedChange={setOn} />`
+export function GlassSwitchExample() {
+  const [on, setOn] = useState(true)
+  return <GlassSwitch ${sharedProps} size="${padding}" checked={on} label=${label} onCheckedChange={setOn} />
+}`
     }
     case "glass-navbar": {
       const title = escapeJsxAttr(text || "Glass UI")

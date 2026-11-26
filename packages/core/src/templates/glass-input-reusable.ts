@@ -72,7 +72,7 @@ ${TINT_COMPOUNDS_SNIPPET}
 )
 
 export interface GlassInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement>,
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
     VariantProps<typeof glassInputVariants> {}
 
 export const GlassInput = React.forwardRef<HTMLInputElement, GlassInputProps>(
