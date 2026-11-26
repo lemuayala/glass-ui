@@ -129,7 +129,7 @@ export function createGlassMcpServer(): McpServer {
   const server = new McpServer(
     {
       name: "glass-ui",
-      version: "0.6.0",
+      version: "0.6.1",
     },
     { instructions: GLASS_SERVER_INSTRUCTIONS },
   )
