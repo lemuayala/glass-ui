@@ -197,6 +197,9 @@ Codegen: `lib/glass-core/` · Contributor notes: [AGENTS.md](AGENTS.md)
 - [ ] Figma plugin
 - [ ] Embedded native preview (Expo Snack)
 
+What changed in each version: [CHANGELOG.md](CHANGELOG.md) · [Releases](https://github.com/lemuayala/glass-ui/releases).
+Want to help? Read [CONTRIBUTING.md](CONTRIBUTING.md).
+
 <br/>
 
 ## Deploy

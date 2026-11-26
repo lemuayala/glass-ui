@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
-      contents: read
+      contents: write # tag + GitHub Release
       id-token: write # npm trusted publishing + MCP Registry GitHub OIDC
 
     steps:
@@ -100,6 +100,20 @@ jobs:
       # approve it in npmjs.com → Staged Packages and re-run this job (npm steps then skip).
       - name: Smoke test published packages from npm
         run: pnpm smoke:published
+
+      # Tags the release commit and publishes its CHANGELOG.md section as the GitHub Release notes.
+      - name: Create GitHub Release (skip if it already exists)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v$VERSION"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "$TAG already released — skipping"
+          else
+            node scripts/changelog-section.mjs "$VERSION" > release-notes.md
+            gh release create "$TAG" --target "$GITHUB_SHA" --title "$TAG" --notes-file release-notes.md
+          fi
 
       # MCP Registry validates the npm package (mcpName) live, so it must run after the npm publish.
       # It runs on every release (not only when npm published) so a failed registry step can be
