@@ -31,6 +31,7 @@ release workflow publishes the section as the GitHub Release notes.
   listener per frame, entrances skip `filter` on phones, large decorative blurs are desktop-only, and the zoom card
   only applies its backdrop blur once the window stops scaling.
 - The glass zoom looked cramped on small or short screens (truncated card text).
+- Spanish copy said "vidrio" for glass in three landing lines; it now uses "glass", like the rest of the app.
 
 ## [0.6.1] - 2026-11-25
 

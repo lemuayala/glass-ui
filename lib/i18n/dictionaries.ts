@@ -290,13 +290,13 @@ export const dictionaries = {
     "landing.nav.playground": "Playground",
 
     "landing.zoom.eyebrow": "Glass de verdad",
-    "landing.zoom.title": "Baja, y mira cómo se vuelve vidrio.",
-    "landing.zoom.cardLabel": "Una tarjeta de reproducción que se vuelve vidrio esmerilado",
+    "landing.zoom.title": "Baja, y mira cómo se vuelve glass.",
+    "landing.zoom.cardLabel": "Una tarjeta de reproducción que se vuelve frosted glass",
     "landing.zoom.chip.blur": "Blur",
     "landing.zoom.chip.tint": "Tinte",
     "landing.zoom.chip.radius": "Radio",
     "landing.zoom.chip.border": "Borde",
-    "landing.statement": "Siete primitivos. Un solo *sistema de vidrio*. *Web y nativo*, desde *una sola fuente*.",
+    "landing.statement": "Siete primitivos. Un solo *sistema glass*. *Web y nativo*, desde *una sola fuente*.",
 
     "landing.showcase.eyebrow": "Primitivos",
     "landing.showcase.title": "Siete componentes, mismo glass.",
