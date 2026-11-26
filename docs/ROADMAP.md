@@ -1,5 +1,11 @@
 # Glass UI Roadmap
 
+## Shipped (v0.6)
+
+- shadcn-compatible registry served at `/r/registry.json` and `/r/<item>.json`, generated from `@lemuayala/glass-ui-core`
+- MCP `generate_component` returns the matching shadcn install command
+- Post-publish smoke test in the release workflow (`pnpm smoke:published`)
+
 ## Shipped (v0.5)
 
 - `@lemuayala/glass-ui-core` npm package + zero-config CLI installer (`npx @lemuayala/glass-ui-core add ...`)

@@ -27,7 +27,7 @@ claude mcp add glass-ui -- npx -y @lemuayala/glass-ui-mcp
 | :--- | :--- |
 | `list_primitives` | Lists all 7 Glass UI primitives, valid glass option enums, platforms, and defaults. |
 | `list_presets` | Lists curated presets (`frosted`, `liquid`, `smoked`, `crystal`, `sunset`, `aqua`). |
-| `generate_component` | Generates `.tsx` component code, usage snippet, target file path, and install command. |
+| `generate_component` | Generates `.tsx` component code, usage snippet, target file path, and install command. When the result matches a published registry item, `registry.shadcnCommand` installs it with the shadcn CLI. |
 | `generate_glass_md` | Generates the full 8-section `GLASS.md` specification (or `short` prompt) for any stack. |
 
 ## Agent Instructions

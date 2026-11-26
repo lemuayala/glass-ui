@@ -15,6 +15,18 @@ npx @lemuayala/glass-ui-core add all --preset liquid --dir src/components/ui
 npx @lemuayala/glass-ui-core add button --native --preset frosted --glass-md
 ```
 
+## shadcn Registry
+
+The same components are published as a [shadcn](https://ui.shadcn.com/docs/registry) registry. Item names are `<component>[-<preset>][-native]`; `glass-ui` installs every web primitive.
+
+```bash
+npx shadcn@latest add https://glass-ui-play.vercel.app/r/glass-card.json
+npx shadcn@latest add https://glass-ui-play.vercel.app/r/glass-tabbar-liquid-native.json
+npx shadcn@latest add https://glass-ui-play.vercel.app/r/glass-ui.json
+```
+
+`buildRegistry()`, `getRegistryItem()` and `shadcnAddCommand()` build the same JSON programmatically.
+
 ## Programmatic API
 
 ```ts
