@@ -92,7 +92,7 @@ export const Header = forwardRef<
       <BrandLockup href="/" logoSize={28} className="min-w-0 flex-1 sm:flex-none" />
 
       {/* Component pills */}
-      <nav className="hidden max-w-[52vw] items-center gap-0.5 overflow-x-auto rounded-full border border-border bg-foreground/[0.03] p-1 lg:flex xl:max-w-none">
+      <nav className="hidden max-w-[52vw] items-center gap-0.5 overflow-x-auto rounded-full border border-border bg-foreground/[0.03] p-1 [scrollbar-width:none] lg:flex xl:max-w-none [&::-webkit-scrollbar]:hidden">
         {COMPONENT_KEYS.map((id) => {
           const active = id === component
           return (
@@ -101,7 +101,7 @@ export const Header = forwardRef<
               type="button"
               onClick={() => onComponent(id)}
               className={cn(
-                "relative rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-200",
+                "relative whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-medium transition-all duration-200 xl:px-3.5",
                 active
                   ? "bg-foreground/10 text-foreground shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
                   : "text-muted-foreground hover:text-foreground",
@@ -133,7 +133,7 @@ export const Header = forwardRef<
                 className="hidden h-8 items-center gap-1.5 rounded-full border border-border bg-foreground/[0.03] px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground md:flex"
               >
                 <Share2 className="h-3.5 w-3.5" />
-                <span>{t("actions.share")}</span>
+                <span className="hidden xl:inline">{t("actions.share")}</span>
               </button>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={8}>
