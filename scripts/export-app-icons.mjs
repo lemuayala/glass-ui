@@ -13,7 +13,7 @@ const publicDir = join(root, "public")
 const jobs = [
   { svg: "app-icon.svg", out: "apple-icon.png", width: 180, height: 180, fit: "contain" },
   { svg: "app-icon-light.svg", out: "apple-icon-light.png", width: 180, height: 180, fit: "contain" },
-  { svg: "app-icon.svg", out: "og-image.png", width: 1200, height: 630, fit: "cover" },
+  { svg: "og-image.svg", out: "og-image.png", width: 1200, height: 630, fit: "cover" },
 ]
 
 for (const job of jobs) {
