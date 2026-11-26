@@ -126,6 +126,11 @@ export function runGlassCli(argv: string[], io: CliIo): number {
     if (emitGlassMd) {
       const mdName = `GLASS-${component.replace("glass-", "")}.md`
       const mdPath = join(absOutDir, mdName)
+      // Same rule as the component: an existing GLASS.md may have the user's own notes.
+      if (existsSync(mdPath) && !force) {
+        io.stderr(`Skipped ${outDirRel}/${mdName} (already exists; pass --force to overwrite)`)
+        continue
+      }
       const md = generateGlassPrompt({
         codegen,
         profile: {

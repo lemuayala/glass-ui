@@ -1,4 +1,4 @@
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs"
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
@@ -57,6 +57,19 @@ describe("@lemuayala/glass-ui-core CLI installer (runGlassCli)", () => {
     // Re-running with --force overwrites with web version
     expect(runGlassCli(["add", "button", "--dir", "src/ui", "--force"], io())).toBe(0)
     expect(readFileSync(tsxPath, "utf8")).not.toContain("expo-blur")
+  })
+
+  it("keeps an existing GLASS.md unless --force is passed", () => {
+    const mdPath = join(tempDir, "components/ui/GLASS-card.md")
+    mkdirSync(join(tempDir, "components/ui"), { recursive: true })
+    writeFileSync(mdPath, "my notes", "utf8")
+
+    expect(runGlassCli(["add", "card", "--glass-md"], io())).toBe(0)
+    expect(readFileSync(mdPath, "utf8")).toBe("my notes")
+    expect(err.join(" ")).toContain("GLASS-card.md (already exists")
+
+    expect(runGlassCli(["add", "card", "--glass-md", "--force"], io())).toBe(0)
+    expect(readFileSync(mdPath, "utf8")).toContain("GLASS")
   })
 
   it("installs all 7 primitives with `add all` and validates invalid args", () => {
